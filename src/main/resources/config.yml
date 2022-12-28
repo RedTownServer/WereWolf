@@ -1,0 +1,61 @@
+roles:
+  seer:
+    priority: 1
+    name: 占い師
+    faction: VILLAGER
+    color: LIGHT_PURPLE
+    num: 10
+    unit: PERCENT
+    min_players: 4
+    min: 0
+    description: 占い師はプレイヤーを占い、そのプレイヤーが人狼かどうかを知ることができます。占い師は人狼たちに対して有利な立場にありますが、占い師を見つけ出して殺すことも人狼たちの重要な作戦です。また、占い師は自分の結果を正しく判断し、村人たちと協力しながらゲームを進めることが重要です。
+  madman:
+    priority: 2
+    name: 狂人
+    faction: VILLAGER
+    color: DARK_RED
+    num: 10
+    unit: PERCENT
+    min_players: 7
+    min: 0
+    description: 狂人は人狼陣営の一員とされます。狂人は、人狼たちに対して独自の戦略を練ってゲームを進めます。狂人は、人狼たちが人狼だと思われるような行動を避けるよう心がけ、人狼を見破ることが重要です。時には人狼をかばうために自分が怪しい行動を取って殺される必要もあるかもしれません。
+  medium:
+    priority: 2
+    name: 霊媒師
+    faction: VILLAGER
+    color: DARK_PURPLE
+    num: 10
+    unit: PERCENT
+    min_players: 8
+    min: 0
+    description: 霊媒師はプレイヤーを霊媒し、そのプレイヤーが死亡しているかどうかを知ることができます。また、死体からそのプレイヤーの役職を知ることもできます。霊媒師は、人狼ゲームで重要な役割を果たしますが、人狼たちがその能力を把握している場合は危険が伴います。
+  wolf:
+    priority: 3
+    name: 人狼
+    faction: WOLF
+    color: DARK_RED
+    num: 15
+    unit: PERCENT
+    min_players: 0
+    min: 2
+    description: 人狼たちが一見村人のように振る舞い、村人陣営に気づかれないように工夫しながら村人陣営を全滅させることが目標です。人狼は村人たちよりも少ない人数でゲームを勝ち抜くために巧妙な戦略を練る必要があります。また人狼は占い師に占われると人狼とバレてしまいます。そして人狼の唯一の仲間として狂人という役職がいるため狂人と協力していくことで戦略を立てることが簡単になります。
+  doctor:
+    priority: 4
+    name: 医者
+    faction: VILLAGER
+    color: AQUA
+    num: 10
+    unit: PERCENT
+    min_players: 5
+    min: 0
+    description: 医者は村人陣営の役職の一つでダメージを受けたプレイヤーの体力を回復することができます。また、医者は人狼ゲームで重要な役割を果たしますが、人狼たちがその能力を把握している場合は危険が伴うため、自分が医者であることを隠すことが望ましい場合もあります
+  villager:
+    priority: 5
+    name: 村人
+    faction: VILLAGER
+    color: GOLD
+    num: -1
+    unit: PERCENT
+    min_players: 0
+    min: 3
+    description: 村人は全滅しないように最後まで生き残ることが目標です。また村人は占い師や医者のように他の役職が持っているような特殊能力を持っていないため他の村陣営の役職と協力しながらゲームを進めることが重要です。

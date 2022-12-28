@@ -1,0 +1,22 @@
+main: dev.mr3n.werewolf3.WereWolf3
+api-version: 1.19
+name: WereWolf3
+version: 1.0
+depend:
+  - ProtocolLib
+commands:
+  start:
+    description: 人狼を開始します。
+    permission: werewolf3.admin.start
+  debug:
+    permission: werewolf3.admin.debug
+permissions:
+  werewolf3:
+    children:
+      admin:
+        default: op
+        children:
+          start:
+            description: 人狼を開始します
+          debug:
+            description: デバッグ用のコマンドを使用できます。

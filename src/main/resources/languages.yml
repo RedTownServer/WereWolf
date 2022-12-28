@@ -1,0 +1,86 @@
+name: "&4&l人狼ＰＶＰ"
+prefix: "&4&l[人狼PvP]&f"
+messages:
+  please_wait_for_start: "開始までしばらくお待ちください"
+  please_wait_for_end: "終了までしばらくお待ちください。"
+  player_joined: "%player% が人狼に参加しました。"
+  player_rejoined: "%player% が戻りました。"
+  coming_out: "%color%%player%が%role%をCoしました。"
+  result:
+    header: "========== 結果 =========="
+    prefix: "&c"
+    winner: "%color%%faction%陣営の勝利です！"
+title:
+  start:
+    title: "役職: %role%"
+    subtitle: "%time%秒後にゲームが開始します"
+  time:
+    title: "%emoji%%time%になりました%emoji%"
+  win:
+    title: "%color%&l%role%の勝利"
+    reason:
+      anni: "%role%が全滅しました。"
+      time_up: "時間切れになりました。"
+  you_are_dead:
+    title: "&4&l死亡しました"
+    subtitle: "試合を観戦できます。"
+item:
+  shop:
+    open:
+      name: "&dショップを開く"
+      description: "右クリックすることでショップを利用できます。"
+  co_helmet:
+    name: "%color%%role%をCoする"
+  doctor_sword:
+    name: "&b医者の剣(回復残量:%amount%)"
+    description: "殴ることで対象のプレイヤーの体力を回復させます。"
+    title:
+      heal:
+        color: "&c"
+        title: "回復"
+      sword:
+        color: "&b"
+        title: "医者の剣"
+    messages:
+      not_working: "ダメージを受けていないようです。"
+      healed: "回復されました。"
+      healing: "%player%を回復しています。"
+time:
+  day:
+    name: "&6朝"
+    emoji: "&6☀"
+    description: "全員と会話ができます。残り%day%日..."
+  night:
+    name: "&9夜"
+    emoji: "&e☽"
+    description: "近くの人とのみ会話できます。"
+bossbar:
+  title: "%emoji%%time%のターン: %time_left%%emoji%"
+sidebar:
+  title: "&4&l人狼&c&lPvP"
+  bottom: "&4///////"
+  global:
+    status:
+      display: "&c状態: &f"
+      waiting: "&7待機中"
+      starting: "&7開始前準備"
+    role:
+      display: "&c役職: &f"
+  starting:
+    players:
+      display: "&c残り人数(推定): &f"
+    time:
+      display: "&c準備時間: &f"
+  running:
+    players:
+      display: "&c残り人数(推定): &f"
+    money:
+      display: "&e所持金: "
+    day:
+      display: "&c残り日数: "
+  waiting:
+    players:
+      display: "&c現在の人数: &f"
+    time:
+      display: "&c開始予定: &f"
+      soon: "もうすぐ"

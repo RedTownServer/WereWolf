@@ -58,7 +58,6 @@ object GameTerminator {
         WereWolf3.INSTANCE.runTaskLater(100) {
             WereWolf3.STATUS = Status.WAITING
         }
-        // TODO ハードコーディングしてるのでいつか修正するいつか
         IShopItem.ShopItem.ITEMS.forEach { it.onEnd() }
     }
 }

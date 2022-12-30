@@ -32,7 +32,7 @@ object LightningRod: IShopItem.ShopItem(Material.LIGHTNING_ROD) {
     init {
         WereWolf3.INSTANCE.registerEvent<PlayerInteractEvent> { event ->
             val player = event.player
-            if(WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
             // main handじゃない場合はreturn
             if(event.hand!=EquipmentSlot.HAND) { return@registerEvent }
             // 右クリックしていない場合はreturn

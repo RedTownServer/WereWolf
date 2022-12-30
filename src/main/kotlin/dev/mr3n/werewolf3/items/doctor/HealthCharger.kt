@@ -43,7 +43,7 @@ object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_BLOCK) {
             if(event.hand!=EquipmentSlot.HAND) { return@registerEvent }
             if(event.action!=Action.RIGHT_CLICK_BLOCK) { return@registerEvent }
             val player = event.player
-            if(WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
             val item = player.inventory.itemInMainHand
             if(!isSimilar(item)) { return@registerEvent }
             val clickedBlock = event.clickedBlock?:return@registerEvent

@@ -9,7 +9,9 @@ import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.commands.Start
 import dev.mr3n.werewolf3.items.*
 import dev.mr3n.werewolf3.items.doctor.DoctorSword
+import dev.mr3n.werewolf3.items.doctor.HealthCharger
 import dev.mr3n.werewolf3.items.seer.SeerItem
+import dev.mr3n.werewolf3.items.wolf.AssassinSword
 import dev.mr3n.werewolf3.items.wolf.BombBall
 import dev.mr3n.werewolf3.items.wolf.LightningRod
 import dev.mr3n.werewolf3.items.wolf.WolfAxe
@@ -47,9 +49,11 @@ class WereWolf3: JavaPlugin() {
             it.setExecutor(Start)
             it.tabCompleter = Start
         }
+        GameTerminator.init()
+
 
         this.getCommand("debug")?.also {
-            it.setExecutor { sender, command, label, args ->
+            it.setExecutor { sender, _, _, args ->
                 if(sender !is Player) { return@setExecutor true  }
                 when(args.getOrNull(0)) {
                     "test1" -> {
@@ -72,6 +76,15 @@ class WereWolf3: JavaPlugin() {
                     }
                     "test7" -> {
                         sender.inventory.addItem(LightningRod.itemStack)
+                    }
+                    "test8" -> {
+                        sender.inventory.addItem(HealthCharger.itemStack)
+                    }
+                    "test9" -> {
+                        sender.inventory.addItem(HealPotion.itemStack)
+                    }
+                    "test10" -> {
+                        sender.inventory.addItem(AssassinSword.itemStack)
                     }
                 }
                 true

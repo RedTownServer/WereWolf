@@ -60,4 +60,8 @@ object GameTerminator {
         }
         IShopItem.ShopItem.ITEMS.forEach { it.onEnd() }
     }
+
+    fun init() {
+
+    }
 }

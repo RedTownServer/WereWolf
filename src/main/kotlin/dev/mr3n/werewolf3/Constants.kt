@@ -17,6 +17,8 @@ object Constants {
         get() = constant("game.night_time")
     val ADD_MONEY: Int
         get() = constant("game.add_money")
+    val START_MONEY: Int
+        get() = constant("game.start_money")
     val MAX_DAYS: Int
         get() = constant("game.max_days")
 }

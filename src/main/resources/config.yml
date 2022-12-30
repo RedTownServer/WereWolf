@@ -1,6 +1,7 @@
 general:
   point_flush_speed: 15
 game:
+  start_money: 800
   starting_time: 400
   day_time: 360
   night_time: 360
@@ -67,6 +68,10 @@ items:
       - SEER
       - MEDIUM
     heal_amount: 10.0
+  assassin_sword:
+    roles:
+      - WOLF
+    attack_angle: 30.0
 roles:
   seer:
     priority: 1

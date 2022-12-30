@@ -51,6 +51,7 @@ object GameInitializer {
             player.sidebar = StartingSidebar(player)
             player.flySpeed = 0.2f
             player.walkSpeed = 0.2f
+            player.money = Constants.START_MONEY
         }
         // 時間を設定
         WereWolf3.TIME_LEFT = Constants.STARTING_TIME

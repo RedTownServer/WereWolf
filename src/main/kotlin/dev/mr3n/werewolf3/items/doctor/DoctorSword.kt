@@ -8,6 +8,7 @@ import dev.mr3n.werewolf3.utils.*
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import org.bukkit.event.Cancellable
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
@@ -30,13 +31,14 @@ object DoctorSword: IShopItem.ShopItem(Material.IRON_SWORD) {
         get() = this.getContainerValue(Keys.HEALTH_AMOUNT, PersistentDataType.DOUBLE)?: MAX_HEAL_AMOUNT
         set(value) { this.setContainerValue(Keys.HEALTH_AMOUNT, PersistentDataType.DOUBLE, value) }
 
-    fun Player.healTo(target: Player) {
+    fun Player.healTo(target: Player,event: Cancellable? = null) {
         val player = this
         val item = player.inventory.itemInMainHand
         // アイテムがヒールの剣じゃない場合はreturn
         if(!isSimilar(item)) { return }
         if(!WereWolf3.PLAYERS.contains(player)) { return }
         if(!WereWolf3.PLAYERS.contains(target)) { return }
+        event?.isCancelled = true
         // ヒール量を推定
         val healAmount = minOf(target.healthScale-target.health, minOf(8.0, item.healthAmount))
         if(healAmount<=0) {
@@ -74,8 +76,7 @@ object DoctorSword: IShopItem.ShopItem(Material.IRON_SWORD) {
             val target = event.entity
             // playerおよびtargetがプレイヤーではない場合return
             if(player !is Player || target !is Player) { return@registerEvent }
-            event.isCancelled = true
-            player.healTo(target)
+            player.healTo(target, event)
         }
     }
 }

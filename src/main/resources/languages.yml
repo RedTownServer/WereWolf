@@ -74,9 +74,16 @@ item:
       wolf_axe:
         color: "&4"
         title: "人狼の斧"
+      failed:
+        color: "&c"
+        title: "殺害失敗"
+      success:
+        color: "&a"
+        title: "殺害成功"
     messages:
       charging: "チャージしています。"
       charged: "チャージ完了"
+      not_enough_charge: "チャージが足りなかった。"
       used: "一撃の斧を使用した"
   fake_seer:
     name: "&dニセ占いアイテム(偽物)"
@@ -128,6 +135,18 @@ item:
         color: "&c"
     messages:
       healing: "&c❤%amount%&f回復しました。"
+  assassin_sword:
+    name: "&c暗殺の剣"
+    description: "&7背後からプレイヤーに斬りかかることで一撃でプレイヤーを仕留めることができる剣。"
+    title:
+      assassin_failed:
+        title: "暗殺失敗"
+        color: "&c"
+      assassin_success:
+        title: "暗殺成功"
+        color: "&a"
+    messages:
+      need_from_back: "背後から斬りかかる必要があります。"
 time:
   day:
     name: "&6朝"

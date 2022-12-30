@@ -22,6 +22,10 @@ object WolfAxe: IShopItem.ShopItem(Material.STONE_AXE) {
 
     private val WOLF_AXE_TITLE_TEXT = titleText("item.$id.title.wolf_axe")
 
+    private val SUCCESS_TITLE_TEXT = titleText("item.$id.title.success")
+
+    private val FAILED_TITLE_TEXT = titleText("item.$id.title.failed")
+
     private val CHARGE: Int = constant("charge")
 
     private val CHARGES = mutableMapOf<Player, Int>()
@@ -39,12 +43,17 @@ object WolfAxe: IShopItem.ShopItem(Material.STONE_AXE) {
             val charge = CHARGES[player]?:0
             val world = player.world
             if(charge >= CHARGE) {
-                player.sendTitle(WOLF_AXE_TITLE_TEXT,messages("used"),0,30,0)
+                player.sendTitle(SUCCESS_TITLE_TEXT,messages("used"),0,30,0)
                 world.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 2f, 0.4f)
                 world.playSound(player, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2f, 2f)
                 player.damageTo(target, 1000000.0)
                 item.amount--
                 CHARGES[player] = 0
+            } else {
+                player.sendTitle(FAILED_TITLE_TEXT,messages("not_enough_charge"),0,30,0)
+                world.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1f, 1f)
+                CHARGES[player] = 0
+                event.isCancelled = true
             }
         }
         WereWolf3.INSTANCE.registerEvent<PlayerItemHeldEvent> { event ->

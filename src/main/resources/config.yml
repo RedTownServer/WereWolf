@@ -1,3 +1,58 @@
+general:
+  point_flush_speed: 15
+game:
+  starting_time: 400
+  day_time: 360
+  night_time: 360
+  add_money: 200 # per 30 sec
+  max_days: 5
+items:
+  seer:
+    roles:
+      - SEER
+    seer_time: 60
+  bomb_ball:
+    roles:
+      - WOLF
+    damage_distance: 10
+    death_distance: 3
+    fuse_time: 12
+    max_damage: 18
+    warning_count: 6
+  doctor_sword:
+    roles:
+      - DOCTOR
+    health_amount: 40.0
+  wolf_axe:
+    charge: 100
+    roles:
+      - WOLF
+  fake_seer:
+    roles:
+      - MADMAN
+  stan_ball:
+    radius: 5.0
+    stan_time: 140
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+  glow_ink:
+    glowing_time: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+  lightning_rod:
+    blindness_time: 300
+    roles:
+      - WOLF
 roles:
   seer:
     priority: 1

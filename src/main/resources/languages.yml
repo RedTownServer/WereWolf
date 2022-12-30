@@ -45,6 +45,70 @@ item:
       not_working: "ダメージを受けていないようです。"
       healed: "回復されました。"
       healing: "%player%を回復しています。"
+  seer:
+    name: "&d占いアイテム"
+    description: "プレイヤーを右クリック長押しすることでそのプレイヤーを占うことができます。"
+    title:
+      seer:
+        color: "&d"
+        title: "占い"
+    messages:
+      canceled: "占いをキャンセルしました。"
+      init: "%player%を占い中..."
+      hint:
+        how_to: "プレヤーを右クリック長押しすることで占うことができます。"
+      result:
+        wolf: "%player%は&c人狼です。"
+        villager: "%player%は&c人狼では&nありません。"
+  bomb_ball:
+    name: "&4投げ爆弾"
+    description: "着弾点から広範囲に即死級のダメージを与える。"
+    title:
+      warning:
+        color: "&4"
+        title: "爆発注意"
+  wolf_axe:
+    name: "&4人狼の斧"
+    description: "チャージすることで一撃でプレイヤーを倒すことができる斧。\nチャージ完了時、および使用した際に大きな音が鳴る。"
+    title:
+      wolf_axe:
+        color: "&4"
+        title: "人狼の斧"
+    messages:
+      charging: "チャージしています。"
+      charged: "チャージ完了"
+      used: "一撃の斧を使用した"
+  fake_seer:
+    name: "&dニセ占いアイテム(偽物)"
+    description: "偽物の占いアイテム。プレイヤーを騙す以外に使用する手段はない。"
+  stan_ball:
+    name: "&cスタンボール"
+    description: "着弾点で爆発し周囲のプレイヤーを数秒間ほとんど動けない状態にできる。"
+    messages:
+      stan: "数秒間動けなくなります。"
+    title:
+      stan:
+        color: "&4"
+        title: "STAN!"
+  glow_ink:
+    name: "&aピカピカインク"
+    description: "使用することでプレイヤー全員に発光効果を付与する。"
+    title:
+      glowing:
+        color: "&a"
+        title: "発光中"
+    messages:
+      glowing: "体が発光しています。"
+  lightning_rod:
+    name: "&a停電"
+    description: "使用することで人狼以外のすべてのプレイヤーに盲目の効果を付与する。"
+    title:
+      blindness:
+        color: "&e"
+        title: "停電中"
+    messages:
+      blindness: "人狼が停電を使用した。"
+      for_wolf: "プレイヤーに盲目を付与中: %sec%"
 time:
   day:
     name: "&6朝"

@@ -37,7 +37,7 @@ interface IShopItem {
     /**
      * このアイテムを所持できる役職
      */
-    val roles: Array<Role>
+    val roles: List<Role>
 
     /**
      * アイテムの価格
@@ -50,6 +50,8 @@ interface IShopItem {
     fun isSimilar(itemStack: ItemStack): Boolean
 
     abstract class ShopItem(val material: Material): IShopItem {
+
+        override val roles: List<Role> = constants<String>("roles").map{Role.valueOf(it)}
         override val displayName: String
             get() = languages("item.${id}.name")
         override val description: String
@@ -58,6 +60,18 @@ interface IShopItem {
             get() = EasyItem(material, displayName, description.split("\n")).also { item ->
                 item.setContainerValue(Keys.ITEM_ID, PersistentDataType.STRING, id)
             }
+
+        fun messages(key: String, vararg values: Pair<String, Any>): String {
+            return languages("item.${id}.messages.${key}", *values)
+        }
+
+        protected inline fun <reified T> constant(key: String): T {
+            return dev.mr3n.werewolf3.utils.constant("items.${id}.${key}")
+        }
+
+        protected inline fun <reified T> constants(key: String): List<T> {
+            return dev.mr3n.werewolf3.utils.constants("items.${id}.${key}")
+        }
 
         override fun isSimilar(itemStack: ItemStack): Boolean {
             return itemStack.getContainerValue(Keys.ITEM_ID, PersistentDataType.STRING) == id

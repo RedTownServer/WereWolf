@@ -1,10 +1,22 @@
 package dev.mr3n.werewolf3
 
+import dev.mr3n.werewolf3.utils.constant
+
+/**
+ * 定数一覧。
+ * 今後スプレッドシート上から変更できるようにするため一元化しています。
+ */
 object Constants {
-    const val POINT_FLUSH_SPEED = 15 // tick
-    const val STARTING_TIME = 20 // sec
-    const val DAY_TIME = 18
-    const val NIGHT_TIME = 18
-    const val ADD_MONEY = 200 // 30秒おきに何円追加するか
-    const val MAX_DAYS = 5
+    val POINT_FLUSH_SPEED: Int
+        get() = constant("general.point_flush_speed")
+    val STARTING_TIME: Int
+        get() = constant("game.starting_time")
+    val DAY_TIME: Int
+        get() = constant("game.day_time")
+    val NIGHT_TIME: Int
+        get() = constant("game.night_time")
+    val ADD_MONEY: Int
+        get() = constant("game.add_money")
+    val MAX_DAYS: Int
+        get() = constant("game.max_days")
 }

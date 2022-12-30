@@ -1,6 +1,7 @@
 package dev.mr3n.werewolf3.sidebar
 
 import dev.mr3n.werewolf3.Constants
+import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.parseTime
@@ -60,8 +61,8 @@ class RunningSidebar(val player: Player): ISideBar {
         getScore("   ").apply { score = 7 }
         // 待機プレイヤー数
         getScore(languages("sidebar.running.day.display")).apply { score = 8 }
-        // 待機プレイヤー数を設定
-        players(Bukkit.getOnlinePlayers().size)
+        // 参加プレイヤー数を設定
+        players(WereWolf3.PLAYERS.size)
         // 待機時間を設定
         // ステータスを待機中に変更
         role(player.role)

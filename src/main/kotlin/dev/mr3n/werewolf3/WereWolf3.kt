@@ -2,12 +2,16 @@ package dev.mr3n.werewolf3
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
-import com.comphenix.protocol.wrappers.WrappedGameProfile
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.commands.Start
-import dev.mr3n.werewolf3.items.DoctorSword
+import dev.mr3n.werewolf3.items.*
+import dev.mr3n.werewolf3.items.doctor.DoctorSword
+import dev.mr3n.werewolf3.items.seer.SeerItem
+import dev.mr3n.werewolf3.items.wolf.BombBall
+import dev.mr3n.werewolf3.items.wolf.LightningRod
+import dev.mr3n.werewolf3.items.wolf.WolfAxe
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
@@ -23,7 +27,6 @@ import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.UUID
 
 class WereWolf3: JavaPlugin() {
     override fun onEnable() {
@@ -51,10 +54,30 @@ class WereWolf3: JavaPlugin() {
                     "test1" -> {
                         sender.inventory.addItem(DoctorSword.itemStack)
                     }
+                    "test2" -> {
+                        sender.inventory.addItem(SeerItem.itemStack)
+                    }
+                    "test3" -> {
+                        sender.inventory.addItem(BombBall.itemStack)
+                    }
+                    "test4" -> {
+                        sender.inventory.addItem(WolfAxe.itemStack)
+                    }
+                    "test5" -> {
+                        sender.inventory.addItem(StanBall.itemStack)
+                    }
+                    "test6" -> {
+                        sender.inventory.addItem(GlowInk.itemStack)
+                    }
+                    "test7" -> {
+                        sender.inventory.addItem(LightningRod.itemStack)
+                    }
                 }
                 true
             }
         }
+
+
 
         // 毎tickループ
         TickTask.task {

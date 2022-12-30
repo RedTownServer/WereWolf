@@ -45,13 +45,15 @@ object GameInitializer {
             // 開始場所にテレポート。
             player.teleport(location)
             // タイトルに自分の役職を表示。
-            player.sendTitle(languages("title.start.title", "%time%" to Constants.STARTING_TIME, "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"),languages("title.start.subtitle", "%time%" to Constants.STARTING_TIME, "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"), 0, 100, 20)
+            player.sendTitle(languages("title.start.title", "%time%" to (Constants.STARTING_TIME / 20), "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"),languages("title.start.subtitle", "%time%" to Constants.STARTING_TIME / 20, "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"), 0, 100, 20)
             // 怖い音を鳴らす。
             repeat(5) { player.playSound(player,Sound.AMBIENT_NETHER_WASTES_MOOD,1F,1F) }
             player.sidebar = StartingSidebar(player)
+            player.flySpeed = 0.2f
+            player.walkSpeed = 0.2f
         }
         // 時間を設定
-        WereWolf3.TIME_LEFT = 20 * Constants.STARTING_TIME
+        WereWolf3.TIME_LEFT = Constants.STARTING_TIME
 
         val wolfs = players.filter { it.role==Role.WOLF }
 

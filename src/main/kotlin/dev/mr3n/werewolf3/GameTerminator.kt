@@ -18,7 +18,7 @@ import org.bukkit.Sound
 object GameTerminator {
 
     fun end(win: Role.Faction, reason: String) {
-        if(WereWolf3.STATUS==Status.ENDING) { return }
+        if(WereWolf3.STATUS==Status.ENDING||WereWolf3.STATUS==Status.WAITING) { return }
         WereWolf3.STATUS = Status.ENDING
         val players = Role.ROLES.map { it.key to it.value.map { uniqueId -> Bukkit.getOfflinePlayer(uniqueId) }.map { p -> p.name } }
         WereWolf3.PLAYERS.forEach { player ->
@@ -35,10 +35,13 @@ object GameTerminator {
         this.run()
     }
     fun run() {
+        WereWolf3.STATUS = Status.WAITING
         WereWolf3.GAME_ID = null
 
         // 発光、チームをリセット
         WereWolf3.PLAYERS.forEach { player ->
+            player.flySpeed = 0.2f
+            player.walkSpeed = 0.2f
             ChatColor.values().forEach { color -> TeamPacketUtil.remove(player, color, WereWolf3.PLAYERS.map { it.name }) }
             WereWolf3.PLAYERS.forEach { player2 -> GlowPacketUtil.remove(player, player2) }
             if(player.role==Role.WOLF) { TeamPacketUtil.removeTeam(player, ChatColor.DARK_RED) }

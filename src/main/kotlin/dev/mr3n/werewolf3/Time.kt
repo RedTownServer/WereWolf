@@ -3,7 +3,9 @@ package dev.mr3n.werewolf3
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.RunningSidebar
+import dev.mr3n.werewolf3.utils.asPrefixed
 import dev.mr3n.werewolf3.utils.languages
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
@@ -62,12 +64,13 @@ enum class Time(val barColor: BarColor) {
                 return
             }
             // 残り時間を朝の時間に設定(20はtick)
-            WereWolf3.TIME_LEFT = Constants.DAY_TIME * 20
+            WereWolf3.TIME_LEFT = Constants.DAY_TIME
             WereWolf3.TIME_LENGTH = WereWolf3.TIME_LEFT
             // 日付を1追加する
             WereWolf3.DAY++
 
             WereWolf3.PLAYERS.forEach { player ->
+                player.sendMessage("${WereWolf3.TIME.title}:${ChatColor.WHITE} ${WereWolf3.TIME.description}".asPrefixed())
                 // プレイヤーに朝になった旨を伝える。
                 player.sendTitle(WereWolf3.TIME.title, WereWolf3.TIME.description, 0, 100, 20)
                 // TODO レコードを流す
@@ -91,10 +94,11 @@ enum class Time(val barColor: BarColor) {
             // ゲームが実行中ではない場合return
             if(!WereWolf3.running) { return }
             // 残り時間を夜の時間に設定(20はtick)
-            WereWolf3.TIME_LEFT = Constants.NIGHT_TIME * 20
+            WereWolf3.TIME_LEFT = Constants.NIGHT_TIME
             WereWolf3.TIME_LENGTH = WereWolf3.TIME_LEFT
 
             WereWolf3.PLAYERS.forEach { player ->
+                player.sendMessage("${WereWolf3.TIME.title}:${ChatColor.WHITE} ${WereWolf3.TIME.description}".asPrefixed())
                 // プレイヤーに夜になった旨を伝える。
                 player.sendTitle(WereWolf3.TIME.title, WereWolf3.TIME.description, 0, 100, 20)
                 // ボスバーを夜の色に変更

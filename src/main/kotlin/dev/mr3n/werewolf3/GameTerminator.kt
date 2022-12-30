@@ -1,6 +1,8 @@
 package dev.mr3n.werewolf3
 
 import dev.moru3.minepie.Executor.Companion.runTaskLater
+import dev.mr3n.werewolf3.citizens2.DeadBody
+import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.GlowPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
@@ -10,10 +12,7 @@ import dev.mr3n.werewolf3.utils.co
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.prefixedLang
 import dev.mr3n.werewolf3.utils.role
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.GameMode
-import org.bukkit.Sound
+import org.bukkit.*
 
 object GameTerminator {
 
@@ -59,5 +58,7 @@ object GameTerminator {
         WereWolf3.INSTANCE.runTaskLater(100) {
             WereWolf3.STATUS = Status.WAITING
         }
+        // TODO ハードコーディングしてるのでいつか修正するいつか
+        IShopItem.ShopItem.ITEMS.forEach { it.onEnd() }
     }
 }

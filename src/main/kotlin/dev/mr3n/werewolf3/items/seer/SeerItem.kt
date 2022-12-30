@@ -37,6 +37,8 @@ object SeerItem: IShopItem.ShopItem(Material.MUSIC_DISC_MALL) {
             if(!isSimilar(item)) { return@registerEvent }
             val target = event.rightClicked
             if(target !is Player) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(target)) { return@registerEvent }
             val seerInfo = LAST_CLICKED[player.uniqueId]
             val isFirst = seerInfo == null
             val currentMillis = System.currentTimeMillis()

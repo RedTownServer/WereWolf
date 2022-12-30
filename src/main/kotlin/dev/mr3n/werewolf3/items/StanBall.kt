@@ -4,19 +4,15 @@ import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.WereWolf3
-import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.damageTo
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -42,6 +38,7 @@ object StanBall: IShopItem.ShopItem(Material.SNOWBALL) {
             val projectile = event.entity
             val shooter = projectile.shooter?:return@registerEvent
             if(shooter !is Player) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(shooter)) { return@registerEvent }
             if(!isSimilar(shooter.inventory.itemInMainHand)) { return@registerEvent }
             // 爆発玉識別用のタグを付与
             projectile.persistentDataContainer.set(Keys.ENTITY_TYPE, PersistentDataType.STRING, ENTITY_TYPE)
@@ -57,7 +54,7 @@ object StanBall: IShopItem.ShopItem(Material.SNOWBALL) {
             if(projectile.persistentDataContainer.get(Keys.ENTITY_TYPE, PersistentDataType.STRING) != ENTITY_TYPE) { return@registerEvent }
             val shooter = projectile.shooter?:return@registerEvent
             if(shooter !is Player) { return@registerEvent }
-
+            if(!WereWolf3.PLAYERS.contains(shooter)) { return@registerEvent }
             // 着弾点
             val location = projectile.location.clone()
             // worldがnullableなためnullではないことを保証する

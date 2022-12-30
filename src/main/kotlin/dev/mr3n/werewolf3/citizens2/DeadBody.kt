@@ -1,7 +1,6 @@
-package dev.mr3n.werewolf3
+package dev.mr3n.werewolf3.citizens2
 
 import com.comphenix.protocol.wrappers.WrappedGameProfile
-import com.comphenix.protocol.wrappers.WrappedSignedProperty
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.trait.SkinTrait
 import net.citizensnpcs.trait.SleepTrait

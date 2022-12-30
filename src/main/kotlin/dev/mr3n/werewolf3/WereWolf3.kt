@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
+import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.commands.Start
 import dev.mr3n.werewolf3.items.*
@@ -156,7 +157,7 @@ class WereWolf3: JavaPlugin() {
                         }
                     }
                     // 生きているプレイヤー一覧(スペクテイターじゃないプレイヤー)
-                    val alivePlayers = WereWolf3.PLAYERS.filter { p->p.gameMode!=GameMode.SPECTATOR }
+                    val alivePlayers = PLAYERS.filter { p->p.gameMode!=GameMode.SPECTATOR }
                     if(alivePlayers.count { p->p.role?.faction==Role.Faction.WOLF }<=0) {
                         // 人狼陣営の数が0になった場合ゲームを終了
                         GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.anni", "%role%" to Role.Faction.WOLF.displayName))

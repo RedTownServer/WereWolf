@@ -61,6 +61,7 @@ object BombBall: IShopItem.ShopItem(Material.SNOWBALL) {
             val projectile = event.entity
             val shooter = projectile.shooter?:return@registerEvent
             if(shooter !is Player) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(shooter)) { return@registerEvent }
             if(!isSimilar(shooter.inventory.itemInMainHand)) { return@registerEvent }
             // 爆発玉識別用のタグを付与
             projectile.persistentDataContainer.set(Keys.ENTITY_TYPE, PersistentDataType.STRING, ENTITY_TYPE)
@@ -71,6 +72,7 @@ object BombBall: IShopItem.ShopItem(Material.SNOWBALL) {
             if(projectile.persistentDataContainer.get(Keys.ENTITY_TYPE, PersistentDataType.STRING) != ENTITY_TYPE) { return@registerEvent }
             val shooter = projectile.shooter?:return@registerEvent
             if(shooter !is Player) { return@registerEvent }
+            if(!WereWolf3.PLAYERS.contains(shooter)) { return@registerEvent }
             // 着弾点
             val location = projectile.location.clone()
             // worldがnullableなためnullではないことを保証する

@@ -3,11 +3,12 @@ package dev.mr3n.werewolf3.items
 import dev.moru3.minepie.item.EasyItem
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.roles.Role
+import dev.mr3n.werewolf3.utils.container
 import dev.mr3n.werewolf3.utils.getContainerValue
 import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.setContainerValue
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 
 /**
@@ -49,6 +50,10 @@ interface IShopItem {
      */
     fun isSimilar(itemStack: ItemStack): Boolean
 
+    fun onEnd()
+
+    fun onSetItemMeta(itemMeta: ItemMeta)
+
     abstract class ShopItem(val material: Material): IShopItem {
 
         override val roles: List<Role> = constants<String>("roles").map{Role.valueOf(it)}
@@ -58,7 +63,10 @@ interface IShopItem {
             get() = languages("item.${id}.description")
         override val itemStack: ItemStack
             get() = EasyItem(material, displayName, description.split("\n")).also { item ->
-                item.setContainerValue(Keys.ITEM_ID, PersistentDataType.STRING, id)
+                item.itemMeta = item.itemMeta?.also { meta ->
+                    this.onSetItemMeta(meta)
+                    meta.container.set(Keys.ITEM_ID, PersistentDataType.STRING, id)
+                }
             }
 
         fun messages(key: String, vararg values: Pair<String, Any>): String {
@@ -75,6 +83,16 @@ interface IShopItem {
 
         override fun isSimilar(itemStack: ItemStack): Boolean {
             return itemStack.getContainerValue(Keys.ITEM_ID, PersistentDataType.STRING) == id
+        }
+
+        override fun onEnd() {}
+
+        override fun onSetItemMeta(itemMeta: ItemMeta) {}
+
+        init { ITEMS.add(this) }
+
+        companion object {
+            val ITEMS = mutableListOf<IShopItem>()
         }
     }
 }

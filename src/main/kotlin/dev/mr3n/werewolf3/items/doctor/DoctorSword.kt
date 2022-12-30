@@ -35,6 +35,8 @@ object DoctorSword: IShopItem.ShopItem(Material.IRON_SWORD) {
         val item = player.inventory.itemInMainHand
         // アイテムがヒールの剣じゃない場合はreturn
         if(!isSimilar(item)) { return }
+        if(!WereWolf3.PLAYERS.contains(player)) { return }
+        if(!WereWolf3.PLAYERS.contains(target)) { return }
         // ヒール量を推定
         val healAmount = minOf(target.healthScale-target.health, minOf(8.0, item.healthAmount))
         if(healAmount<=0) {

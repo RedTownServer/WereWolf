@@ -109,6 +109,25 @@ item:
     messages:
       blindness: "人狼が停電を使用した。"
       for_wolf: "プレイヤーに盲目を付与中: %sec%"
+  health_charger:
+    name: "&cヘルスチャージャー"
+    description: "設置することで周囲のプレイヤーの体力を回復する。\n設置するには3x3のスペースが必要。"
+    title:
+      charger:
+        color: "&c"
+        title: "ヘルスチャージャー"
+    messages:
+      cant_placeable: "設置するには3x3のスペースが必要です。"
+      healing: "ヘルスチャージャーで体力を回復しています。"
+  heal_potion:
+    name: "&c回復ポーション"
+    description: "&7飲むことで&c❤5&7回復するポーション。"
+    title:
+      healing:
+        title: "回復"
+        color: "&c"
+    messages:
+      healing: "&c❤%amount%&f回復しました。"
 time:
   day:
     name: "&6朝"

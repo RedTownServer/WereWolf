@@ -1,29 +1,18 @@
 package dev.mr3n.werewolf3.items.wolf
 
-import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.Executor.Companion.runTaskTimer
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
-import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.damageTo
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.role
 import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.entity.Item
-import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
-import org.bukkit.event.entity.ProjectileHitEvent
-import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -42,11 +31,12 @@ object LightningRod: IShopItem.ShopItem(Material.LIGHTNING_ROD) {
 
     init {
         WereWolf3.INSTANCE.registerEvent<PlayerInteractEvent> { event ->
+            val player = event.player
+            if(WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
             // main handじゃない場合はreturn
             if(event.hand!=EquipmentSlot.HAND) { return@registerEvent }
             // 右クリックしていない場合はreturn
             if(event.action!=Action.RIGHT_CLICK_AIR&&event.action!=Action.RIGHT_CLICK_BLOCK) { return@registerEvent }
-            val player = event.player
             val item = player.inventory.itemInMainHand
             // ピカピカインクを持っていない場合はreturn
             if(!isSimilar(item)) { return@registerEvent }

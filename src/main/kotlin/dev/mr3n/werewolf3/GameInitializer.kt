@@ -1,6 +1,7 @@
 package dev.mr3n.werewolf3
 
 import dev.moru3.minepie.item.EasyItem
+import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.protocol.GlowPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
@@ -10,7 +11,6 @@ import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 object GameInitializer {

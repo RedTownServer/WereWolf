@@ -1,5 +1,6 @@
 name: "&4&l人狼ＰＶＰ"
 prefix: "&4&l[人狼PvP]&f"
+chat: "%name%&a: &f%message%"
 messages:
   please_wait_for_start: "開始までしばらくお待ちください"
   please_wait_for_end: "終了までしばらくお待ちください。"
@@ -99,13 +100,14 @@ item:
         title: "STAN!"
   glow_ink:
     name: "&aピカピカインク"
-    description: "使用することでプレイヤー全員に発光効果を付与する。"
+    description: "使用することでプレイヤー全員に発光効果を付与する。\n例外に透明なプレイヤーは発光しない。"
     title:
       glowing:
         color: "&a"
         title: "発光中"
     messages:
       glowing: "体が発光しています。"
+      invisible: "透明なため発光していません。"
   lightning_rod:
     name: "&a停電"
     description: "使用することで人狼以外のすべてのプレイヤーに盲目の効果を付与する。"
@@ -128,7 +130,7 @@ item:
       healing: "ヘルスチャージャーで体力を回復しています。"
   heal_potion:
     name: "&c回復ポーション"
-    description: "&7飲むことで&c❤5&7回復するポーション。"
+    description: "&7飲むことで&c❤%amount%&7回復するポーション。"
     title:
       healing:
         title: "回復"
@@ -147,6 +149,27 @@ item:
         color: "&a"
     messages:
       need_from_back: "背後から斬りかかる必要があります。"
+      success: "暗殺に成功しました。"
+  invisible_potion:
+    name: "&b透明化ポーション"
+    description: "飲むことで%time%秒間透明になれる。\n装備は消えるが手に持っているアイテムは見えてしまう。"
+    title:
+      invisible:
+        title: "透明化中"
+        color: "&b"
+    messages:
+      remaining_time: "透明化残り%time%秒"
+  wolf_guide:
+    name: "&c人狼ガイド"
+    description: "使用することでランダムで一匹の人狼の名前を知ることができる。\nまた知った人狼をマーキングすることがdケイル。"
+    title:
+      guide:
+        title: "人狼ガイド"
+        color: "&c"
+    messages:
+      wolf_not_found: "人狼がいないようだ。"
+      searching: "検索中..."
+      searched: "%player%が人狼の中の一匹です。"
 time:
   day:
     name: "&6朝"

@@ -2,6 +2,7 @@ package dev.mr3n.werewolf3.items
 
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
+import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Color
 import org.bukkit.Material
@@ -18,6 +19,8 @@ object HealPotion: IShopItem.ShopItem(Material.POTION) {
 
     private val CHARGER_TITLE_TEXT = titleText("item.$id.title.healing")
 
+    override val description: String = languages("item.${id}.description", "%amount%" to HEAL_AMOUNT)
+
     override fun onSetItemMeta(itemMeta: ItemMeta) {
         if(itemMeta !is PotionMeta) { return }
         itemMeta.color = Color.RED
@@ -31,6 +34,7 @@ object HealPotion: IShopItem.ShopItem(Material.POTION) {
             if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
             player.health = minOf(player.healthScale, player.health + HEAL_AMOUNT)
             player.sendTitle(CHARGER_TITLE_TEXT, messages("healing", "%amount%" to HEAL_AMOUNT), 0, 60, 20)
+            player.inventory.itemInMainHand.amount--
         }
     }
 }

@@ -2,7 +2,6 @@ package dev.mr3n.werewolf3.utils
 
 import dev.mr3n.werewolf3.WereWolf3
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.entity.Player
 
 
 /**
@@ -15,7 +14,7 @@ fun languages(key: String, vararg args: Pair<String, Any>): String {
 }
 
 /**
- * プラグインのprefix([人狼pvp])付きでメッセーを取得
+ * プラグインのprefix(\[人狼pvp])付きでメッセーを取得
  */
 fun prefixedLang(key: String, vararg args: Pair<String, Any>) = languages(key,*args).asPrefixed()
 

@@ -5,17 +5,21 @@ import com.comphenix.protocol.ProtocolManager
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
 import dev.mr3n.werewolf3.citizens2.DeadBody
-import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.commands.Start
-import dev.mr3n.werewolf3.items.*
+import dev.mr3n.werewolf3.items.GlowInk
+import dev.mr3n.werewolf3.items.HealPotion
+import dev.mr3n.werewolf3.items.InvisiblePotion
+import dev.mr3n.werewolf3.items.StanBall
 import dev.mr3n.werewolf3.items.doctor.DoctorSword
 import dev.mr3n.werewolf3.items.doctor.HealthCharger
+import dev.mr3n.werewolf3.items.madman.WolfGuide
 import dev.mr3n.werewolf3.items.seer.SeerItem
 import dev.mr3n.werewolf3.items.wolf.AssassinSword
 import dev.mr3n.werewolf3.items.wolf.BombBall
 import dev.mr3n.werewolf3.items.wolf.LightningRod
 import dev.mr3n.werewolf3.items.wolf.WolfAxe
 import dev.mr3n.werewolf3.roles.Role
+import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
@@ -50,8 +54,6 @@ class WereWolf3: JavaPlugin() {
             it.tabCompleter = Start
         }
         GameTerminator.init()
-
-
         this.getCommand("debug")?.also {
             it.setExecutor { sender, _, _, args ->
                 if(sender !is Player) { return@setExecutor true  }
@@ -86,12 +88,16 @@ class WereWolf3: JavaPlugin() {
                     "test10" -> {
                         sender.inventory.addItem(AssassinSword.itemStack)
                     }
+                    "test11" -> {
+                        sender.inventory.addItem(InvisiblePotion.itemStack)
+                    }
+                    "test12" -> {
+                        sender.inventory.addItem(WolfGuide.itemStack)
+                    }
                 }
                 true
             }
         }
-
-
 
         // 毎tickループ
         TickTask.task {
@@ -185,14 +191,14 @@ class WereWolf3: JavaPlugin() {
     }
 
     override fun onDisable() {
+        // ゲームが起動中の場合停止
+        if(running) {
+            GameTerminator.run(true)
+        }
         // ボスバーを削除
         BOSSBAR.removeAll()
         // すべての死体を削除
         DeadBody.DEAD_BODIES.forEach { it.destroy() }
-        // ゲームが起動中の場合停止
-        if(running) {
-            GameTerminator.run()
-        }
     }
 
     // インスタンスを公開変数に保存する
@@ -212,6 +218,8 @@ class WereWolf3: JavaPlugin() {
         var TIME_LENGTH = 0
         var DAY: Int = 0
         val PLAYERS = mutableListOf<Player>()
+        val PLAYER_BY_ENTITY_ID: MutableMap<Int, Player> = mutableMapOf()
+        val isPlugmanLoaded: Boolean by lazy { Bukkit.getPluginManager().isPluginEnabled("PlugManX") }
 
         // 現在の時刻(朝/夜)
         var TIME: Time = Time.DAY

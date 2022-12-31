@@ -32,7 +32,7 @@ object TeamPacketUtil {
         // 当たり判定やネームタグの表示/非表示を設定。
         internalStructure.integers.write(0,0x01)
         internalStructure.strings.write(0,"always")
-        internalStructure.strings.write(1,"always")
+        internalStructure.strings.write(1,"never")
         // チームの色を設定
         internalStructure.getEnumModifier(ChatColor::class.java, MinecraftReflection.getMinecraftClass("EnumChatFormat")).write(0,color)
         // 作成した情報をパケットに収納
@@ -45,10 +45,24 @@ object TeamPacketUtil {
     /**
      * チームのメンバーを設定できる関数です。
      */
-    fun set(player: Player,color: ChatColor,players: List<Player>) {
-        val colours = TEAMS[player]?: mutableMapOf()
-        colours[color] = players.map { it.name }.toMutableList()
-        TEAMS[player] = colours
+    fun add(player: Player,color: ChatColor,players: List<Player>) {
+        val members = TEAMS[player]?: mutableMapOf()
+        TEAMS[player]?.forEach { (color, members1) ->
+            val filteredMembers = players.filter { members1.contains(it.name) }
+            if(filteredMembers.isNotEmpty()) { remove(player, color, filteredMembers.map { it.name }) }
+        }
+        members[color] = players.map { it.name }.toMutableList()
+        TEAMS[player] = members
+        // パケットを作成
+        val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM)
+        // チーム名を指定
+        packet.strings.write(0,"$color")
+        // 操作を3，つまりプレイヤーの追加に設定
+        packet.integers.write(0,3)
+        // 追加するプレイヤーを格納
+        packet.getSpecificModifier(Collection::class.java).write(0,players.map { it.name })
+        // パケットを送信
+        WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
     }
 
     /**
@@ -70,12 +84,36 @@ object TeamPacketUtil {
         WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
     }
 
+    val colours = listOf(
+        ChatColor.DARK_RED,
+        ChatColor.RED,
+        ChatColor.GOLD,
+        ChatColor.YELLOW,
+        ChatColor.DARK_GREEN,
+        ChatColor.GREEN,
+        ChatColor.AQUA,
+        ChatColor.DARK_AQUA,
+        ChatColor.DARK_BLUE,
+        ChatColor.BLUE,
+        ChatColor.LIGHT_PURPLE,
+        ChatColor.DARK_PURPLE,
+        ChatColor.WHITE,
+        ChatColor.GRAY,
+        ChatColor.DARK_GRAY,
+        ChatColor.BLACK
+    )
+
+    /**
+     * チームからプレイヤーを削除数パケットです。
+     */
+    fun removeAll(player: Player, color: ChatColor) {
+        remove(player, color, TEAMS[player]?.get(color)?: listOf())
+    }
+
     /**
      * チームを削除するパケットです。
      */
     fun removeTeam(player: Player, color: ChatColor) {
-        // チームがもとから存在しない場合はreturn
-        if(TEAMS[player]?.contains(color)!=true) { return }
         // パケットを作成
         val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM)
         // 削除するチーム名を指定
@@ -86,17 +124,17 @@ object TeamPacketUtil {
         WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
     }
 
-    /**
-     * プレイヤー全員にチームを作成するパケットを送信する
-     */
-    fun sendAll() {
-        TEAMS.forEach { (player, map) -> map.forEach { (color, _) -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player,createTeamColorPacket(player,color)) } }
-    }
-
     init {
         // プレイヤー参加時にチームを作成するパケットを送信するt
         WereWolf3.INSTANCE.registerEvent<PlayerJoinEvent> { event ->
-            TEAMS[event.player]?.forEach { (color, _) -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(event.player, createTeamColorPacket(event.player,color)) }
+            TEAMS[event.player]?.forEach { (color, _) ->
+                removeTeam(event.player, color)
+                WereWolf3.PROTOCOL_MANAGER.sendServerPacket(event.player, createTeamColorPacket(event.player,color))
+            }
         }
+        Bukkit.getOnlinePlayers().forEach { player -> colours.forEach { color ->
+            removeTeam(player, color)
+            WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, createTeamColorPacket(player,color))
+        } }
     }
 }

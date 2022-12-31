@@ -13,7 +13,10 @@ import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -41,8 +44,26 @@ object PlayerListener: Listener {
     }
 
     @EventHandler
+    fun onChat(event: AsyncPlayerChatEvent) {
+        event.format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
+    }
+
+    @EventHandler
+    fun onDrop(event: PlayerDropItemEvent) {
+        if(!WereWolf3.PLAYERS.contains(event.player)) { return }
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onQuit(event: PlayerQuitEvent) {
+        WereWolf3.PLAYERS.remove(event.player)
+        WereWolf3.PLAYER_BY_ENTITY_ID.remove(event.player.entityId)
+    }
+
+    @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
+        WereWolf3.PLAYER_BY_ENTITY_ID[player.entityId] = player
         // 参加メッセージを"人狼に参加しました"に変更
         event.joinMessage = prefixedLang("messages.player_joined", "%player%" to player.name)
         // ゲームが実行中かどうか
@@ -66,10 +87,6 @@ object PlayerListener: Listener {
             // if:実行中ではない場合
             // プレイヤーに待機中のボスバーを表示
             WereWolf3.BOSSBAR.addPlayer(player)
-            // ｷﾗﾘｰﾝを鳴らす
-            player.playSound(player,Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
-            // タイトルに待機中である旨を送信
-            player.sendTitle(languages("name"), languages("messages.please_wait_for_start"), 0, 100, 20)
             // プレイヤーにサイドバーを表示
             player.sidebar = WaitingSidebar()
             WereWolf3.PLAYERS.forEach { p ->

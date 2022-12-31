@@ -1,7 +1,6 @@
 package dev.mr3n.werewolf3.commands
 
 import dev.mr3n.werewolf3.WereWolf3
-import dev.mr3n.werewolf3.roles.Role
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

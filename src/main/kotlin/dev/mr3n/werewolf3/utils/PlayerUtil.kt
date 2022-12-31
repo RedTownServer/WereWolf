@@ -3,11 +3,12 @@ package dev.mr3n.werewolf3.utils
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.roles.Role
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.persistence.PersistentDataType
 
 fun Player.damageTo(target: Player, damage: Double) {
-    target.health = maxOf(.0, target.health - damage)
+    val health = target.health
+    target.damage(1.0, this)
+    target.health = maxOf(.0, health - damage)
 }
 
 var Player.gameId: String?

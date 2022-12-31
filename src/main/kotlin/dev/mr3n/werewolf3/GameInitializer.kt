@@ -43,15 +43,17 @@ object GameInitializer {
             player.role = role
             player.co = null
             // 開始場所にテレポート。
-            player.teleport(location)
+            val tc = (0..100)
+            player.teleport(location.clone().add(tc.random()/100.0,0.0,tc.random()/100.0))
             // タイトルに自分の役職を表示。
             player.sendTitle(languages("title.start.title", "%time%" to (Constants.STARTING_TIME / 20), "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"),languages("title.start.subtitle", "%time%" to Constants.STARTING_TIME / 20, "%role%" to "${role.color}${ChatColor.BOLD}${role.displayName}"), 0, 100, 20)
             // 怖い音を鳴らす。
-            repeat(5) { player.playSound(player,Sound.AMBIENT_NETHER_WASTES_MOOD,1F,1F) }
+            repeat(10) { player.playSound(player,Sound.AMBIENT_NETHER_WASTES_MOOD,1F,1F) }
             player.sidebar = StartingSidebar(player)
             player.flySpeed = 0.2f
             player.walkSpeed = 0.2f
             player.money = Constants.START_MONEY
+            TeamPacketUtil.add(player,ChatColor.WHITE,players)
         }
         // 時間を設定
         WereWolf3.TIME_LEFT = Constants.STARTING_TIME
@@ -64,11 +66,8 @@ object GameInitializer {
                 GlowPacketUtil.add(player,wolf)
             }
             // 人狼チームからは身内が赤く見えるように
-            TeamPacketUtil.set(player,ChatColor.DARK_RED,wolfs)
+            TeamPacketUtil.add(player,ChatColor.DARK_RED,wolfs)
         }
-
-        // チーム更新のパケットを送信
-        TeamPacketUtil.sendAll()
 
         WereWolf3.REMAINING_PLAYER_PRED = players.size
 

@@ -46,8 +46,13 @@ object GlowInk: IShopItem.ShopItem(Material.GLOW_INK_SAC) {
                 glowing -= 20
                 WereWolf3.PLAYERS.forEach { player ->
                     player.playSound(player,Sound.ENTITY_BEE_STING,2F,0F)
-                    player.sendTitle(GLOW_TITLE_TEXT, messages("glowing"), 0, 5, 30)
-                    player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 40, 0, false, false))
+                    if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                        player.sendTitle(GLOW_TITLE_TEXT, messages("invisible"), 0, 5, 30)
+                        player.removePotionEffect(PotionEffectType.INVISIBILITY)
+                    } else {
+                        player.sendTitle(GLOW_TITLE_TEXT, messages("glowing"), 0, 5, 30)
+                        player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 40, 0, false, false))
+                    }
                 }
             }
         }

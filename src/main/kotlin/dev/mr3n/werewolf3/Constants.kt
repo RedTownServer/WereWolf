@@ -21,4 +21,6 @@ object Constants {
         get() = constant("game.start_money")
     val MAX_DAYS: Int
         get() = constant("game.max_days")
+    val END_TIME: Time
+        get() = try { Time.valueOf(constant("end_time")) } catch(_: Exception) { Time.DAY }
 }

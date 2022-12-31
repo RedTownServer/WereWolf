@@ -6,7 +6,6 @@ import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.utils.asPrefixed
 import dev.mr3n.werewolf3.utils.languages
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.boss.BarColor
@@ -40,7 +39,7 @@ enum class Time(val barColor: BarColor) {
     }
 
     val title: String
-        get() = languages("title.time.title", "%emoji%" to DAY.emoji, "%time%" to displayName, "%day%" to WereWolf3.DAY)
+        get() = languages("title.time.title", "%emoji%" to emoji, "%time%" to displayName, "%day%" to WereWolf3.DAY)
 
     /**
      * 次の時間帯を変えします。
@@ -59,7 +58,7 @@ enum class Time(val barColor: BarColor) {
         fun morning() {
             // ゲームが実行中ではない場合return
             if(!WereWolf3.running) { return }
-            if(WereWolf3.DAY>=Constants.MAX_DAYS) {
+            if(Constants.END_TIME==NIGHT&&WereWolf3.DAY>=Constants.MAX_DAYS) {
                 GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.time_up"))
                 return
             }
@@ -93,6 +92,10 @@ enum class Time(val barColor: BarColor) {
         fun night() {
             // ゲームが実行中ではない場合return
             if(!WereWolf3.running) { return }
+            if(Constants.END_TIME==DAY&&WereWolf3.DAY>=Constants.MAX_DAYS) {
+                GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.time_up"))
+                return
+            }
             // 残り時間を夜の時間に設定(20はtick)
             WereWolf3.TIME_LEFT = Constants.NIGHT_TIME
             WereWolf3.TIME_LENGTH = WereWolf3.TIME_LEFT

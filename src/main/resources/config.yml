@@ -3,10 +3,11 @@ general:
 game:
   start_money: 800
   starting_time: 400
-  day_time: 360
-  night_time: 360
+  day_time: 2400
+  night_time: 3600
   add_money: 200 # per 30 sec
   max_days: 5
+  end_time: DAY # DAY or NIGHT
 items:
   seer:
     roles:
@@ -15,8 +16,8 @@ items:
   bomb_ball:
     roles:
       - WOLF
-    damage_distance: 10
-    death_distance: 3
+    damage_distance: 11
+    death_distance: 5
     fuse_time: 12
     max_damage: 18
     warning_count: 6
@@ -25,7 +26,7 @@ items:
       - DOCTOR
     health_amount: 40.0
   wolf_axe:
-    charge: 100
+    charge: 50
     roles:
       - WOLF
   fake_seer:
@@ -58,7 +59,7 @@ items:
     roles:
       - DOCTOR
     heal_amount: 1.0
-    distance: 3
+    distance: 3.0
   heal_potion:
     roles:
       - VILLAGER
@@ -71,7 +72,20 @@ items:
   assassin_sword:
     roles:
       - WOLF
-    attack_angle: 30.0
+    attack_angle: 70.0
+  invisible_potion:
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+    time: 600
+  wolf_guide:
+    roles:
+      - MADMAN
+    search_time: 60
 roles:
   seer:
     priority: 1

@@ -10,11 +10,17 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    // for spigot
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://repo.dmulloy2.net/repository/public/")
-    maven("https://jitpack.io")
     maven("https://libraries.minecraft.net")
+    // for protocollib
+    maven("https://repo.dmulloy2.net/repository/public/")
+    // for minepie
+    maven("https://jitpack.io")
+    // for citizens
     maven("https://maven.citizensnpcs.co/repo")
+    // for plugmanx
+    maven("https://raw.githubusercontent.com/TheBlackEntity/PlugMan/repository/")
 }
 
 dependencies {
@@ -24,6 +30,7 @@ dependencies {
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
         exclude(group="*",module="*")
     }
+    compileOnly("com.rylinaux:PlugMan:2.2.9")
     implementation("com.github.moruch4nn:MinePie:4406de1615")
 }
 

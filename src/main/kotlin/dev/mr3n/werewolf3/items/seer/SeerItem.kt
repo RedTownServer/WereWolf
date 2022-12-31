@@ -5,7 +5,10 @@ import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.*
+import dev.mr3n.werewolf3.utils.asPrefixed
+import dev.mr3n.werewolf3.utils.languages
+import dev.mr3n.werewolf3.utils.role
+import dev.mr3n.werewolf3.utils.titleText
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
@@ -13,7 +16,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.scheduler.BukkitTask
-import java.util.UUID
+import java.util.*
 
 object SeerItem: IShopItem.ShopItem(Material.MUSIC_DISC_MALL) {
     override val id: String = "seer"

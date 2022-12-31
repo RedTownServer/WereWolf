@@ -4,12 +4,18 @@ name: WereWolf3
 version: 1.0
 depend:
   - ProtocolLib
+  - Citizens
+softdepend:
+  - PlugManX
 commands:
   start:
     description: 人狼を開始します。
     permission: werewolf3.admin.start
   debug:
     permission: werewolf3.admin.debug
+  end:
+    description: 人狼を終了します。
+    permission: werewolf3.admin.end
 permissions:
   werewolf3:
     children:
@@ -20,3 +26,5 @@ permissions:
             description: 人狼を開始します
           debug:
             description: デバッグ用のコマンドを使用できます。
+          end:
+            description: 人狼を終了します。

@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 
-object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_BLOCK) {
+object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_ORE) {
     override val id: String = "health_charger"
 
     override val price: Int = 300
@@ -30,7 +30,7 @@ object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_BLOCK) {
     override fun onEnd() { CHARGERS.forEach { it.block.type = Material.AIR } }
 
     init {
-        WereWolf3.INSTANCE.runTaskTimer(0L, 20L) {
+        WereWolf3.INSTANCE.runTaskTimer(0L, 35L) {
             CHARGERS.forEach { chargerLoc ->
                 WereWolf3.PLAYERS.filter { it.location.distance(chargerLoc) <= DISTANCE }.forEach { player ->
                     player.sendTitle(CHARGER_TITLE_TEXT, messages("healing"), 0, 1, 20)
@@ -57,6 +57,7 @@ object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_BLOCK) {
                 item.amount--
                 placedLocation.block.type = Material.REDSTONE_ORE
                 CHARGERS.add(placedLocation)
+                player.world.playSound(player,Sound.BLOCK_STONE_PLACE, 1f, 1f)
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
             } else {
                 player.sendMessage(messages("cant_placeable").asPrefixed())

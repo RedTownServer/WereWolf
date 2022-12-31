@@ -1,17 +1,15 @@
 package dev.mr3n.werewolf3.protocol
 
 import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.events.ListenerPriority
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.events.PacketEvent
 import com.comphenix.protocol.wrappers.WrappedDataValue
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import dev.mr3n.werewolf3.WereWolf3
-import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import java.util.UUID
+import java.util.*
 import kotlin.experimental.or
 
 object GlowPacketUtil {
@@ -45,6 +43,11 @@ object GlowPacketUtil {
         PLAYERS[player.uniqueId]?.remove(entity.entityId)
         // 削除するパケットを送信
         WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, createMetadataResetPacket(entity))
+    }
+
+    fun removeAll(player: Player) {
+        val entities = PLAYERS[player.uniqueId]?:return
+        entities.map { ENTITY_MAPPING[it] }.filterNotNull().forEach { entity -> remove(player, entity) }
     }
 
     /**

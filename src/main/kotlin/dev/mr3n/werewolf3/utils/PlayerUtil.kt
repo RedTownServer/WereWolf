@@ -6,9 +6,14 @@ import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
 fun Player.damageTo(target: Player, damage: Double) {
+    if(damage == 0.0) { return }
     val health = target.health
-    target.damage(1.0, this)
-    target.health = maxOf(.0, health - damage)
+    target.damage(1.0,this)
+    if(damage < 0) {
+        target.health = 0.0
+    } else {
+        target.health = maxOf(.0, health - damage)
+    }
 }
 
 var Player.gameId: String?
@@ -16,6 +21,18 @@ var Player.gameId: String?
     set(value) {
         if(value==null) { this.persistentDataContainer.remove(Keys.GAME_ID) } else { this.persistentDataContainer.set(Keys.GAME_ID, PersistentDataType.STRING, value) }
     }
+
+var Player.kills: IntArray?
+    get() = this.persistentDataContainer.get(Keys.KILLS, PersistentDataType.INTEGER_ARRAY)
+    set(value) {
+        if(value==null) { this.persistentDataContainer.remove(Keys.KILLS) } else { this.persistentDataContainer.set(Keys.KILLS, PersistentDataType.INTEGER_ARRAY, value) }
+    }
+
+fun Player.addKill(target: Player) {
+    val kills = this.kills?.toMutableSet()?:mutableSetOf()
+    kills.add(target.entityId)
+    this.kills = kills.toIntArray()
+}
 
 var Player.role: Role?
     get() = this.persistentDataContainer.get(Keys.ROLE, Role.RoleTagType)

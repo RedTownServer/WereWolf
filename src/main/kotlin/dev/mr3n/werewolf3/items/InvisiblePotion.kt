@@ -1,5 +1,6 @@
 package dev.mr3n.werewolf3.items
 
+import com.comphenix.protocol.wrappers.EnumWrappers
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.Executor.Companion.runTaskTimer
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
@@ -50,7 +51,7 @@ object InvisiblePotion: IShopItem.ShopItem(Material.POTION) {
                     if(event.newEffect?.type!=PotionEffectType.INVISIBILITY) { return@registerEvent }
                     WereWolf3.INSTANCE.runTaskLater(1L) {
                         WereWolf3.PLAYERS.forEach { sendTo ->
-                            InvisiblePacketUtil.sendEmptySlotPacket(sendTo, player)
+                            InvisiblePacketUtil.add(sendTo, player, 10, EnumWrappers.ItemSlot.HEAD, EnumWrappers.ItemSlot.CHEST, EnumWrappers.ItemSlot.LEGS, EnumWrappers.ItemSlot.FEET)
                         }
                     }
                 }
@@ -58,13 +59,13 @@ object InvisiblePotion: IShopItem.ShopItem(Material.POTION) {
                     if(event.oldEffect?.type!=PotionEffectType.INVISIBILITY) { return@registerEvent }
                     // イベント発生直後はエフェクトが残っている判定なので1tick後に帽子を復元するパケットを送信
                     WereWolf3.INSTANCE.runTaskLater(1L) {
-                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.sendResetSlotPacket(sendTo, player) }
+                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.remove(sendTo, player, 10) }
                     }
                 }
                 EntityPotionEffectEvent.Action.CLEARED -> {
                     // イベント発生直後はエフェクトが残っている判定なので1tick後に帽子を復元するパケットを送信
                     WereWolf3.INSTANCE.runTaskLater(1L) {
-                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.sendResetSlotPacket(sendTo, player) }
+                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.remove(sendTo, player, 10) }
                     }                }
                 else -> {}
             }

@@ -9,8 +9,6 @@ import dev.mr3n.werewolf3.utils.asPrefixed
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.role
 import dev.mr3n.werewolf3.utils.titleText
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -72,8 +70,6 @@ object SeerItem: IShopItem.ShopItem(Material.MUSIC_DISC_MALL) {
                     player.sendTitle(SEER_TITLE_TEXT, messages("canceled"), 0, 60, 20)
                     // キラリーンの音を鳴らす
                     player.playSound(player,Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
-                    // 占い方法をアクションバーに表示
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(messages("hint.how_to")))
                     LAST_CLICKED[player.uniqueId]?.bukkitTask?.cancel()
                     LAST_CLICKED.remove(player.uniqueId)
                 }

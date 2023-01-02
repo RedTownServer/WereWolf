@@ -43,11 +43,11 @@ object WolfAxe: IShopItem.ShopItem(Material.STONE_AXE) {
             val charge = CHARGES[player]?:0
             val world = player.world
             if(charge >= CHARGE) {
+                item.amount--
                 player.sendTitle(SUCCESS_TITLE_TEXT,messages("used"),0,30,0)
                 world.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 2f, 0.4f)
                 world.playSound(player, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2f, 2f)
-                player.damageTo(target, 1000000.0)
-                item.amount--
+                player.damageTo(target, -1.0)
                 CHARGES[player] = 0
             } else {
                 player.sendTitle(FAILED_TITLE_TEXT,messages("not_enough_charge"),0,30,0)

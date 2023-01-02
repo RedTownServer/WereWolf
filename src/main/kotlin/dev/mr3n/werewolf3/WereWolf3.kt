@@ -6,10 +6,7 @@ import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
 import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.commands.Start
-import dev.mr3n.werewolf3.items.GlowInk
-import dev.mr3n.werewolf3.items.HealPotion
-import dev.mr3n.werewolf3.items.InvisiblePotion
-import dev.mr3n.werewolf3.items.StanBall
+import dev.mr3n.werewolf3.items.*
 import dev.mr3n.werewolf3.items.doctor.DoctorSword
 import dev.mr3n.werewolf3.items.doctor.HealthCharger
 import dev.mr3n.werewolf3.items.madman.WolfGuide
@@ -18,9 +15,9 @@ import dev.mr3n.werewolf3.items.wolf.AssassinSword
 import dev.mr3n.werewolf3.items.wolf.BombBall
 import dev.mr3n.werewolf3.items.wolf.LightningRod
 import dev.mr3n.werewolf3.items.wolf.WolfAxe
+import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
-import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
 import dev.mr3n.werewolf3.utils.*
@@ -44,6 +41,7 @@ class WereWolf3: JavaPlugin() {
             setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
             setGameRule(GameRule.DO_WEATHER_CYCLE, false)
             setGameRule(GameRule.KEEP_INVENTORY, false)
+            setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
         }
         // いつもの
         Bukkit.getPluginManager().registerEvents(PlayerListener,this)
@@ -53,6 +51,8 @@ class WereWolf3: JavaPlugin() {
             it.setExecutor(Start)
             it.tabCompleter = Start
         }
+        IShopItem.ShopItem.ITEMS
+        SpectatorPacketUtil.init()
         GameTerminator.init()
         this.getCommand("debug")?.also {
             it.setExecutor { sender, _, _, args ->
@@ -100,14 +100,14 @@ class WereWolf3: JavaPlugin() {
         }
 
         // 毎tickループ
-        TickTask.task {
+        TickTask.task { loopCount ->
             when(STATUS) {
                 // 待機中にループする処理
                 WAITING -> {
                     // 点滅速度
-                    if(it% Constants.POINT_FLUSH_SPEED!=0) {
+                    if(loopCount% Constants.POINT_FLUSH_SPEED!=0) {
                         // ...の.の数を計算
-                        val loadingDots = ".".repeat((it%(Constants.POINT_FLUSH_SPEED*4))/ Constants.POINT_FLUSH_SPEED)
+                        val loadingDots = ".".repeat((loopCount%(Constants.POINT_FLUSH_SPEED*4))/ Constants.POINT_FLUSH_SPEED)
                         // bossbarに...のアニメーションを追加
                         BOSSBAR.setTitle(languages("messages.please_wait_for_start") +loadingDots)
                         PLAYERS.forEach { player ->
@@ -144,37 +144,7 @@ class WereWolf3: JavaPlugin() {
                     BOSSBAR.progress = TIME_LEFT * (1.0 / TIME_LENGTH)
                     // ボスバーのタイトルにタイマーを表示
                     BOSSBAR.setTitle(languages("bossbar.title","%time%" to TIME.displayName, "%emoji%" to TIME.emoji, "%time_left%" to (TIME_LEFT / 20).parseTime()))
-                    PLAYERS.forEach { player ->
-                        // プレイヤーのヘルメットを取得
-                        val helmet = player.inventory.helmet
-                        // ヘルメットのCoの役職を取得。nullだった場合はreturn
-                        val coRole = helmet?.getContainerValue(Role.HELMET_ROLE_TAG_KEY, Role.RoleTagType)
-                        // まだCoしていない役職だった場合
-                        if(player.co!=coRole) {
-                            if(coRole==null) {
-                                player.setDisplayName(player.name)
-                                player.setPlayerListName(player.name)
-                                // 何をcoしたかをほぞん
-                                player.co = null
-                            } else {
-                                // すべてのプレイヤーにCoした旨を伝える。
-                                PLAYERS.forEach { it.sendMessage(languages("messages.coming_out", "%color%" to coRole.color, "%player%" to player.name, "%role%" to coRole.displayName)) }
-                                // プレイヤーのprefixにCoした役職を表示
-                                player.setDisplayName("${coRole.color}[${coRole.displayName}Co]${player.name}")
-                                player.setPlayerListName("${coRole.color}[${coRole.displayName}Co]${player.name}")
-                                // 何をcoしたかをほぞん
-                                player.co = coRole
-                            }
-                        }
-                        val sidebar = player.sidebar
-                        if(sidebar is RunningSidebar) {
-                            sidebar.players(REMAINING_PLAYER_PRED)
-                            sidebar.money(player.money)
-                        }
-                        if(it%(20*30)==0) {
-                            player.money += Constants.ADD_MONEY
-                        }
-                    }
+                    GameRunner.running(loopCount = loopCount)
                     // 生きているプレイヤー一覧(スペクテイターじゃないプレイヤー)
                     val alivePlayers = PLAYERS.filter { p->p.gameMode!=GameMode.SPECTATOR }
                     if(alivePlayers.count { p->p.role?.faction==Role.Faction.WOLF }<=0) {
@@ -214,7 +184,7 @@ class WereWolf3: JavaPlugin() {
         // 残り時間
         var TIME_LEFT = 0
         // 残り時間の長さ(カウントが減らされる前の長さ)
-        var REMAINING_PLAYER_PRED = 0
+        var REMAINING_PLAYER_EST = 0
         var TIME_LENGTH = 0
         var DAY: Int = 0
         val PLAYERS = mutableListOf<Player>()

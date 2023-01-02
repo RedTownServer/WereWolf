@@ -38,7 +38,7 @@ object TeamPacketUtil {
         // 作成した情報をパケットに収納
         packet.optionalStructures.write(0, Optional.of(internalStructure))
         // チームのプレイヤー一覧を格納
-        packet.getSpecificModifier(Collection::class.java).write(0,TEAMS[player]?.get(color)?:listOf<String>())
+        packet.getSpecificModifier(Collection::class.java).write(0, listOf<String>())
         return packet
     }
 

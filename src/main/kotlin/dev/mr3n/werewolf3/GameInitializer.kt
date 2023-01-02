@@ -2,7 +2,7 @@ package dev.mr3n.werewolf3
 
 import dev.moru3.minepie.item.EasyItem
 import dev.mr3n.werewolf3.citizens2.DeadBody
-import dev.mr3n.werewolf3.protocol.GlowPacketUtil
+import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
@@ -11,6 +11,7 @@ import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
+import java.security.SecureRandom
 import java.util.*
 
 object GameInitializer {
@@ -35,7 +36,7 @@ object GameInitializer {
         // プレイヤーにゲームIDを設定。
         players.forEach { player -> player.gameId = WereWolf3.GAME_ID }
         // プレイヤー人数から役職数を推定してリストに格納。 roleList.length == players.length
-        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(Random(System.currentTimeMillis()))
+        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(SecureRandom.getInstanceStrong())
         // TODO カメラアニメーションをつける
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
@@ -54,6 +55,10 @@ object GameInitializer {
             player.walkSpeed = 0.2f
             player.money = Constants.START_MONEY
             TeamPacketUtil.add(player,ChatColor.WHITE,players)
+            player.setDisplayName(player.name)
+            player.setPlayerListName(player.name)
+            player.gameMode = GameMode.ADVENTURE
+            player.kills = intArrayOf()
         }
         // 時間を設定
         WereWolf3.TIME_LEFT = Constants.STARTING_TIME
@@ -63,13 +68,13 @@ object GameInitializer {
         wolfs.forEach { player ->
             wolfs.forEach { wolf ->
                 // 人狼チームからは身内が発光しているように
-                GlowPacketUtil.add(player,wolf)
+                MetadataPacketUtil.addToGlowing(player,wolf)
             }
             // 人狼チームからは身内が赤く見えるように
             TeamPacketUtil.add(player,ChatColor.DARK_RED,wolfs)
         }
 
-        WereWolf3.REMAINING_PLAYER_PRED = players.size
+        WereWolf3.REMAINING_PLAYER_EST = players.size
 
         WereWolf3.PLAYERS.addAll(players)
     }

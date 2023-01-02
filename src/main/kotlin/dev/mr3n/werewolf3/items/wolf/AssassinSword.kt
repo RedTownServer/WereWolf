@@ -60,7 +60,7 @@ object AssassinSword: IShopItem.ShopItem(Material.IRON_SWORD) {
             if(success) {
                 // if:背後から殴っていた場合
                 item.amount--
-                player.damageTo(target, 1000000.0)
+                player.damageTo(target, -1.0)
                 player.sendTitle(SUCCESS_TITLE_TEXT,messages("success"),0,60,20)
             } else {
                 // if:背後から殴っていなかった場合

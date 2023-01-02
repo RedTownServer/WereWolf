@@ -26,7 +26,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     compileOnly("org.spigotmc:spigot:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")
+    compileOnly(files("libs/ProtocolLib.jar"))
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
         exclude(group="*",module="*")
     }

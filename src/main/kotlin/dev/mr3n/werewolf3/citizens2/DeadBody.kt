@@ -2,6 +2,7 @@ package dev.mr3n.werewolf3.citizens2
 
 import com.comphenix.protocol.wrappers.WrappedGameProfile
 import net.citizensnpcs.api.CitizensAPI
+import net.citizensnpcs.api.trait.trait.Equipment
 import net.citizensnpcs.trait.SkinTrait
 import net.citizensnpcs.trait.SleepTrait
 import org.bukkit.entity.EntityType
@@ -27,6 +28,14 @@ class DeadBody(val player: Player) {
         DEAD_BODIES.add(this)
         // 死体をスポーン
         npc.spawn(player.location)
+
+        val equipmentTrait = npc.getOrAddTrait(Equipment::class.java)
+        equipmentTrait.set(Equipment.EquipmentSlot.HELMET, player.inventory.helmet)
+        equipmentTrait.set(Equipment.EquipmentSlot.CHESTPLATE, player.inventory.chestplate)
+        equipmentTrait.set(Equipment.EquipmentSlot.LEGGINGS, player.inventory.leggings)
+        equipmentTrait.set(Equipment.EquipmentSlot.BOOTS, player.inventory.boots)
+        equipmentTrait.set(Equipment.EquipmentSlot.HAND, player.inventory.itemInMainHand)
+        equipmentTrait.set(Equipment.EquipmentSlot.OFF_HAND, player.inventory.itemInOffHand)
     }
 
     /**

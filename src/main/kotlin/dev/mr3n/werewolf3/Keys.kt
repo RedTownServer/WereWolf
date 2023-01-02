@@ -10,4 +10,5 @@ object Keys {
     val ITEM_ID = NamespacedKey(WereWolf3.INSTANCE, "item_id")
     val HEALTH_AMOUNT = NamespacedKey(WereWolf3.INSTANCE, "health_amount")
     val ENTITY_TYPE = NamespacedKey(WereWolf3.INSTANCE, "entity_type")
+    val KILLS = NamespacedKey(WereWolf3.INSTANCE, "kills")
 }

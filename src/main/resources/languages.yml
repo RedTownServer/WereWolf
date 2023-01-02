@@ -7,9 +7,10 @@ messages:
   player_joined: "%player% が人狼に参加しました。"
   player_rejoined: "%player% が戻りました。"
   coming_out: "%color%%player%が%role%をCoしました。"
+  wolf_actionbar: "&f&l仲間の人狼: &4%wolfs%"
   result:
     header: "========== 結果 =========="
-    prefix: "&c"
+    prefix: "&a"
     winner: "%color%%faction%陣営の勝利です！"
 title:
   start:
@@ -25,6 +26,7 @@ title:
   you_are_dead:
     title: "&4&l死亡しました"
     subtitle: "試合を観戦できます。"
+    subtitle_with_killer: "%killer% に殺された。"
 item:
   shop:
     open:
@@ -63,7 +65,7 @@ item:
         villager: "%player%は&c人狼では&nありません。"
   bomb_ball:
     name: "&4投げ爆弾"
-    description: "着弾点から広範囲に即死級のダメージを与える。"
+    description: "着弾点から広範囲に即死級のダメージを与える。\n爆発音はワールド内全員に聞こえる。"
     title:
       warning:
         color: "&4"
@@ -209,3 +211,6 @@ sidebar:
     time:
       display: "&c開始予定: &f"
       soon: "もうすぐ"
+  dead:
+    players:
+      display: "&c残り人数: &f"

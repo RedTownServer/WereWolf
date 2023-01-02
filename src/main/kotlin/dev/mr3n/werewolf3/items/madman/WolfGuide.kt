@@ -4,7 +4,7 @@ import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
-import dev.mr3n.werewolf3.protocol.GlowPacketUtil
+import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.utils.languages
@@ -51,7 +51,7 @@ object WolfGuide: IShopItem.ShopItem(Material.BOOK) {
                     player.sendTitle(GUIDE_TITLE_TEXT, messages("searched", "%player%" to wolf.name), 0, 100, 0)
                     player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                     TeamPacketUtil.add(player, ChatColor.DARK_RED, listOf(wolf))
-                    GlowPacketUtil.add(player, wolf)
+                    MetadataPacketUtil.addToGlowing(player, wolf)
                 }
             }
         }

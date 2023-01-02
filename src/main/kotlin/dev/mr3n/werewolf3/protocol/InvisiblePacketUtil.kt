@@ -3,34 +3,68 @@ package dev.mr3n.werewolf3.protocol
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
-import com.comphenix.protocol.wrappers.EnumWrappers
+import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import com.comphenix.protocol.wrappers.Pair
 import dev.mr3n.werewolf3.WereWolf3
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.potion.PotionEffectType
+import org.bukkit.inventory.PlayerInventory
 
 object InvisiblePacketUtil {
-    fun sendEmptySlotPacket(sendTo: Player, player: Player) {
+
+    private val INVISIBLE_PLAYERS = mutableMapOf<Player,MutableMap<Int, MutableMap<Short, List<ItemSlot>>>>()
+    private val ITEM_SLOT_MAPPING = mapOf<ItemSlot, (PlayerInventory)->ItemStack?>(
+        ItemSlot.HEAD to { it.helmet },
+        ItemSlot.CHEST to { it.chestplate },
+        ItemSlot.LEGS to { it.leggings },
+        ItemSlot.FEET to { it.boots },
+        ItemSlot.MAINHAND to { it.itemInMainHand },
+        ItemSlot.OFFHAND to { it.itemInOffHand },
+    )
+
+    fun add(sendTo: Player, player: Player, priority: Short, vararg slots: ItemSlot) {
         if(sendTo==player) { return }
+        val players = INVISIBLE_PLAYERS[sendTo]?: mutableMapOf()
+        val slotList = players[player.entityId]?: mutableMapOf()
+        if(slotList.contains(priority)) { return }
+        slotList[priority] = slots.toList()
+        players[player.entityId] = slotList
+        INVISIBLE_PLAYERS[sendTo] = players
+        sendPacket(sendTo, player)
+    }
+
+    fun remove(sendTo: Player, player: Player, priority: Short) {
+        if(sendTo==player) { return }
+        val players = INVISIBLE_PLAYERS[sendTo]?:return
+        val slotList = players[player.entityId]?:return
+        if(!slotList.contains(priority)) { return }
+        slotList.remove(priority)
+        players[player.entityId] = slotList
+        INVISIBLE_PLAYERS[sendTo] = players
+        sendResetPacket(sendTo, player)
+    }
+
+    fun sendResetPacket(sendTo: Player, player: Player) {
         val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT)
         packet.integers.write(0, player.entityId)
-        val air = ItemStack(Material.AIR)
-        val stacks = mapOf(EnumWrappers.ItemSlot.HEAD to air, EnumWrappers.ItemSlot.CHEST to ItemStack(Material.AIR), EnumWrappers.ItemSlot.LEGS to ItemStack(Material.AIR), EnumWrappers.ItemSlot.FEET to ItemStack(Material.AIR))
-            .map { Pair(it.key,it.value) }
-        packet.slotStackPairLists.write(0, stacks)
+        val players = INVISIBLE_PLAYERS[sendTo]?: mutableMapOf()
+        val invisibleData = players[player.entityId]?: mutableMapOf()
+        val list = invisibleData[invisibleData.keys.minOrNull()?:0]?: listOf()
+        packet.slotStackPairLists.writeSafely(0,
+            ITEM_SLOT_MAPPING.keys.filterNot { list.contains(it) }
+                .map { Pair(it, ITEM_SLOT_MAPPING[it]?.let { it1 -> it1(player.inventory) }?:return@map null) }
+                .filterNotNull()
+        )
         WereWolf3.PROTOCOL_MANAGER.sendServerPacket(sendTo, packet)
     }
 
-    fun sendResetSlotPacket(sendTo: Player, player: Player) {
-        if(sendTo==player) { return }
+    fun sendPacket(sendTo: Player, player: Player) {
         val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT)
         packet.integers.write(0, player.entityId)
-        val stacks = mapOf(
-            EnumWrappers.ItemSlot.HEAD to player.inventory.helmet
-        ).map { Pair(it.key,it.value) }
-        packet.slotStackPairLists.write(0, stacks)
+        val players = INVISIBLE_PLAYERS[sendTo]?:return
+        val invisibleData = players[player.entityId]?:return
+        val firstKey = invisibleData.keys.minOrNull() ?:return
+        packet.slotStackPairLists.writeSafely(0, invisibleData[firstKey]?.map { Pair(it, null) })
         WereWolf3.PROTOCOL_MANAGER.sendServerPacket(sendTo, packet)
     }
 
@@ -38,20 +72,10 @@ object InvisiblePacketUtil {
         WereWolf3.PROTOCOL_MANAGER.addPacketListener(object: PacketAdapter(WereWolf3.INSTANCE, PacketType.Play.Server.ENTITY_EQUIPMENT) {
             override fun onPacketSending(event: PacketEvent) {
                 val packet = event.packet.deepClone()
-                val entityId = packet.integers.read(0)
-                val entity = WereWolf3.PLAYER_BY_ENTITY_ID[entityId]?:return
-                if(entity.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                    val slots = packet.slotStackPairLists.read(0)
-                        .associate { it.first to it.second }
-                        .map { (slot, item) ->
-                            when(slot) {
-                                EnumWrappers.ItemSlot.HEAD, EnumWrappers.ItemSlot.CHEST, EnumWrappers.ItemSlot.LEGS, EnumWrappers.ItemSlot.FEET -> { slot to ItemStack(Material.AIR) }
-                                else -> { slot to item }
-                            }
-                        }.map { Pair(it.first,it.second) }
-                    packet.slotStackPairLists.write(0,slots)
-                    event.packet = packet
-                }
+                val players = INVISIBLE_PLAYERS[event.player]?:return
+                val invisibleData = players[packet.integers.readSafely(0)]?:return
+                val firstKey = invisibleData.keys.minOrNull() ?:return
+                packet.slotStackPairLists.writeSafely(0, invisibleData[firstKey]?.map { Pair(it, null) })
             }
         })
     }

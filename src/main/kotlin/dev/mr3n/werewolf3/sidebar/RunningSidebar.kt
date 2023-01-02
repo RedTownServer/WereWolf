@@ -13,14 +13,14 @@ import org.bukkit.scoreboard.DisplaySlot
 /**
  * 待機中に表示するサイドバー
  */
-class RunningSidebar(val player: Player): ISideBar {
+open class RunningSidebar(val player: Player): ISideBar {
     // サイドバーのスコアボード
-    override val scoreboard = checkNotNull(Bukkit.getScoreboardManager()?.newScoreboard)
+    final override val scoreboard = checkNotNull(Bukkit.getScoreboardManager()?.newScoreboard)
 
     // 待機中のプレイヤー数を表示するためのチーム
-    private val playersTeam = scoreboard.registerNewTeam("players").apply { addEntry(languages("sidebar.running.players.display")) }
+    private val playersEstTeam = scoreboard.registerNewTeam("players").apply { addEntry(languages("sidebar.running.players.display")) }
     // プレイヤー人数を設定
-    fun players(value: Int) { if(playersTeam.suffix!="${value}人"){ playersTeam.suffix = "${value}人" } }
+    fun playersEst(value: Int) { if(playersEstTeam.suffix!="${value}人"){ playersEstTeam.suffix = "${value}人" } }
 
 
     // 現在のステータつ情報を表示するためのチーム
@@ -31,7 +31,7 @@ class RunningSidebar(val player: Player): ISideBar {
     // 現在のステータつ情報を表示するためのチーム
     private val moneyTeam = scoreboard.registerNewTeam("money").apply { addEntry(languages("sidebar.running.money.display")) }
     // ステータス情報を設定
-    fun money(value: Int) { if(moneyTeam.suffix != "${value}円") { moneyTeam.suffix = "${value}円" } }
+    open fun money(value: Int) { if(moneyTeam.suffix != "${value}円") { moneyTeam.suffix = "${value}円" } }
 
     // 現在のステータつ情報を表示するためのチーム
     private val dayTeam = scoreboard.registerNewTeam("day").apply { addEntry(languages("sidebar.running.day.display")) }
@@ -39,7 +39,7 @@ class RunningSidebar(val player: Player): ISideBar {
     fun day(value: Int) { if(dayTeam.suffix != "${value}日") { dayTeam.suffix = "${value}日" } }
 
     // サイドバーに表示するオブジェクト
-    val objective = scoreboard.registerNewObjective("running", Criteria.DUMMY, languages("sidebar.title")).apply {
+    open val objective = scoreboard.registerNewObjective("running", Criteria.DUMMY, languages("sidebar.title")).apply {
         // スロットをサイドバーに
         displaySlot = DisplaySlot.SIDEBAR
         // サイドバーの一覧に下に表示するかっこいいやつ(//////<-これ)
@@ -60,7 +60,7 @@ class RunningSidebar(val player: Player): ISideBar {
         // 待機プレイヤー数
         getScore(languages("sidebar.running.day.display")).apply { score = 8 }
         // 参加プレイヤー数を設定
-        players(WereWolf3.PLAYERS.size)
+        playersEst(WereWolf3.PLAYERS.size)
         // 待機時間を設定
         // ステータスを待機中に変更
         role(player.role)

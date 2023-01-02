@@ -1,8 +1,8 @@
 package dev.mr3n.werewolf3
 
-import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
+import dev.mr3n.werewolf3.utils.addKill
 import dev.mr3n.werewolf3.utils.gameId
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.prefixedLang
@@ -10,8 +10,11 @@ import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -25,17 +28,22 @@ object PlayerListener: Listener {
     fun onDead(event: PlayerDeathEvent) {
         val player = event.entity
         val killer = player.killer
-        killer?.playSound(killer, Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f)
+        if(killer!=null) {
+            killer.playSound(killer, Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f)
+            killer.addKill(player)
+            player.sendTitle(languages("title.you_are_dead.title"),languages("title.you_are_dead.subtitle_with_killer", "%killer%" to killer.name), 0, 100, 20)
+        } else {
+            player.sendTitle(languages("title.you_are_dead.title"),languages("title.you_are_dead.subtitle"), 0, 100, 20)
+        }
+        // ゲームモードをスペクテイターに設定 注意: 絶対にインベントリを削除する前にスペクテイターに変更してください。
+        player.gameMode = GameMode.SPECTATOR
         // インベントリを削除
         player.inventory.clear()
         // 体力を満タンに設定
         player.health = player.healthScale
-        // ゲームモードをスペクテイターに設定
-        player.gameMode = GameMode.SPECTATOR
         // 死体を生成
-        DeadBody(player)
+        // TODO DeadBody(player)
         // 死んだ人にタイトルを表示
-        player.sendTitle(languages("title.you_are_dead.title"),languages("title.you_are_dead.subtitle"), 0, 100, 20)
         player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,20,1,false,false,false))
         // 死亡メッセージを削除
         event.deathMessage = null
@@ -46,6 +54,19 @@ object PlayerListener: Listener {
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
         event.format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
+    }
+
+    @EventHandler
+    fun onRegainHealth(event: EntityRegainHealthEvent) {
+        val player = event.entity
+        if(player !is Player) { return }
+        if(!WereWolf3.PLAYERS.contains(player)) { return }
+        when(event.regainReason) {
+            EntityRegainHealthEvent.RegainReason.MAGIC, EntityRegainHealthEvent.RegainReason.MAGIC_REGEN -> {}
+            else -> {
+                event.isCancelled = true
+            }
+        }
     }
 
     @EventHandler
@@ -95,5 +116,13 @@ object PlayerListener: Listener {
                 sidebar.players(WereWolf3.PLAYERS.size)
             }
         }
+    }
+
+    @EventHandler
+    fun onDamage(event: EntityDamageEvent) {
+        val player = event.entity
+        if(player !is Player) { return }
+        if(WereWolf3.STATUS==Status.RUNNING) { return }
+        event.isCancelled = true
     }
 }

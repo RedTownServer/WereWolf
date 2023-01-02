@@ -11,6 +11,7 @@ import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.ProjectileHitEvent
@@ -44,8 +45,8 @@ object BombBall: IShopItem.ShopItem(Material.SNOWBALL) {
             // if:ダメージ範囲の外にいる場合は0
             0.0
         } else if(distance< DEATH_DISTANCE) {
-            // if:死亡範囲内にいる場合は100万ダメージを与える
-            1000000.0
+            // if:死亡範囲内にいる場合は-1.0ダメージ(即死)を与える
+            -1.0
         } else {
             // 死亡範囲を除いたダメージ範囲を計算。
             val damageDistance = DAMAGE_DISTANCE - DEATH_DISTANCE
@@ -100,7 +101,8 @@ object BombBall: IShopItem.ShopItem(Material.SNOWBALL) {
             WereWolf3.INSTANCE.runTaskLater(FUSE_TIME) {
                 tnt.remove()
                 world.spawnParticle(Particle.EXPLOSION_HUGE, location, 30, .0, .0, .0)
-                world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
+                WereWolf3.PLAYERS.forEach { it.stopSound(SoundCategory.RECORDS) }
+                world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1000f, 1f)
                 WereWolf3.PLAYERS.forEach { player ->
                     // 着弾点とプレイヤーの距離
                     val distance = location.distance(player.location)

@@ -16,12 +16,8 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
-object SeerItem: IShopItem.ShopItem(Material.MUSIC_DISC_MALL) {
-    override val id: String = "seer"
-
+object SeerItem: IShopItem.ShopItem("seer", Material.MUSIC_DISC_MALL) {
     override val displayName: String = languages("item.$id.name")
-
-    override val price: Int = 300
 
     private val SEER_TITLE_TEXT = titleText("item.$id.title.seer")
 

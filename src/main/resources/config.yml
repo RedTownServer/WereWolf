@@ -3,17 +3,19 @@ general:
 game:
   start_money: 800
   starting_time: 400
-  day_time: 2400
-  night_time: 3600
+  day_time: 2400 # 2 minute
+  night_time: 3600 # 3 minute
   add_money: 200 # per 30 sec
   max_days: 5
   end_time: DAY # DAY or NIGHT
 items:
   seer:
+    price: 300
     roles:
       - SEER
     seer_time: 60
   bomb_ball:
+    price: 300
     roles:
       - WOLF
     damage_distance: 11
@@ -22,17 +24,21 @@ items:
     max_damage: 18
     warning_count: 6
   doctor_sword:
+    price: 300
     roles:
       - DOCTOR
     health_amount: 40.0
   wolf_axe:
+    price: 300
     charge: 50
     roles:
       - WOLF
   fake_seer:
+    price: 300
     roles:
       - MADMAN
   stan_ball:
+    price: 300
     radius: 5.0
     stan_time: 140
     roles:
@@ -43,6 +49,7 @@ items:
       - SEER
       - MEDIUM
   glow_ink:
+    price: 300
     glowing_time: 300
     roles:
       - VILLAGER
@@ -52,15 +59,18 @@ items:
       - SEER
       - MEDIUM
   lightning_rod:
+    price: 300
     blindness_time: 300
     roles:
       - WOLF
   health_charger:
+    price: 300
     roles:
       - DOCTOR
     heal_amount: 1.0
     distance: 3.0
   heal_potion:
+    price: 300
     roles:
       - VILLAGER
       - DOCTOR
@@ -70,10 +80,12 @@ items:
       - MEDIUM
     heal_amount: 10.0
   assassin_sword:
+    price: 300
     roles:
       - WOLF
     attack_angle: 70.0
   invisible_potion:
+    price: 300
     roles:
       - VILLAGER
       - DOCTOR
@@ -83,14 +95,59 @@ items:
       - MEDIUM
     time: 600
   wolf_guide:
+    price: 300
     roles:
       - MADMAN
     search_time: 60
+  one_shot_crossbow:
+    price: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+  totem_of_undying:
+    price: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+    speed_level: 2
+    speed_time: 200
+  speed_potion:
+    price: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+    time: 600
+    level: 6
+  stone_sword:
+    price: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
+  last_resort:
+    price: 300
+    roles:
+      - WOLF
 roles:
   seer:
     priority: 1
     name: 占い師
-    faction: VILLAGER
+    team: VILLAGER
     color: LIGHT_PURPLE
     num: 10
     unit: PERCENT
@@ -100,7 +157,7 @@ roles:
   madman:
     priority: 2
     name: 狂人
-    faction: VILLAGER
+    team: VILLAGER
     color: DARK_RED
     num: 10
     unit: PERCENT
@@ -110,7 +167,7 @@ roles:
   medium:
     priority: 2
     name: 霊媒師
-    faction: VILLAGER
+    team: VILLAGER
     color: DARK_PURPLE
     num: 10
     unit: PERCENT
@@ -120,7 +177,7 @@ roles:
   wolf:
     priority: 3
     name: 人狼
-    faction: WOLF
+    team: WOLF
     color: DARK_RED
     num: 15
     unit: PERCENT
@@ -130,7 +187,7 @@ roles:
   doctor:
     priority: 4
     name: 医者
-    faction: VILLAGER
+    team: VILLAGER
     color: AQUA
     num: 10
     unit: PERCENT
@@ -140,7 +197,7 @@ roles:
   villager:
     priority: 5
     name: 村人
-    faction: VILLAGER
+    team: VILLAGER
     color: GOLD
     num: -1
     unit: PERCENT

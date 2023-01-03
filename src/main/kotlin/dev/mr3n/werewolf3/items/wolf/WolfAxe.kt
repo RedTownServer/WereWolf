@@ -13,12 +13,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 
-object WolfAxe: IShopItem.ShopItem(Material.STONE_AXE) {
-    override val id: String = "wolf_axe"
-
+object WolfAxe: IShopItem.ShopItem("wolf_axe",Material.STONE_AXE) {
     override val displayName: String = languages("item.$id.name")
-
-    override val price: Int = 300
 
     private val WOLF_AXE_TITLE_TEXT = titleText("item.$id.title.wolf_axe")
 

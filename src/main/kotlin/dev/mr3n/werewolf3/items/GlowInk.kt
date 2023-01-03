@@ -13,12 +13,8 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object GlowInk: IShopItem.ShopItem(Material.GLOW_INK_SAC) {
-    override val id: String = "glow_ink"
-
+object GlowInk: IShopItem.ShopItem("glow_ink", Material.GLOW_INK_SAC) {
     override val displayName: String = languages("item.${id}.name")
-
-    override val price: Int = 300
 
     private val GLOWING_TIME: Long = constant("glowing_time")
 

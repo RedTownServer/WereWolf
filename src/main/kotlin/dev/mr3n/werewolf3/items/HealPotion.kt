@@ -10,11 +10,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.PotionMeta
 
-object HealPotion: IShopItem.ShopItem(Material.POTION) {
-    override val id: String = "heal_potion"
-
-    override val price: Int = 300
-
+object HealPotion: IShopItem.ShopItem("heal_potion", Material.POTION) {
     private val HEAL_AMOUNT: Double = constant("heal_amount")
 
     private val CHARGER_TITLE_TEXT = titleText("item.$id.title.healing")

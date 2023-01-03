@@ -14,11 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 
-object HealthCharger: IShopItem.ShopItem(Material.REDSTONE_ORE) {
-    override val id: String = "health_charger"
-
-    override val price: Int = 300
-
+object HealthCharger: IShopItem.ShopItem("health_charger", Material.REDSTONE_ORE) {
     private val HEAL_AMOUNT: Double = constant("heal_amount")
 
     private val DISTANCE: Double = constant("distance")

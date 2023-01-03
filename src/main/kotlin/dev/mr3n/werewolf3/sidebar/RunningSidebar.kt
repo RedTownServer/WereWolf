@@ -18,7 +18,7 @@ open class RunningSidebar(val player: Player): ISideBar {
     final override val scoreboard = checkNotNull(Bukkit.getScoreboardManager()?.newScoreboard)
 
     // 待機中のプレイヤー数を表示するためのチーム
-    private val playersEstTeam = scoreboard.registerNewTeam("players").apply { addEntry(languages("sidebar.running.players.display")) }
+    private val playersEstTeam = scoreboard.registerNewTeam("playersEst").apply { addEntry(languages("sidebar.running.players.display")) }
     // プレイヤー人数を設定
     fun playersEst(value: Int) { if(playersEstTeam.suffix!="${value}人"){ playersEstTeam.suffix = "${value}人" } }
 

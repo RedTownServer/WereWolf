@@ -12,12 +12,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import kotlin.math.abs
 
-object AssassinSword: IShopItem.ShopItem(Material.IRON_SWORD) {
-    override val id: String = "assassin_sword"
-
+object AssassinSword: IShopItem.ShopItem("assassin_sword", Material.IRON_SWORD) {
     override val displayName: String = languages("item.$id.name")
-
-    override val price: Int = 300
 
     private val SUCCESS_TITLE_TEXT = titleText("item.$id.title.assassin_success")
 

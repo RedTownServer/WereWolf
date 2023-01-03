@@ -17,12 +17,8 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object StanBall: IShopItem.ShopItem(Material.SNOWBALL) {
-    override val id: String = "stan_ball"
-
+object StanBall: IShopItem.ShopItem("stan_ball", Material.SNOWBALL) {
     override val displayName: String = languages("item.${id}.name")
-
-    override val price: Int = 300
 
     private const val ENTITY_TYPE = "STAN_BALL"
 

@@ -6,21 +6,15 @@ import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
 import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.commands.Start
-import dev.mr3n.werewolf3.items.*
-import dev.mr3n.werewolf3.items.doctor.DoctorSword
-import dev.mr3n.werewolf3.items.doctor.HealthCharger
-import dev.mr3n.werewolf3.items.madman.WolfGuide
-import dev.mr3n.werewolf3.items.seer.SeerItem
-import dev.mr3n.werewolf3.items.wolf.AssassinSword
-import dev.mr3n.werewolf3.items.wolf.BombBall
-import dev.mr3n.werewolf3.items.wolf.LightningRod
-import dev.mr3n.werewolf3.items.wolf.WolfAxe
+import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
-import dev.mr3n.werewolf3.utils.*
+import dev.mr3n.werewolf3.utils.languages
+import dev.mr3n.werewolf3.utils.parseTime
+import dev.mr3n.werewolf3.utils.role
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.GameRule
@@ -51,48 +45,60 @@ class WereWolf3: JavaPlugin() {
             it.setExecutor(Start)
             it.tabCompleter = Start
         }
+        // >>> クラスの初期化 >>>
         IShopItem.ShopItem.ITEMS
         SpectatorPacketUtil.init()
         GameTerminator.init()
+        Role.ROLES
+        // <<< クラスの初期化 <<<
         this.getCommand("debug")?.also {
             it.setExecutor { sender, _, _, args ->
                 if(sender !is Player) { return@setExecutor true  }
                 when(args.getOrNull(0)) {
                     "test1" -> {
-                        sender.inventory.addItem(DoctorSword.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.DOCTOR_SWORD.itemStack)
                     }
                     "test2" -> {
-                        sender.inventory.addItem(SeerItem.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.SEER_ITEM.itemStack)
                     }
                     "test3" -> {
-                        sender.inventory.addItem(BombBall.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.BOMB_BALL.itemStack)
                     }
                     "test4" -> {
-                        sender.inventory.addItem(WolfAxe.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.WOLF_AXE.itemStack)
                     }
                     "test5" -> {
-                        sender.inventory.addItem(StanBall.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.STAN_BALL.itemStack)
                     }
                     "test6" -> {
-                        sender.inventory.addItem(GlowInk.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.GLOW_INK.itemStack)
                     }
                     "test7" -> {
-                        sender.inventory.addItem(LightningRod.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.LIGHTNING_ROD.itemStack)
                     }
                     "test8" -> {
-                        sender.inventory.addItem(HealthCharger.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.HEALTH_CHARGER.itemStack)
                     }
                     "test9" -> {
-                        sender.inventory.addItem(HealPotion.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.HEAL_POTION.itemStack)
                     }
                     "test10" -> {
-                        sender.inventory.addItem(AssassinSword.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.ASSASSIN_SWORD.itemStack)
                     }
                     "test11" -> {
-                        sender.inventory.addItem(InvisiblePotion.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.INVISIBLE_POTION.itemStack)
                     }
                     "test12" -> {
-                        sender.inventory.addItem(WolfGuide.itemStack)
+                        sender.inventory.addItem(IShopItem.ShopItem.WOLF_GUIDE.itemStack)
+                    }
+                    "test13" -> {
+                        sender.inventory.addItem(IShopItem.ShopItem.ONE_SHOT_BOW.itemStack)
+                    }
+                    "test14" -> {
+                        sender.inventory.addItem(IShopItem.ShopItem.TOTEM.itemStack)
+                    }
+                    "test15" -> {
+                        sender.inventory.addItem(IShopItem.ShopItem.SPEED_POTION.itemStack)
                     }
                 }
                 true
@@ -147,12 +153,12 @@ class WereWolf3: JavaPlugin() {
                     GameRunner.running(loopCount = loopCount)
                     // 生きているプレイヤー一覧(スペクテイターじゃないプレイヤー)
                     val alivePlayers = PLAYERS.filter { p->p.gameMode!=GameMode.SPECTATOR }
-                    if(alivePlayers.count { p->p.role?.faction==Role.Faction.WOLF }<=0) {
+                    if(alivePlayers.count { p->p.role?.team==Role.Team.WOLF }<=0) {
                         // 人狼陣営の数が0になった場合ゲームを終了
-                        GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.anni", "%role%" to Role.Faction.WOLF.displayName))
-                    } else if(alivePlayers.count { p->p.role?.faction==Role.Faction.VILLAGER }<=0) {
+                        GameTerminator.end(Role.Team.VILLAGER, languages("title.win.reason.anni", "%role%" to Role.Team.WOLF.displayName))
+                    } else if(alivePlayers.count { p->p.role?.team==Role.Team.VILLAGER }<=0) {
                         // 村人陣営の数が0になった場合ゲームを終了
-                        GameTerminator.end(Role.Faction.WOLF, languages("title.win.reason.anni", "%role%" to Role.Faction.VILLAGER.displayName))
+                        GameTerminator.end(Role.Team.WOLF, languages("title.win.reason.anni", "%role%" to Role.Team.VILLAGER.displayName))
                     }
                 }
                 ENDING -> {}

@@ -2,11 +2,17 @@ package dev.mr3n.werewolf3.items
 
 import dev.moru3.minepie.item.EasyItem
 import dev.mr3n.werewolf3.Keys
+import dev.mr3n.werewolf3.items.doctor.DoctorSword
+import dev.mr3n.werewolf3.items.doctor.HealthCharger
+import dev.mr3n.werewolf3.items.madman.FakeSeerItem
+import dev.mr3n.werewolf3.items.madman.WolfGuide
+import dev.mr3n.werewolf3.items.seer.SeerItem
+import dev.mr3n.werewolf3.items.wolf.*
 import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.container
-import dev.mr3n.werewolf3.utils.getContainerValue
-import dev.mr3n.werewolf3.utils.languages
+import dev.mr3n.werewolf3.utils.*
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
@@ -19,6 +25,11 @@ interface IShopItem {
      * アイテムを識別するためのユニークなID
      */
     val id: String
+
+    /**
+     * ひとこと
+     */
+    val comment: String
 
     /**
      * アイテムの表示名
@@ -54,18 +65,21 @@ interface IShopItem {
 
     fun onSetItemMeta(itemMeta: ItemMeta)
 
-    abstract class ShopItem(val material: Material): IShopItem {
+    fun buy(player: Player)
 
+    abstract class ShopItem(final override val id: String, val material: Material): IShopItem {
+
+        override val price: Int = constant("price")
         override val roles: List<Role> = constants<String>("roles").map{Role.valueOf(it)}
-        override val displayName: String
-            get() = languages("item.${id}.name")
-        override val description: String
-            get() = languages("item.${id}.description")
+        override val displayName: String = languages("item.${id}.name")
+        override val comment: String = languages("item.${id}.comment")
+        override val description: String = languages("item.${id}.description").let { "${it}\n\n${languages("item.comment", "%comment%" to comment)}" }
         override val itemStack: ItemStack
             get() = EasyItem(material, displayName, description.split("\n")).also { item ->
                 item.itemMeta = item.itemMeta?.also { meta ->
-                    this.onSetItemMeta(meta)
                     meta.container.set(Keys.ITEM_ID, PersistentDataType.STRING, id)
+                    ItemFlag.values().forEach { meta.addItemFlags(it) }
+                    this.onSetItemMeta(meta)
                 }
             }
 
@@ -78,7 +92,7 @@ interface IShopItem {
         }
 
         protected inline fun <reified T> constants(key: String): List<T> {
-            return dev.mr3n.werewolf3.utils.constants("items.${id}.${key}")
+            return dev.mr3n.werewolf3.utils.constants<T>("items.${id}.${key}")
         }
 
         override fun isSimilar(itemStack: ItemStack): Boolean {
@@ -87,12 +101,40 @@ interface IShopItem {
 
         override fun onEnd() {}
 
+        override fun buy(player: Player) {
+            if(player.money >= price) {
+                player.money -= price
+                player.inventory.addItem(itemStack)
+                player.sendMessage(languages("shop.bought", "%item%" to displayName, "%price%" to price).asPrefixed())
+            } else {
+                player.sendMessage(languages("shop.cant_buy", "%item%" to displayName, "%price%" to price).asPrefixed())
+            }
+        }
+
         override fun onSetItemMeta(itemMeta: ItemMeta) {}
 
         init { ITEMS.add(this) }
 
         companion object {
             val ITEMS = mutableListOf<IShopItem>()
+            val STAN_BALL = StanBall
+            val INVISIBLE_POTION = InvisiblePotion
+            val HEAL_POTION = HealPotion
+            val GLOW_INK = GlowInk
+            val ASSASSIN_SWORD = AssassinSword
+            val BOMB_BALL = BombBall
+            val LIGHTNING_ROD = LightningRod
+            val WOLF_AXE = WolfAxe
+            val SEER_ITEM = SeerItem
+            val WOLF_GUIDE = WolfGuide
+            val FAKE_SEER_ITEM = FakeSeerItem
+            val HEALTH_CHARGER = HealthCharger
+            val DOCTOR_SWORD = DoctorSword
+            val ONE_SHOT_BOW = OneShotBow
+            val TOTEM = Totem
+            val SPEED_POTION = SpeedPotion
+            val STONE_SWORD = StoneSword
+            val LAST_RESORT = LastResort
         }
     }
 }

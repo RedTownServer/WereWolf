@@ -19,13 +19,8 @@ import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-object BombBall: IShopItem.ShopItem(Material.SNOWBALL) {
-    override val id: String = "bomb_ball"
-
+object BombBall: IShopItem.ShopItem("bomb_ball", Material.SNOWBALL) {
     override val displayName: String = languages("item.$id.name")
-
-    override val price: Int = 300
-
 
     private val WARNING_TITLE_TEXT = titleText("item.$id.title.warning")
 

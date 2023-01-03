@@ -13,16 +13,20 @@ import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.meta.ItemMeta
 
-object WolfGuide: IShopItem.ShopItem(Material.BOOK) {
-    override val id: String = "wolf_guide"
-
+object WolfGuide: IShopItem.ShopItem("wolf_guide", Material.BOOK) {
     override val displayName: String = languages("item.${id}.name")
 
-    override val price: Int = 300
+    override fun onSetItemMeta(itemMeta: ItemMeta) {
+        itemMeta.addEnchant(Enchantment.LUCK, 1, true)
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+    }
 
     private val GUIDE_TITLE_TEXT = titleText("item.${id}.title.guide")
 

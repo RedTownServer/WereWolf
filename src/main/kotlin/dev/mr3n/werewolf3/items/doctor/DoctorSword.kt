@@ -17,11 +17,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 
-object DoctorSword: IShopItem.ShopItem(Material.IRON_SWORD) {
-    override val id: String = "doctor_sword"
-
-    override val price: Int = 300
-
+object DoctorSword: IShopItem.ShopItem("doctor_sword", Material.IRON_SWORD) {
     private val MAX_HEAL_AMOUNT: Double = constant("health_amount")
 
     private val HEAL_TITLE_TEXT: String = titleText("item.$id.title.heal")

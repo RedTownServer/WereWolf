@@ -1,18 +1,24 @@
 package dev.mr3n.werewolf3.utils
 
 import dev.mr3n.werewolf3.Keys
+import dev.mr3n.werewolf3.events.WereWolf3DamageEvent
 import dev.mr3n.werewolf3.roles.Role
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
 fun Player.damageTo(target: Player, damage: Double) {
     if(damage == 0.0) { return }
+    val event = WereWolf3DamageEvent(target, damage)
+    Bukkit.getPluginManager().callEvent(event)
+    if(event.isCancelled) { return }
     val health = target.health
+    target.health = minOf(target.healthScale, health + 1)
     target.damage(1.0,this)
-    if(damage < 0) {
+    if(event.damage < 0) {
         target.health = 0.0
     } else {
-        target.health = maxOf(.0, health - damage)
+        target.health = maxOf(.0, health - event.damage)
     }
 }
 
@@ -63,6 +69,12 @@ var Player.co: Role?
     get() = this.persistentDataContainer.get(Keys.CO, Role.RoleTagType)
     set(value) {
         if(value==null) { this.persistentDataContainer.remove(Keys.CO) } else { this.persistentDataContainer.set(Keys.CO, Role.RoleTagType, value) }
+    }
+
+var Player.will: String?
+    get() = this.persistentDataContainer.get(Keys.PLAYER_WILL, PersistentDataType.STRING)
+    set(value) {
+        if(value==null) { this.persistentDataContainer.remove(Keys.PLAYER_WILL) } else { this.persistentDataContainer.set(Keys.PLAYER_WILL, PersistentDataType.STRING, value) }
     }
 
 var Player.money: Int

@@ -28,7 +28,6 @@ class DeadBody(val player: Player) {
         DEAD_BODIES.add(this)
         // 死体をスポーン
         npc.spawn(player.location)
-
         val equipmentTrait = npc.getOrAddTrait(Equipment::class.java)
         equipmentTrait.set(Equipment.EquipmentSlot.HELMET, player.inventory.helmet)
         equipmentTrait.set(Equipment.EquipmentSlot.CHESTPLATE, player.inventory.chestplate)

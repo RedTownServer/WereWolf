@@ -1,11 +1,11 @@
 package dev.mr3n.werewolf3
 
+import dev.mr3n.werewolf3.citizens2.DeadBody
+import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
+import dev.mr3n.werewolf3.sidebar.DeathSidebar
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
-import dev.mr3n.werewolf3.utils.addKill
-import dev.mr3n.werewolf3.utils.gameId
-import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.prefixedLang
+import dev.mr3n.werewolf3.utils.*
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -37,12 +37,14 @@ object PlayerListener: Listener {
         }
         // ゲームモードをスペクテイターに設定 注意: 絶対にインベントリを削除する前にスペクテイターに変更してください。
         player.gameMode = GameMode.SPECTATOR
+        // 死体を生成 注意: 絶対にインベントリを削除する前に死体を生成してください。
+        DeadBody(player)
         // インベントリを削除
         player.inventory.clear()
         // 体力を満タンに設定
         player.health = player.healthScale
-        // 死体を生成
-        // TODO DeadBody(player)
+        player.sidebar = DeathSidebar(player)
+        MetadataPacketUtil.removeAllInvisible(player)
         // 死んだ人にタイトルを表示
         player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,20,1,false,false,false))
         // 死亡メッセージを削除
@@ -53,6 +55,7 @@ object PlayerListener: Listener {
 
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
+        event.player.will = event.message
         event.format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
     }
 

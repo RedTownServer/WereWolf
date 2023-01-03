@@ -1,9 +1,9 @@
 package dev.mr3n.werewolf3.sidebar
 
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.role
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Criteria
@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.DisplaySlot
 /**
  * 待機中に表示するサイドバー
  */
-class DeadSidebar(player: Player): RunningSidebar(player) {
+class DeathSidebar(player: Player): RunningSidebar(player) {
     override fun money(value: Int) { }
 
     // 待機中のプレイヤー数を表示するためのチーム
@@ -20,7 +20,7 @@ class DeadSidebar(player: Player): RunningSidebar(player) {
     fun players(value: Int)  { if(playersTeam.suffix!="${value}人"){ playersTeam.suffix = "${value}人" } }
 
     // サイドバーに表示するオブジェクト
-    override val objective = scoreboard.registerNewObjective("running", Criteria.DUMMY, languages("sidebar.title")).apply {
+    override val objective = scoreboard.registerNewObjective("death", Criteria.DUMMY, languages("sidebar.title")).apply {
         // スロットをサイドバーに
         displaySlot = DisplaySlot.SIDEBAR
         // サイドバーの一覧に下に表示するかっこいいやつ(//////<-これ)
@@ -47,7 +47,7 @@ class DeadSidebar(player: Player): RunningSidebar(player) {
         // ステータスを待機中に変更
         role(player.role)
         money(300)
-        day(-1)
+        day(Constants.MAX_DAYS - WereWolf3.DAY)
         players(WereWolf3.PLAYERS.count { it.gameMode != GameMode.SPECTATOR })
     }
 }

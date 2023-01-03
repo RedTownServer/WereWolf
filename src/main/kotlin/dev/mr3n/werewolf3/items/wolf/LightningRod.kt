@@ -16,12 +16,8 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object LightningRod: IShopItem.ShopItem(Material.LIGHTNING_ROD) {
-    override val id: String = "lightning_rod"
-
+object LightningRod: IShopItem.ShopItem("lightning_rod", Material.LIGHTNING_ROD) {
     override val displayName: String = languages("item.${id}.name")
-
-    override val price: Int = 300
 
     private val BLINDNESS_TIME: Long = constant("blindness_time")
 

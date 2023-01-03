@@ -11,6 +11,7 @@ import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.persistence.PersistentDataType
 import java.security.SecureRandom
 import java.util.*
 
@@ -36,7 +37,7 @@ object GameInitializer {
         // プレイヤーにゲームIDを設定。
         players.forEach { player -> player.gameId = WereWolf3.GAME_ID }
         // プレイヤー人数から役職数を推定してリストに格納。 roleList.length == players.length
-        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(SecureRandom.getInstanceStrong())
+        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(SecureRandom.getInstance("SHA1PRNG"))
         // TODO カメラアニメーションをつける
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
@@ -72,6 +73,7 @@ object GameInitializer {
             }
             // 人狼チームからは身内が赤く見えるように
             TeamPacketUtil.add(player,ChatColor.DARK_RED,wolfs)
+            player.sendMessage(languages("messages.wolfs", "%wolfs%" to wolfs.joinToString(" ") { it.name }).asPrefixed())
         }
 
         WereWolf3.REMAINING_PLAYER_EST = players.size
@@ -83,19 +85,24 @@ object GameInitializer {
      * 役職発表など準備完了後に行う処理
      */
     fun run() {
-        WereWolf3.PLAYERS.filter { it.role!=null }.forEach {  player ->
+        WereWolf3.PLAYERS.forEach {  player ->
             // ショップを開くアイテムを設置。 TODO
-            player.inventory.setItem(8, EasyItem(Material.AMETHYST_SHARD, languages("item.shop.open.name"), languages("item.shop.open.description").split("\n")))
+            player.inventory.setItem(8,
+                EasyItem(Material.AMETHYST_SHARD, languages("item.shop.open.name"), languages("item.shop.open.description").split("\n")).also { item ->
+                    item.setContainerValue(Keys.ITEM_TYPE, PersistentDataType.STRING, ShopMenu.SHOP_ID)
+                }
+            )
             // 弓を渡す。
             player.inventory.addItem(EasyItem(Material.BOW).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta ->
                 itemMeta.addEnchant(Enchantment.ARROW_INFINITE,1,true)
                 itemMeta.isUnbreakable = true
             } })
             // 石の剣を渡す。
-            player.inventory.addItem(EasyItem(Material.STONE_SWORD).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta -> itemMeta.isUnbreakable = true } })
+            player.inventory.addItem(EasyItem(Material.WOODEN_SWORD).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta -> itemMeta.isUnbreakable = true } })
             // 矢を渡す。
             player.inventory.addItem(EasyItem(Material.ARROW))
-            Role.values().forEach { role -> player.inventory.addItem(role.helmet) }
+            Role.values().forEachIndexed { index, role -> player.inventory.setItem(9+index, role.helmet) }
+            player.sendMessage(languages("title.start.messages.co").asPrefixed())
             player.sidebar = RunningSidebar(player)
         }
         WereWolf3.STATUS = Status.RUNNING

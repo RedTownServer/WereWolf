@@ -59,7 +59,7 @@ enum class Time(val barColor: BarColor) {
             // ゲームが実行中ではない場合return
             if(!WereWolf3.running) { return }
             if(Constants.END_TIME==NIGHT&&WereWolf3.DAY>=Constants.MAX_DAYS) {
-                GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.time_up"))
+                GameTerminator.end(Role.Team.VILLAGER, languages("title.win.reason.time_up"))
                 return
             }
             // 残り時間を朝の時間に設定(20はtick)
@@ -93,7 +93,7 @@ enum class Time(val barColor: BarColor) {
             // ゲームが実行中ではない場合return
             if(!WereWolf3.running) { return }
             if(Constants.END_TIME==DAY&&WereWolf3.DAY>=Constants.MAX_DAYS) {
-                GameTerminator.end(Role.Faction.VILLAGER, languages("title.win.reason.time_up"))
+                GameTerminator.end(Role.Team.VILLAGER, languages("title.win.reason.time_up"))
                 return
             }
             // 残り時間を夜の時間に設定(20はtick)

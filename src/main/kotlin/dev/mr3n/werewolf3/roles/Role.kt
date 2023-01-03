@@ -30,7 +30,7 @@ enum class Role() {
     // 役職の色
     val color = ChatColor.of(config.getString("roles.${this.lowercase()}.color")!!)
     // 役職の陣営 (白陣営/黒陣営)
-    val faction = Faction.valueOf(config.getString("roles.${this.lowercase()}.faction")!!)
+    val team = Team.valueOf(config.getString("roles.${this.lowercase()}.team")!!)
     // 表示名
     val displayName = config.getString("roles.${this.lowercase()}.name")!!
     // 役職の説明
@@ -106,7 +106,7 @@ enum class Role() {
     }
 
     // 陣営一覧。白陣営、黒陣営。
-    enum class Faction(val displayName: String, val color: ChatColor) {
+    enum class Team(val displayName: String, val color: ChatColor) {
         WOLF("人狼", ChatColor.DARK_RED),
         VILLAGER("村人", ChatColor.GOLD)
     }

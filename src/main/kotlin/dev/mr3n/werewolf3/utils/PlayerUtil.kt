@@ -1,5 +1,6 @@
 package dev.mr3n.werewolf3.utils
 
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.events.WereWolf3DamageEvent
 import dev.mr3n.werewolf3.roles.Role
@@ -21,6 +22,9 @@ fun Player.damageTo(target: Player, damage: Double) {
         target.health = maxOf(.0, health - event.damage)
     }
 }
+
+val Player.isBE: Boolean
+    get() = this.name.startsWith(Constants.BE_PREFIX)
 
 var Player.gameId: String?
     get() = this.persistentDataContainer.get(Keys.GAME_ID, PersistentDataType.STRING)

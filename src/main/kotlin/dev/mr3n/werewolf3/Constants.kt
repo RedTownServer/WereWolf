@@ -27,4 +27,6 @@ object Constants {
         get() = constant("game.dead_body_prize")
     val CONVERSATION_DISTANCE: Double
         get() = constant("game.conversation_distance")
+    val BE_PREFIX: String
+        get() = constant("be_prefix")
 }

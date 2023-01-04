@@ -1,3 +1,4 @@
+be_prefix: "BE."
 general:
   point_flush_speed: 15
 game:

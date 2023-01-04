@@ -2,14 +2,17 @@ package dev.mr3n.werewolf3.items.medium
 
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.events.WereWolf3DeadBodyClickEvent
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.DeadBody
+import dev.mr3n.werewolf3.utils.isBE
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
@@ -43,7 +46,8 @@ object MediumItem: IShopItem.ShopItem("medium", Material.MUSIC_DISC_WAIT) {
                 isFirst = true
                 length = 0
             }
-            if(length >= MEDIUM_TIME * 50) {
+            // 指定時間以上長押ししている、もしくはBEユーザーの場合は霊媒開始
+            if(length >= MEDIUM_TIME * 50 || player.isBE) {
                 // if:3秒以上押し続けている場合
                 LAST_CLICKED.remove(player.uniqueId)
                 item.amount--

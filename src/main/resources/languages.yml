@@ -3,6 +3,7 @@ prefix: "&4&l[人狼PvP]&f"
 chat: "%name%&a: &f%message%"
 none: "なし"
 send_message_at_night: "&e&l[半径%distance%m以内のプレイヤーにメッセージを送信しました！]"
+be_cannot_use_item: "統合版ではこのアイテムを使用できません。対応をお待ち下さい。\nまた、%item%は次のアイテムで代用できるかもしれません: %substitute%"
 shop:
   name: "&dアイテムショップ"
   close: "&c閉じる"

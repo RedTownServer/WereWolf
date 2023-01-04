@@ -2,13 +2,11 @@ package dev.mr3n.werewolf3.items.seer
 
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.asPrefixed
-import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.role
-import dev.mr3n.werewolf3.utils.titleText
+import dev.mr3n.werewolf3.utils.*
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -25,6 +23,14 @@ object SeerItem: IShopItem.ShopItem("seer", Material.MUSIC_DISC_CHIRP) {
     private val LAST_CLICKED = mutableMapOf<UUID, SeerInfo>()
 
     private val SEER_TIME: Long = constant("seer_time")
+
+    override fun buy(player: Player): Boolean {
+        if(player.isBE) {
+            player.sendMessage(languages("be_cannot_use_item"))
+            return false
+        }
+        return super.buy(player)
+    }
 
     init {
         WereWolf3.INSTANCE.registerEvent<PlayerInteractAtEntityEvent> { event ->

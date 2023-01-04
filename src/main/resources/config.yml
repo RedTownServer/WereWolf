@@ -9,6 +9,7 @@ game:
   max_days: 5
   end_time: DAY # DAY or NIGHT
   dead_body_prize: 300 # 死体発見時の賞金
+  conversation_distance: 20.0 # 夜に会話可能な半径
 items:
   seer:
     price: 300

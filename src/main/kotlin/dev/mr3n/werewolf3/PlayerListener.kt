@@ -6,6 +6,8 @@ import dev.mr3n.werewolf3.sidebar.DeathSidebar
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
 import dev.mr3n.werewolf3.utils.*
+import net.md_5.bungee.api.ChatMessageType
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -57,8 +59,24 @@ object PlayerListener: Listener {
 
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
+        // 遺言を設定
         event.player.will = event.message
-        event.format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
+        // チャットのフォーマットを設定
+        val format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
+        if(WereWolf3.TIME==Time.DAY) {
+            // 朝は全員に送信
+            event.format = format
+        } else {
+            // 夜は特定の人にのみ送信
+            event.isCancelled = true
+            // スペクテイター、もしくは会話可能範囲内のプレイヤーにチャットを送信
+            WereWolf3.PLAYERS
+                .associateWith { it.location.distance(event.player.location) }
+                .filter { it.key.gameMode==GameMode.SPECTATOR || it.value < Constants.CONVERSATION_DISTANCE }
+                .forEach { (player, _) -> player.sendMessage(format) }
+            event.player.playSound(event.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+            event.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(languages("send_message_at_night", "%distance%" to Constants.CONVERSATION_DISTANCE)))
+        }
     }
 
     @EventHandler

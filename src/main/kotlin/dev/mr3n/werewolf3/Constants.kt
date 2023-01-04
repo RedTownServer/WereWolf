@@ -25,4 +25,6 @@ object Constants {
         get() = try { Time.valueOf(constant("end_time")) } catch(_: Exception) { Time.DAY }
     val DEAD_BODY_PRIZE: Int
         get() = constant("game.dead_body_prize")
+    val CONVERSATION_DISTANCE: Double
+        get() = constant("game.conversation_distance")
 }

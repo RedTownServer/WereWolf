@@ -1,6 +1,9 @@
 package dev.mr3n.werewolf3
 
 import dev.moru3.minepie.item.EasyItem
+import dev.mr3n.werewolf3.items.quickchat.TrustYou
+import dev.mr3n.werewolf3.items.quickchat.WithYou
+import dev.mr3n.werewolf3.items.quickchat.YouAreWolf
 import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
@@ -96,6 +99,10 @@ object GameInitializer {
                     item.setContainerValue(Keys.ITEM_TYPE, PersistentDataType.STRING, ShopMenu.SHOP_ID)
                 }
             )
+            // クイックチャットのアイテムを渡す。
+            player.inventory.setItem(5, WithYou.itemStack)
+            player.inventory.setItem(6, TrustYou.itemStack)
+            player.inventory.setItem(7, YouAreWolf.itemStack)
             // 弓を渡す。
             player.inventory.addItem(EasyItem(Material.BOW).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta ->
                 itemMeta.addEnchant(Enchantment.ARROW_INFINITE,1,true)

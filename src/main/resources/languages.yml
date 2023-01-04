@@ -2,6 +2,7 @@ name: "&4&l人狼ＰＶＰ"
 prefix: "&4&l[人狼PvP]&f"
 chat: "%name%&a: &f%message%"
 none: "なし"
+send_message_at_night: "&e&l[半径%distance%m以内のプレイヤーにメッセージを送信しました！]"
 shop:
   name: "&dアイテムショップ"
   close: "&c閉じる"
@@ -261,6 +262,27 @@ item:
         color: "&4"
     messages:
       subtitle: "%player% の死体を燃やしました。"
+  with_you:
+    name: "&7一緒にいるよ"
+    description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
+    comment: "嘘は構いませんが冗談では使用しないでください。"
+    messages:
+      - "%player% と一緒に行動してます！"
+      - "%player% と一緒に行動中ですー"
+  trust_you:
+    name: "&e村人陣営だと思う"
+    description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
+    comment: "嘘は構いませんが冗談では使用しないでください。"
+    messages:
+      - "%player% は信用できる気がする"
+      - "%player% は村人陣営だと思う"
+  you_are_wolf:
+    name: "&4こいつやばい！人狼や！"
+    description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
+    comment: "嘘は構いませんが冗談では使用しないでください。"
+    messages:
+      - "%player%人狼！！！！"
+      - "%player%人狼！！！！！"
 time:
   day:
     name: "&6朝"

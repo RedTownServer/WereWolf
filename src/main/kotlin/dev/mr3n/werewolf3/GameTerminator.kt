@@ -75,11 +75,10 @@ object GameTerminator {
 
         try { IShopItem.ShopItem.ITEMS.forEach { it.onEnd() } } catch(_: Exception) { }
 
-        Bukkit.getWorlds()[0].time = 6000
-
         try {
             // 発光、チームをリセット
             WereWolf3.PLAYERS.forEach { player ->
+                player.world.time = 8000
                 player.flySpeed = 0.2f
                 player.walkSpeed = 0.2f
                 // チームの色を削除

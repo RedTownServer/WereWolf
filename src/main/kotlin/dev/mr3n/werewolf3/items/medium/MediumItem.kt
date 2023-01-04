@@ -54,7 +54,7 @@ object MediumItem: IShopItem.ShopItem("medium", Material.MUSIC_DISC_WAIT) {
                 val role = event.deadBody.role
                 player.sendMessage(messages("team", "%team%" to "${role?.team?.color}${role?.team?.displayName}"))
                 player.sendMessage(messages("time", "%sec%" to (System.currentTimeMillis()-event.deadBody.time) / 1000))
-                player.sendMessage(messages("will", "%will%" to event.deadBody.will))
+                player.sendMessage(messages("will", "%will%" to "\"${event.deadBody.will}\""))
 
             } else {
                 // 初めてクリックしていた場合

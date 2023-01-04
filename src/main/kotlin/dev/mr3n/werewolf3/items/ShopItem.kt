@@ -4,8 +4,10 @@ import dev.moru3.minepie.item.EasyItem
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.items.doctor.DoctorSword
 import dev.mr3n.werewolf3.items.doctor.HealthCharger
+import dev.mr3n.werewolf3.items.madman.FakeMediumItem
 import dev.mr3n.werewolf3.items.madman.FakeSeerItem
 import dev.mr3n.werewolf3.items.madman.WolfGuide
+import dev.mr3n.werewolf3.items.medium.MediumItem
 import dev.mr3n.werewolf3.items.seer.SeerItem
 import dev.mr3n.werewolf3.items.wolf.*
 import dev.mr3n.werewolf3.roles.Role
@@ -115,10 +117,14 @@ interface IShopItem {
 
         override fun onSetItemMeta(itemMeta: ItemMeta) {}
 
-        init { ITEMS.add(this) }
+        init {
+            ITEMS.add(this)
+            ITEMS_BY_ID[id] = this
+        }
 
         companion object {
             val ITEMS = mutableListOf<IShopItem>()
+            val ITEMS_BY_ID = mutableMapOf<String, IShopItem>()
             val STAN_BALL = StanBall
             val INVISIBLE_POTION = InvisiblePotion
             val HEAL_POTION = HealPotion
@@ -128,8 +134,10 @@ interface IShopItem {
             val LIGHTNING_ROD = LightningRod
             val WOLF_AXE = WolfAxe
             val SEER_ITEM = SeerItem
+            val MEDIUM_ITEM = MediumItem
             val WOLF_GUIDE = WolfGuide
             val FAKE_SEER_ITEM = FakeSeerItem
+            val FAKE_MEDIUM_ITEM = FakeMediumItem
             val HEALTH_CHARGER = HealthCharger
             val DOCTOR_SWORD = DoctorSword
             val ONE_SHOT_BOW = OneShotBow

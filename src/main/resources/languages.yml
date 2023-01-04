@@ -1,6 +1,7 @@
 name: "&4&l人狼ＰＶＰ"
 prefix: "&4&l[人狼PvP]&f"
 chat: "%name%&a: &f%message%"
+none: "なし"
 shop:
   name: "&dアイテムショップ"
   close: "&c閉じる"
@@ -20,6 +21,7 @@ messages:
     prefix: "&a"
     winner: "%color%%team%陣営&fが勝利しました！"
     kills_info: "内訳* 敵キル数: %kills%, 身内キル: %kill_teams%"
+  found_dead_body: "&c%player% の死体が発見された..."
 title:
   start:
     title: "役職: %role%"
@@ -76,6 +78,24 @@ item:
       result:
         wolf: "%player%は&c人狼です。"
         villager: "%player%は&c人狼では&nありません。"
+  medium:
+    name: "&d霊媒アイテム"
+    description: "プレイヤーの死体のモヤを右クリック長押しすることで\nそのプレイヤーの遺言や役職などを確認することができます。"
+    comment: "遺言一つで大きく流れが変わることがあるから慎重にね！"
+    title:
+      medium:
+        color: "&5"
+        title: "霊媒"
+    messages:
+      canceled: "霊媒をキャンセルしました。"
+      init: "%player%を霊媒中..."
+      hint:
+        how_to: "プレヤーを右クリック長押しすることで霊媒ができます。"
+      success: "霊媒が完了しました。"
+      header: "&5========== 霊媒 =========="
+      will: "&5遺言&7: &f%will%"
+      team: "&5陣営&7: &f%team%陣営"
+      time: "&5死亡時刻&7: &f%sec%秒前"
   bomb_ball:
     name: "&4投げ爆弾"
     description: "着弾点から広範囲に即死級のダメージを与える。\n爆発音はワールド内全員に聞こえる。"
@@ -107,6 +127,10 @@ item:
     name: "&dニセ占いアイテム(偽物)"
     description: "偽物の占いアイテム。プレイヤーを騙す以外に使用する手段はない。"
     comment: "本物の占いはプレイヤーを3秒間長押ししないといけないからたまに「止まって！」とか言うと信憑性増すかも？"
+  fake_medium:
+    name: "&dニセ霊媒アイテム(偽物)"
+    description: "偽物の霊媒アイテム。プレイヤーを騙す以外に使用する手段はない。"
+    comment: "遺言を偽装すると結構有利に立てるかも！死人に口無し！"
   stan_ball:
     name: "&cスタンボール"
     description: "着弾点で&c爆発&7し巻き込まれたプレイヤーは\n数秒間&cほとんど動けない状態&fになる。"
@@ -230,7 +254,7 @@ item:
   dead_body_remover:
     name: "&c死体消し"
     description: "任意のプレイヤーの死体を燃やして隠蔽することができる。"
-    comment: "死体の赤いモヤのところをクリックしてね！"
+    comment: "死体のモヤのところをクリックしてね！"
     title:
       remover:
         title: "死体消し"

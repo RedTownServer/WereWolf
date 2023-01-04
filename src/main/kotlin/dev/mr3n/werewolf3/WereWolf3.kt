@@ -10,6 +10,7 @@ import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
+import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
 import dev.mr3n.werewolf3.utils.languages
@@ -36,6 +37,7 @@ class WereWolf3: JavaPlugin() {
             setGameRule(GameRule.DO_WEATHER_CYCLE, false)
             setGameRule(GameRule.KEEP_INVENTORY, false)
             setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
+            setGameRule(GameRule.DO_MOB_SPAWNING, false)
         }
         // いつもの
         Bukkit.getPluginManager().registerEvents(PlayerListener,this)
@@ -50,6 +52,7 @@ class WereWolf3: JavaPlugin() {
         SpectatorPacketUtil.init()
         GameTerminator.init()
         Role.ROLES
+        DeadBody.DEAD_BODIES
         Time.DAY
         // <<< クラスの初期化 <<<
         this.getCommand("debug")?.also {
@@ -57,6 +60,7 @@ class WereWolf3: JavaPlugin() {
                 if(sender !is Player) { return@setExecutor true  }
                 when(args.getOrNull(0)) {
                     "test1" -> {
+                        sender.inventory.addItem(IShopItem.ShopItem.ITEMS_BY_ID[args.getOrNull(1)]?.itemStack)
                     }
                 }
                 true
@@ -148,7 +152,14 @@ class WereWolf3: JavaPlugin() {
         // 残り時間
         var TIME_LEFT = 0
         // 残り時間の長さ(カウントが減らされる前の長さ)
-        var REMAINING_PLAYER_EST = 0
+        var PLAYERS_EST = 0
+            set(value) {
+                PLAYERS.forEach { player ->
+                    val sidebar = player.sidebar
+                    if(sidebar is RunningSidebar) { sidebar.playersEst(value) }
+                }
+                field = value
+            }
         var TIME_LENGTH = 0
         var DAY: Int = 0
         val PLAYERS = mutableListOf<Player>()

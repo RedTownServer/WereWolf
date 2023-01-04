@@ -13,9 +13,4 @@ fun languages(key: String, vararg args: Pair<String, Any>): String {
     return ChatColor.translateAlternateColorCodes('&',message)
 }
 
-/**
- * プラグインのprefix(\[人狼pvp])付きでメッセーを取得
- */
-fun prefixedLang(key: String, vararg args: Pair<String, Any>) = languages(key,*args).asPrefixed()
-
 fun String.asPrefixed() = "${languages("prefix")} $this"

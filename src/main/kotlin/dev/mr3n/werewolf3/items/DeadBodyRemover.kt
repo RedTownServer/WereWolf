@@ -20,6 +20,7 @@ object DeadBodyRemover: IShopItem.ShopItem("dead_body_remover", Material.FLINT_A
             player.world.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
             player.sendTitle(REMOVER_TITLE_TEXT, messages("subtitle", "%player%" to event.deadBody.name), 0, 100, 20)
             event.deadBody.destroy()
+            event.isCancelled = true
         }
     }
 }

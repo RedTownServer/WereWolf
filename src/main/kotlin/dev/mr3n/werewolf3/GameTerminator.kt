@@ -59,7 +59,7 @@ object GameTerminator {
                 player.spigot().sendMessage(textComponents)
             }
             player.sendMessage("${languages("messages.result.prefix")}${languages("messages.result.header")}")
-            player.sendMessage(prefixedLang("messages.result.winner", "%team%" to win.displayName, "%color%" to win.color))
+            player.sendMessage(languages("messages.result.winner", "%team%" to win.displayName, "%color%" to win.color).asPrefixed())
         }
         this.run()
     }
@@ -96,6 +96,7 @@ object GameTerminator {
                 player.kills = null
                 player.role = null
                 player.co = null
+                player.will = null
                 // インベントリを削除
                 player.inventory.clear()
                 // サイドバーを待機中のものに変更

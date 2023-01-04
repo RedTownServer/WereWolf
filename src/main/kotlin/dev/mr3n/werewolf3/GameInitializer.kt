@@ -41,6 +41,9 @@ object GameInitializer {
         // TODO カメラアニメーションをつける
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
+            repeat(20) {
+                player.sendMessage("\n")
+            }
             // プレイヤーの役職を設定。
             player.role = role
             player.co = null
@@ -60,6 +63,7 @@ object GameInitializer {
             player.setPlayerListName(player.name)
             player.gameMode = GameMode.ADVENTURE
             player.kills = intArrayOf()
+            player.inventory.contents.filterNotNull().forEach { it.amount = 0 }
         }
         // 時間を設定
         WereWolf3.TIME_LEFT = Constants.STARTING_TIME
@@ -76,7 +80,7 @@ object GameInitializer {
             player.sendMessage(languages("messages.wolfs", "%wolfs%" to wolfs.joinToString(" ") { it.name }).asPrefixed())
         }
 
-        WereWolf3.REMAINING_PLAYER_EST = players.size
+        WereWolf3.PLAYERS_EST = players.size
 
         WereWolf3.PLAYERS.addAll(players)
     }
@@ -87,7 +91,6 @@ object GameInitializer {
     fun run() {
         val wolfs = WereWolf3.PLAYERS.filter { it.role?.team == Role.Team.WOLF }
         WereWolf3.PLAYERS.forEach {  player ->
-            // ショップを開くアイテムを設置。 TODO
             player.inventory.setItem(8,
                 EasyItem(Material.AMETHYST_SHARD, languages("item.shop.open.name"), languages("item.shop.open.description").split("\n")).also { item ->
                     item.setContainerValue(Keys.ITEM_TYPE, PersistentDataType.STRING, ShopMenu.SHOP_ID)

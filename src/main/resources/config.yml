@@ -8,12 +8,18 @@ game:
   add_money: 200 # per 30 sec
   max_days: 5
   end_time: DAY # DAY or NIGHT
+  dead_body_prize: 300 # 死体発見時の賞金
 items:
   seer:
     price: 300
     roles:
       - SEER
     seer_time: 60
+  medium:
+    price: 300
+    roles:
+      - MEDIUM
+    medium_time: 60
   bomb_ball:
     price: 300
     roles:
@@ -34,6 +40,10 @@ items:
     roles:
       - WOLF
   fake_seer:
+    price: 300
+    roles:
+      - MADMAN
+  fake_medium:
     price: 300
     roles:
       - MADMAN

@@ -84,6 +84,7 @@ object PlayerListener: Listener {
     fun onQuit(event: PlayerQuitEvent) {
         WereWolf3.PLAYERS.remove(event.player)
         WereWolf3.PLAYER_BY_ENTITY_ID.remove(event.player.entityId)
+        DeadBody.DEAD_BODY_BY_UUID[event.player.uniqueId]?.destroy()
     }
 
     @EventHandler
@@ -91,7 +92,7 @@ object PlayerListener: Listener {
         val player = event.player
         WereWolf3.PLAYER_BY_ENTITY_ID[player.entityId] = player
         // 参加メッセージを"人狼に参加しました"に変更
-        event.joinMessage = prefixedLang("messages.player_joined", "%player%" to player.name)
+        event.joinMessage = languages("messages.player_joined", "%player%" to player.name).asPrefixed()
         // ゲームが実行中かどうか
         if(WereWolf3.running) {
             // if:実行中だった場合
@@ -107,7 +108,7 @@ object PlayerListener: Listener {
             } else {
                 // if:途中抜けだった場合
                 // 全員に復帰した旨を知らせる
-                event.joinMessage = prefixedLang("messages.player_rejoined", "%player%" to player.name)
+                event.joinMessage = languages("messages.player_rejoined", "%player%" to player.name).asPrefixed()
             }
         } else {
             // if:実行中ではない場合

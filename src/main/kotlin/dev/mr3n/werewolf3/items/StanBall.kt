@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 
 object StanBall: IShopItem.ShopItem("stan_ball", Material.SNOWBALL) {
     override val displayName: String = languages("item.${id}.name")
@@ -41,7 +42,10 @@ object StanBall: IShopItem.ShopItem("stan_ball", Material.SNOWBALL) {
         }
         WereWolf3.INSTANCE.registerEvent<PlayerMoveEvent> { event ->
             if(stanPlayers.contains(event.player)) {
-                event.player.teleport(event.player.location.also { it.pitch=-90f;it.yaw=0f })
+                val to = (event.to?:event.player.location)
+                if(to.pitch != -90f) {
+                    event.player.teleport(to.setDirection(Vector(0,1,0)))
+                }
             }
         }
         WereWolf3.INSTANCE.registerEvent<ProjectileHitEvent> { event ->

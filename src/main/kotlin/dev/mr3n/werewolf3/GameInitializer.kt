@@ -112,6 +112,7 @@ object GameInitializer {
             Role.values().forEachIndexed { index, role -> player.inventory.setItem(9+index, role.helmet) }
             player.sendMessage(languages("title.start.messages.info", "%wolf_teams%" to wolfs.size, "%villager_teams%" to WereWolf3.PLAYERS.size - wolfs.size))
             player.sidebar = RunningSidebar(player)
+            player.role?.items?.map { it.itemStack }?.forEach { player.inventory.addItem(it) }
         }
         WereWolf3.STATUS = Status.RUNNING
         WereWolf3.TIME = Time.DAY

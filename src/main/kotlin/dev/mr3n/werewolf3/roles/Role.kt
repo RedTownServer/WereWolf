@@ -1,6 +1,8 @@
 package dev.mr3n.werewolf3.roles
 
 import dev.mr3n.werewolf3.WereWolf3
+import dev.mr3n.werewolf3.items.IShopItem
+import dev.mr3n.werewolf3.utils.constants
 import dev.mr3n.werewolf3.utils.container
 import dev.mr3n.werewolf3.utils.languages
 import net.md_5.bungee.api.ChatColor
@@ -49,6 +51,9 @@ enum class Role() {
     private val unit = Unit.valueOf(config.getString("roles.${this.lowercase()}.unit")!!)
     // 役職を有効にする際の最小参加人数
     private val minP = config.getInt("roles.${this.lowercase()}.min_players")
+    val items: List<IShopItem>
+        get() = constants<String>("roles.${this.lowercase()}.items").mapNotNull { IShopItem.ShopItem.ITEMS_BY_ID[it] }
+
 
     // 役職の人数を参加者数から計算
     fun calc(players: Int): Int {

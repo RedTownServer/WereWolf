@@ -65,7 +65,7 @@ interface IShopItem {
 
     fun onSetItemMeta(itemMeta: ItemMeta)
 
-    fun buy(player: Player)
+    fun buy(player: Player): Boolean
 
     abstract class ShopItem(final override val id: String, val material: Material): IShopItem {
 
@@ -101,13 +101,15 @@ interface IShopItem {
 
         override fun onEnd() {}
 
-        override fun buy(player: Player) {
-            if(player.money >= price) {
+        override fun buy(player: Player): Boolean {
+            return if(player.money >= price) {
                 player.money -= price
                 player.inventory.addItem(itemStack)
                 player.sendMessage(languages("shop.bought", "%item%" to displayName, "%price%" to price).asPrefixed())
+                true
             } else {
                 player.sendMessage(languages("shop.cant_buy", "%item%" to displayName, "%price%" to price).asPrefixed())
+                false
             }
         }
 
@@ -135,6 +137,7 @@ interface IShopItem {
             val SPEED_POTION = SpeedPotion
             val STONE_SWORD = StoneSword
             val LAST_RESORT = LastResort
+            val DEAD_BODY_REMOVER = DeadBodyRemover
         }
     }
 }

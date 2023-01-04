@@ -143,6 +143,15 @@ items:
     price: 300
     roles:
       - WOLF
+  dead_body_remover:
+    price: 300
+    roles:
+      - VILLAGER
+      - DOCTOR
+      - WOLF
+      - MADMAN
+      - SEER
+      - MEDIUM
 roles:
   seer:
     priority: 1

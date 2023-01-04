@@ -1,8 +1,8 @@
 package dev.mr3n.werewolf3
 
 import com.rylinaux.plugman.util.PluginUtil
-import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.items.IShopItem
+import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
@@ -107,9 +107,9 @@ object GameTerminator {
                 // <<< バグって動かないようにちょっとずらしてスポーン地点にてレポート <<<
             }
         } catch(e: Exception) { e.printStackTrace() }
-        try { WereWolf3.PLAYERS.clear() } catch(_: Exception) {}
         // 死体を全削除
         try { DeadBody.DEAD_BODIES.forEach { it.destroy() } } catch(_: Exception) {}
+        try { WereWolf3.PLAYERS.clear() } catch(_: Exception) {}
         // プラグインをreload
         if(!shutdown) {
             if(WereWolf3.isPlugmanLoaded) { PluginUtil.reload(WereWolf3.INSTANCE) } else { Bukkit.getServer().reload() }

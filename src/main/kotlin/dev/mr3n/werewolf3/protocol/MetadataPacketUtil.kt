@@ -128,19 +128,19 @@ object MetadataPacketUtil {
                 val packet = event.packet.deepClone()
                 // エンティティID
                 val entityId = packet.integers.read(0)
+                // entityを取得
+                val entity = ENTITY_MAPPING[entityId]?:return
+                // entityの発光情報が格納されているdwを取得
+                val dataWatcher = createDataWatcher(player, entity)
+                val skinLayers = WrappedDataWatcher.WrappedDataWatcherObject(17, WrappedDataWatcher.Registry.get(Byte::class.javaObjectType))
+                dataWatcher.setObject(skinLayers, (0x01 or 0x02 or 0x04 or 0x08 or 0x10 or 0x20 or 0x40).toByte())
                 // エンティティが発行している必要がある場合
-                if(GLOWING_PLAYERS[player.uniqueId]?.contains(entityId)==true || INVISIBLE_PLAYERS[player.uniqueId]?.contains(entityId)==true) {
-                    // entityを取得
-                    val entity = ENTITY_MAPPING[entityId]?:return
-                    // entityの発光情報が格納されているdwを取得
-                    val dataWatcher = createDataWatcher(player, entity)
-                    // dwに発行しているという情報を書き込む
-                    val wrappedDataValueList = dataWatcher.watchableObjects.map { WrappedDataValue(it.watcherObject.index, it.watcherObject.serializer, it.rawValue) }
-                    // そのdwをパケットに書き込む
-                    packet.dataValueCollectionModifier.write(0, wrappedDataValueList)
-                    // 編集したパケットを送信する
-                    event.packet = packet
-                }
+                // dwに発行しているという情報を書き込む
+                val wrappedDataValueList = dataWatcher.watchableObjects.map { WrappedDataValue(it.watcherObject.index, it.watcherObject.serializer, it.rawValue) }
+                // そのdwをパケットに書き込む
+                packet.dataValueCollectionModifier.write(0, wrappedDataValueList)
+                // 編集したパケットを送信する
+                event.packet = packet
             }
         })
     }

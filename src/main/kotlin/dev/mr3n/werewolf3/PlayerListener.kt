@@ -1,6 +1,6 @@
 package dev.mr3n.werewolf3
 
-import dev.mr3n.werewolf3.citizens2.DeadBody
+import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.sidebar.DeathSidebar
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
@@ -28,6 +28,8 @@ object PlayerListener: Listener {
     fun onDead(event: PlayerDeathEvent) {
         val player = event.entity
         val killer = player.killer
+        if(!WereWolf3.PLAYERS.contains(player)) { return }
+        if(!WereWolf3.PLAYERS.contains(killer)) { return }
         if(killer!=null) {
             killer.playSound(killer, Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f)
             killer.addKill(player)
@@ -125,7 +127,11 @@ object PlayerListener: Listener {
     fun onDamage(event: EntityDamageEvent) {
         val player = event.entity
         if(player !is Player) { return }
-        if(WereWolf3.STATUS==Status.RUNNING) { return }
-        event.isCancelled = true
+        if(player.gameMode==GameMode.SPECTATOR) {
+            event.isCancelled = true
+        } else {
+            if (WereWolf3.STATUS == Status.RUNNING) { return }
+            event.isCancelled = true
+        }
     }
 }

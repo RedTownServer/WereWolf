@@ -22,16 +22,22 @@ object LastResort: IShopItem.ShopItem("last_resort",Material.END_CRYSTAL) {
 
     private var hasBought = false
 
-    override fun buy(player: Player) {
-        if(hasBought) {
+    override fun buy(player: Player): Boolean {
+        return if(hasBought) {
             player.sendMessage(messages("already_bought").asPrefixed())
+            false
         } else {
             hasBought = true
-            player.inventory.addItem(itemStack)
-            WereWolf3.PLAYERS.filter { it.role == Role.WOLF }.forEach { wolf ->
-                wolf.playSound(wolf, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 0f)
-                wolf.sendTitle(LAST_RESORT_TITLE_TEXT, messages("bought", "%player%" to player.name), 0, 100, 20)
-                wolf.sendMessage(messages("what").asPrefixed())
+            // 購入が成功した場合すべての人狼に購入した旨を通知する
+            if(super.buy(player)) {
+                WereWolf3.PLAYERS.filter { it.role == Role.WOLF }.forEach { wolf ->
+                    wolf.playSound(wolf, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 0f)
+                    wolf.sendTitle(LAST_RESORT_TITLE_TEXT, messages("bought", "%player%" to player.name), 0, 100, 20)
+                    wolf.sendMessage(messages("what").asPrefixed())
+                }
+                true
+            } else {
+                false
             }
         }
     }

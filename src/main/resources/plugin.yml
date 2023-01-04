@@ -4,7 +4,6 @@ name: WereWolf3
 version: 1.0
 depend:
   - ProtocolLib
-  - Citizens
 softdepend:
   - PlugManX
 commands:

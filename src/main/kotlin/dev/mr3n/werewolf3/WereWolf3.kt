@@ -4,9 +4,9 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
-import dev.mr3n.werewolf3.citizens2.DeadBody
 import dev.mr3n.werewolf3.commands.Start
 import dev.mr3n.werewolf3.items.IShopItem
+import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
@@ -50,55 +50,13 @@ class WereWolf3: JavaPlugin() {
         SpectatorPacketUtil.init()
         GameTerminator.init()
         Role.ROLES
+        Time.DAY
         // <<< クラスの初期化 <<<
         this.getCommand("debug")?.also {
             it.setExecutor { sender, _, _, args ->
                 if(sender !is Player) { return@setExecutor true  }
                 when(args.getOrNull(0)) {
                     "test1" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.DOCTOR_SWORD.itemStack)
-                    }
-                    "test2" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.SEER_ITEM.itemStack)
-                    }
-                    "test3" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.BOMB_BALL.itemStack)
-                    }
-                    "test4" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.WOLF_AXE.itemStack)
-                    }
-                    "test5" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.STAN_BALL.itemStack)
-                    }
-                    "test6" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.GLOW_INK.itemStack)
-                    }
-                    "test7" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.LIGHTNING_ROD.itemStack)
-                    }
-                    "test8" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.HEALTH_CHARGER.itemStack)
-                    }
-                    "test9" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.HEAL_POTION.itemStack)
-                    }
-                    "test10" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.ASSASSIN_SWORD.itemStack)
-                    }
-                    "test11" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.INVISIBLE_POTION.itemStack)
-                    }
-                    "test12" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.WOLF_GUIDE.itemStack)
-                    }
-                    "test13" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.ONE_SHOT_BOW.itemStack)
-                    }
-                    "test14" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.TOTEM.itemStack)
-                    }
-                    "test15" -> {
-                        sender.inventory.addItem(IShopItem.ShopItem.SPEED_POTION.itemStack)
                     }
                 }
                 true
@@ -111,7 +69,7 @@ class WereWolf3: JavaPlugin() {
                 // 待機中にループする処理
                 WAITING -> {
                     // 点滅速度
-                    if(loopCount% Constants.POINT_FLUSH_SPEED!=0) {
+                    if(loopCount % Constants.POINT_FLUSH_SPEED!=0) {
                         // ...の.の数を計算
                         val loadingDots = ".".repeat((loopCount%(Constants.POINT_FLUSH_SPEED*4))/ Constants.POINT_FLUSH_SPEED)
                         // bossbarに...のアニメーションを追加

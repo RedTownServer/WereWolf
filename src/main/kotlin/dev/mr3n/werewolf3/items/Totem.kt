@@ -5,7 +5,10 @@ import dev.mr3n.werewolf3.Time
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.events.WereWolf3DamageEvent
 import dev.mr3n.werewolf3.utils.languages
-import org.bukkit.*
+import org.bukkit.EntityEffect
+import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityResurrectEvent
 import org.bukkit.potion.PotionEffect

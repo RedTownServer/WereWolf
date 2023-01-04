@@ -17,8 +17,6 @@ repositories {
     maven("https://repo.dmulloy2.net/repository/public/")
     // for minepie
     maven("https://jitpack.io")
-    // for citizens
-    maven("https://maven.citizensnpcs.co/repo")
     // for plugmanx
     maven("https://raw.githubusercontent.com/TheBlackEntity/PlugMan/repository/")
 }
@@ -27,9 +25,6 @@ dependencies {
     testImplementation(kotlin("test"))
     compileOnly("org.spigotmc:spigot:1.19.3-R0.1-SNAPSHOT")
     compileOnly(files("libs/ProtocolLib.jar"))
-    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
-        exclude(group="*",module="*")
-    }
     compileOnly("com.rylinaux:PlugMan:2.2.9")
     implementation("com.github.moruch4nn:MinePie:4406de1615")
 }

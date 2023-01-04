@@ -14,7 +14,7 @@ messages:
   player_joined: "%player% が人狼に参加しました。"
   player_rejoined: "%player% が戻りました。"
   coming_out: "%color%%player%が%role%をCoしました。"
-  wolfs: "&f仲間の人狼: &4%wolfs%"
+  wolfs: "&c人狼は: %wolfs% &cです。"
   result:
     header: "========== 結果 =========="
     prefix: "&a"
@@ -25,7 +25,7 @@ title:
     title: "役職: %role%"
     subtitle: "%time%秒後にゲームが開始します"
     messages:
-      co: "&nインベントリにCo(カミングアウト)帽子が配布されました！帽子を被ることで役職をカミングアウトできます。"
+      info: "&4黒陣営(人狼、狂人など): %wolf_teams%人\n&b白陣営(村人、占師など): %villager_teams%人"
   time:
     title: "%emoji%%time%になりました%emoji%"
   win:
@@ -227,6 +227,16 @@ item:
       bought: ":苦肉の策:を%player%が購入した"
       what: ":苦肉の策:は&c試合に一度しか使用できない&f重要な切り札アイテムです。使用すると&cすべての人狼のプレイヤー名が公開&fされる代わりに&c&n残り日数が一日追加&fされます。"
       already_bought: "すでにこのアイテムは人狼に購入されています。このアイテムは試合中に一度しか購入できません。"
+  dead_body_remover:
+    name: "&c死体消し"
+    description: "任意のプレイヤーの死体を燃やして隠蔽することができる。"
+    comment: "死体の赤いモヤのところをクリックしてね！"
+    title:
+      remover:
+        title: "死体消し"
+        color: "&4"
+    messages:
+      subtitle: "%player% の死体を燃やしました。"
 time:
   day:
     name: "&6朝"

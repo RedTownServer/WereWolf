@@ -1,7 +1,7 @@
 package dev.mr3n.werewolf3
 
 import dev.moru3.minepie.item.EasyItem
-import dev.mr3n.werewolf3.citizens2.DeadBody
+import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.TeamPacketUtil
 import dev.mr3n.werewolf3.roles.Role
@@ -85,6 +85,7 @@ object GameInitializer {
      * 役職発表など準備完了後に行う処理
      */
     fun run() {
+        val wolfs = WereWolf3.PLAYERS.filter { it.role?.team == Role.Team.WOLF }
         WereWolf3.PLAYERS.forEach {  player ->
             // ショップを開くアイテムを設置。 TODO
             player.inventory.setItem(8,
@@ -102,7 +103,7 @@ object GameInitializer {
             // 矢を渡す。
             player.inventory.addItem(EasyItem(Material.ARROW))
             Role.values().forEachIndexed { index, role -> player.inventory.setItem(9+index, role.helmet) }
-            player.sendMessage(languages("title.start.messages.co").asPrefixed())
+            player.sendMessage(languages("title.start.messages.info", "%wolf_teams%" to wolfs.size, "%villager_teams%" to WereWolf3.PLAYERS.size - wolfs.size))
             player.sidebar = RunningSidebar(player)
         }
         WereWolf3.STATUS = Status.RUNNING

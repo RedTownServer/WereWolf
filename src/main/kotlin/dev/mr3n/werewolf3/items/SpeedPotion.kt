@@ -1,6 +1,5 @@
 package dev.mr3n.werewolf3.items
 
-import dev.moru3.minepie.Executor.Companion.runTaskTimer
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
@@ -19,8 +18,6 @@ object SpeedPotion: IShopItem.ShopItem("speed_potion", Material.POTION) {
 
     private val LEVEL: Int = constant("level")
 
-    private val INVISIBLE_TITLE_TEXT = titleText("item.$id.title.speed")
-
     override val description: String = languages("item.$id.description", "%time%" to TIME / 20)
 
     override fun onSetItemMeta(itemMeta: ItemMeta) {
@@ -30,11 +27,6 @@ object SpeedPotion: IShopItem.ShopItem("speed_potion", Material.POTION) {
     }
 
     init {
-        WereWolf3.INSTANCE.runTaskTimer(20L,20L) {
-            WereWolf3.PLAYERS.filter { it.hasPotionEffect(PotionEffectType.INVISIBILITY) }.forEach { player ->
-                player.sendTitle(INVISIBLE_TITLE_TEXT, messages("remaining_time", "%time%" to (player.getPotionEffect(PotionEffectType.INVISIBILITY)?.duration?.div(20)?:-1)), 0, 30, 0)
-            }
-        }
         WereWolf3.INSTANCE.registerEvent<PlayerItemConsumeEvent> { event ->
             val player = event.player
             val item = event.item

@@ -72,9 +72,8 @@ enum class Time(val barColor: BarColor) {
                 player.sendMessage("${WereWolf3.TIME.title}:${ChatColor.WHITE} ${WereWolf3.TIME.description}".asPrefixed())
                 // プレイヤーに朝になった旨を伝える。
                 player.sendTitle(WereWolf3.TIME.title, WereWolf3.TIME.description, 0, 100, 20)
-                // TODO レコードを流す
-                // ぴろりーんの効果音
-                player.world.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                // ぷーぷっぷぷーの効果音
+                player.world.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_0, 1f, 1f)
                 // ボスバーの色を朝の色に変更
                 WereWolf3.BOSSBAR.color = WereWolf3.TIME.barColor
                 // ワールドの時間帯を朝に変更

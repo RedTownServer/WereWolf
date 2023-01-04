@@ -8,6 +8,7 @@ import dev.mr3n.werewolf3.items.madman.FakeMediumItem
 import dev.mr3n.werewolf3.items.madman.FakeSeerItem
 import dev.mr3n.werewolf3.items.madman.WolfGuide
 import dev.mr3n.werewolf3.items.medium.MediumItem
+import dev.mr3n.werewolf3.items.seer.MultipleSeerItem
 import dev.mr3n.werewolf3.items.seer.SeerItem
 import dev.mr3n.werewolf3.items.wolf.*
 import dev.mr3n.werewolf3.roles.Role
@@ -146,6 +147,7 @@ interface IShopItem {
             val STONE_SWORD = StoneSword
             val LAST_RESORT = LastResort
             val DEAD_BODY_REMOVER = DeadBodyRemover
+            val MULTIPLE_SEER_ITEM = MultipleSeerItem
         }
     }
 }

@@ -16,7 +16,13 @@ items:
     price: 300
     roles:
       - SEER
-    seer_time: 60
+    seer_time: 80
+  multiple_seer:
+    price: 300
+    roles:
+      - SEER
+    distance: 5.0
+    seer_time: 50
   medium:
     price: 300
     roles:
@@ -225,3 +231,18 @@ roles:
     min_players: 0
     min: 3
     description: 村人は全滅しないように最後まで生き残ることが目標です。また村人は占い師や医者のように他の役職が持っているような特殊能力を持っていないため他の村陣営の役職と協力しながらゲームを進めることが重要です。
+message_commands:
+  - "/msg"
+  - "/tell"
+  - "/w"
+  - "/teammsg"
+  - "/tm"
+  - "/say"
+  - "/me"
+  - "/minecraft:msg"
+  - "/minecraft:tell"
+  - "/minecraft:w"
+  - "/minecraft:teammsg"
+  - "/minecraft:tm"
+  - "/minecraft:say"
+  - "/minecraft:me"

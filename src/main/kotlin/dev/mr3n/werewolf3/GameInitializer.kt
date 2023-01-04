@@ -41,7 +41,6 @@ object GameInitializer {
         players.forEach { player -> player.gameId = WereWolf3.GAME_ID }
         // プレイヤー人数から役職数を推定してリストに格納。 roleList.length == players.length
         val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(SecureRandom.getInstance("SHA1PRNG"))
-        // TODO カメラアニメーションをつける
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
             // プレイヤーの役職を設定。
@@ -64,6 +63,7 @@ object GameInitializer {
             player.gameMode = GameMode.ADVENTURE
             player.kills = intArrayOf()
             player.inventory.contents.filterNotNull().forEach { it.amount = 0 }
+            MetadataPacketUtil.resetAll(player)
         }
         // 時間を設定
         WereWolf3.TIME_LEFT = Constants.STARTING_TIME

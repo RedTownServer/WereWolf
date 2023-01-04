@@ -4,7 +4,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
-import dev.mr3n.werewolf3.protocol.InvisiblePacketUtil
+import dev.mr3n.werewolf3.protocol.InvisibleEquipmentPacketUtil
 import dev.mr3n.werewolf3.utils.languages
 import org.bukkit.Color
 import org.bukkit.Material
@@ -38,7 +38,7 @@ object InvisiblePotion: IShopItem.ShopItem("invisible_potion", Material.POTION) 
                     if(event.newEffect?.type!=PotionEffectType.INVISIBILITY) { return@registerEvent }
                     WereWolf3.INSTANCE.runTaskLater(1L) {
                         WereWolf3.PLAYERS.forEach { sendTo ->
-                            InvisiblePacketUtil.add(sendTo, player, 10, EnumWrappers.ItemSlot.HEAD, EnumWrappers.ItemSlot.CHEST, EnumWrappers.ItemSlot.LEGS, EnumWrappers.ItemSlot.FEET)
+                            InvisibleEquipmentPacketUtil.add(sendTo, player, 10, EnumWrappers.ItemSlot.HEAD, EnumWrappers.ItemSlot.CHEST, EnumWrappers.ItemSlot.LEGS, EnumWrappers.ItemSlot.FEET)
                         }
                     }
                 }
@@ -46,13 +46,13 @@ object InvisiblePotion: IShopItem.ShopItem("invisible_potion", Material.POTION) 
                     if(event.oldEffect?.type!=PotionEffectType.INVISIBILITY) { return@registerEvent }
                     // イベント発生直後はエフェクトが残っている判定なので1tick後に帽子を復元するパケットを送信
                     WereWolf3.INSTANCE.runTaskLater(1L) {
-                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.remove(sendTo, player, 10) }
+                        WereWolf3.PLAYERS.forEach { sendTo -> InvisibleEquipmentPacketUtil.remove(sendTo, player, 10) }
                     }
                 }
                 EntityPotionEffectEvent.Action.CLEARED -> {
                     // イベント発生直後はエフェクトが残っている判定なので1tick後に帽子を復元するパケットを送信
                     WereWolf3.INSTANCE.runTaskLater(1L) {
-                        WereWolf3.PLAYERS.forEach { sendTo -> InvisiblePacketUtil.remove(sendTo, player, 10) }
+                        WereWolf3.PLAYERS.forEach { sendTo -> InvisibleEquipmentPacketUtil.remove(sendTo, player, 10) }
                     }
                 }
                 else -> {}

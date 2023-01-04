@@ -74,31 +74,33 @@ object GameTerminator {
         try { IShopItem.ShopItem.ITEMS.forEach { it.onEnd() } } catch(_: Exception) { }
 
         try {
-            // 発光、チームをリセット
             WereWolf3.PLAYERS.forEach { player ->
-                player.world.time = 8000
-                player.flySpeed = 0.2f
-                player.walkSpeed = 0.2f
-                // チームの色を削除
-                TeamPacketUtil.removeAll(player, ChatColor.DARK_RED,)
-                // パケットで発光を送信していた場合は削除
-                MetadataPacketUtil.removeAllGlowing(player)
-                // パケットで透明を送信していた場合は削除
-                MetadataPacketUtil.removeAllInvisible(player)
-                // co帽子などで表示名が変わっている場合は戻す
-                player.setDisplayName(player.name)
-                player.setPlayerListName(player.name)
-                player.activePotionEffects.forEach { player.removePotionEffect(it.type) }
-                // 人狼関係のデータを削除
+                // 人狼ゲーム関係のデータを削除
                 player.kills = null
                 player.role = null
                 player.co = null
                 player.will = null
                 // インベントリを削除
                 player.inventory.clear()
+
+            }
+        } catch(e: Exception) { e.printStackTrace() }
+        try {
+            Bukkit.getOnlinePlayers().forEach { player ->
                 // サイドバーを待機中のものに変更
                 player.sidebar = WaitingSidebar()
                 player.gameMode = GameMode.ADVENTURE
+                // co帽子などで表示名が変わっている場合は戻す
+                player.setDisplayName(player.name)
+                player.setPlayerListName(player.name)
+                player.world.time = 8000
+                player.flySpeed = 0.2f
+                player.walkSpeed = 0.2f
+                // チームの色を削除
+                TeamPacketUtil.removeAll(player, ChatColor.DARK_RED,)
+                // パケットで発光、透明化を送信していた場合は削除
+                MetadataPacketUtil.resetAll(player)
+                player.activePotionEffects.forEach { player.removePotionEffect(it.type) }
                 // >>> バグって動かないようにちょっとずらしてスポーン地点にてレポート >>>
                 val tc = (0..100)
                 player.teleport(player.world.spawnLocation.clone().add(tc.random()/100.0,0.0,tc.random()/100.0))

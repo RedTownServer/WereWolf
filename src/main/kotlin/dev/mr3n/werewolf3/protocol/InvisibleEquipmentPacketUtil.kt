@@ -3,17 +3,14 @@ package dev.mr3n.werewolf3.protocol
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
-import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import com.comphenix.protocol.wrappers.Pair
 import dev.mr3n.werewolf3.WereWolf3
-import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 
-object InvisiblePacketUtil {
+object InvisibleEquipmentPacketUtil {
 
     private val INVISIBLE_PLAYERS = mutableMapOf<Player,MutableMap<Int, MutableMap<Short, List<ItemSlot>>>>()
     private val ITEM_SLOT_MAPPING = mapOf<ItemSlot, (PlayerInventory)->ItemStack?>(

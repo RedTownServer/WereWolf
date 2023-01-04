@@ -1,6 +1,7 @@
 package dev.mr3n.werewolf3
 
 import dev.mr3n.werewolf3.utils.constant
+import dev.mr3n.werewolf3.utils.constants
 
 /**
  * 定数一覧。
@@ -29,4 +30,6 @@ object Constants {
         get() = constant("game.conversation_distance")
     val BE_PREFIX: String
         get() = constant("be_prefix")
+    val MESSAGE_COMMANDS: List<String>
+        get() = constants("message_commands")
 }

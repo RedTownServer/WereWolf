@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.WrappedDataValue
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.mr3n.werewolf3.WereWolf3
+import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import java.util.*
@@ -84,6 +85,16 @@ object MetadataPacketUtil {
     fun removeAllInvisible(player: Player) {
         val entities = INVISIBLE_PLAYERS[player.uniqueId]?:return
         entities.mapNotNull { ENTITY_MAPPING[it] }.forEach { entity -> removeFromGlowing(player, entity) }
+    }
+
+    fun resetAll(player: Player) {
+        GLOWING_PLAYERS.remove(player.uniqueId)
+        Bukkit.getOnlinePlayers().forEach { entity ->
+            // 発光するエンティティ一覧からプレイヤーを削除
+            GLOWING_PLAYERS[player.uniqueId]?.remove(entity.entityId)
+            // 削除するパケットを送信
+            WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, createMetadataPacket(player, entity))
+        }
     }
 
     /**

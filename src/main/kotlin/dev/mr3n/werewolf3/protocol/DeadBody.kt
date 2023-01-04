@@ -9,10 +9,7 @@ import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.events.WereWolf3DeadBodyClickEvent
 import dev.mr3n.werewolf3.utils.*
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Color
-import org.bukkit.Particle
+import org.bukkit.*
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
@@ -43,6 +40,7 @@ class DeadBody(val player: Player) {
         WereWolf3.PLAYERS.forEach { player2 ->
             player2.sendMessage(languages("messages.found_dead_body", "%player%" to name).asPrefixed())
         }
+        player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if(co!=null) {
             this.player.setPlayerListName("${co.color}${ChatColor.STRIKETHROUGH}[${co.displayName}Co]${this.player.name}")
         } else {
@@ -69,6 +67,18 @@ class DeadBody(val player: Player) {
     private val gameProfile = WrappedGameProfile(uniqueId, player.name)
 
     private val showedPlayers = mutableListOf<Player>()
+
+    private val helmet = player.inventory.helmet?.clone()
+
+    private val chestPlate = player.inventory.chestplate?.clone()
+
+    private val leggings = player.inventory.leggings?.clone()
+
+    private val boots = player.inventory.boots?.clone()
+
+    private val mainHand = player.inventory.itemInMainHand.clone()
+
+    private val offHand = player.inventory.itemInOffHand.clone()
 
     fun onClick(player: Player) {
         val event = WereWolf3DeadBodyClickEvent(player, this)
@@ -132,6 +142,7 @@ class DeadBody(val player: Player) {
         namedEntitySpawn.bytes
             .writeSafely(0, ((location.yaw*256.0f)/360.0f).toInt().toByte())
             .writeSafely(1, ((location.pitch*256.0f)/360.0f).toInt().toByte())
+
         // プレイヤーの情報を送信するパケット。ここでプレイヤーのスキンや名前などを送信する
         val playerInfo = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.PLAYER_INFO)
         playerInfo.playerInfoActions.writeSafely(0,setOf(EnumWrappers.PlayerInfoAction.ADD_PLAYER))
@@ -150,10 +161,25 @@ class DeadBody(val player: Player) {
         val pose = WrappedDataWatcher.WrappedDataWatcherObject(6, WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass()))
         dataWatcher.setObject(pose,  EnumWrappers.EntityPose.SLEEPING)
         entityMetadata.dataValueCollectionModifier.writeSafely(0, dataWatcher.watchableObjects.map { WrappedDataValue(it.watcherObject.index, it.watcherObject.serializer, it.rawValue) })
+
+        // 装備をつける
+        val setEquipment = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT)
+        setEquipment.integers.writeSafely(0, entityId)
+        val equipments = listOf(
+            Pair(EnumWrappers.ItemSlot.HEAD, helmet),
+            Pair(EnumWrappers.ItemSlot.CHEST, chestPlate),
+            Pair(EnumWrappers.ItemSlot.LEGS, leggings),
+            Pair(EnumWrappers.ItemSlot.FEET, boots),
+            Pair(EnumWrappers.ItemSlot.MAINHAND, mainHand),
+            Pair(EnumWrappers.ItemSlot.OFFHAND, offHand)
+        )
+        setEquipment.slotStackPairLists.writeSafely(0, equipments)
+
         players.forEach { p ->
             WereWolf3.PROTOCOL_MANAGER.sendServerPacket(p,playerInfo)
             WereWolf3.PROTOCOL_MANAGER.sendServerPacket(p,namedEntitySpawn)
             WereWolf3.PROTOCOL_MANAGER.sendServerPacket(p,entityMetadata)
+            WereWolf3.PROTOCOL_MANAGER.sendServerPacket(p,setEquipment)
         }
         show(players)
     }

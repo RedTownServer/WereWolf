@@ -1,7 +1,9 @@
 name: "&4&l人狼ＰＶＰ"
 prefix: "&4&l[人狼PvP]&f"
-chat: "%name%&a: &f%message%"
+chat_format: "%name%&a: &f%message%"
+death_chat_format: "&7[死亡者チャット]%name%&7: %message%"
 none: "なし"
+force_end: "GMがゲームを終了しました。"
 send_message_at_night: "&e&l[半径%distance%m以内のプレイヤーにメッセージを送信しました！]"
 be_cannot_use_item: "統合版ではこのアイテムを使用できません。対応をお待ち下さい。\nまた、%item%は次のアイテムで代用できるかもしれません: %substitute%"
 shop:
@@ -80,6 +82,19 @@ item:
       result:
         wolf: "%player%は&c人狼です。"
         villager: "%player%は&c人狼では&nありません。"
+  multiple_seer:
+    name: "&d範囲占いアイテム"
+    description: "近くに人狼がいるかどうかを占うことができます。"
+    comment: "半径はまあまあ小さいから占うときは近くのプレイヤーに報告しよう！"
+    title:
+      seer:
+        color: "&d"
+        title: "占い"
+    messages:
+      init: "占い中..."
+      result:
+        wolf: "範囲内に&c人狼がいます。"
+        villager: "範囲内に&c人狼は&nいません。"
   medium:
     name: "&d霊媒アイテム"
     description: "プレイヤーの死体のモヤを右クリック長押しすることで\nそのプレイヤーの遺言や役職などを確認することができます。"

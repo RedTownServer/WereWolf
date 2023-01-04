@@ -8,6 +8,8 @@ import dev.mr3n.werewolf3.sidebar.WaitingSidebar
 import dev.mr3n.werewolf3.utils.*
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -19,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -26,6 +29,14 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object PlayerListener: Listener {
+
+    @EventHandler
+    fun onCommand(event: PlayerCommandPreprocessEvent) {
+        if(Constants.MESSAGE_COMMANDS.contains(event.message.split(" ").firstOrNull())) {
+            event.isCancelled = true
+        }
+    }
+
     @EventHandler
     fun onDead(event: PlayerDeathEvent) {
         val player = event.entity
@@ -59,23 +70,31 @@ object PlayerListener: Listener {
 
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
-        // 遺言を設定
-        event.player.will = event.message
-        // チャットのフォーマットを設定
-        val format = languages("chat", "%name%" to event.player.displayName, "%message%" to event.message)
-        if(WereWolf3.TIME==Time.DAY) {
-            // 朝は全員に送信
-            event.format = format
-        } else {
-            // 夜は特定の人にのみ送信
+        if(event.player.gameMode==GameMode.SPECTATOR) {
             event.isCancelled = true
-            // スペクテイター、もしくは会話可能範囲内のプレイヤーにチャットを送信
-            WereWolf3.PLAYERS
-                .associateWith { it.location.distance(event.player.location) }
-                .filter { it.key.gameMode==GameMode.SPECTATOR || it.value < Constants.CONVERSATION_DISTANCE }
-                .forEach { (player, _) -> player.sendMessage(format) }
-            event.player.playSound(event.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
-            event.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(languages("send_message_at_night", "%distance%" to Constants.CONVERSATION_DISTANCE)))
+            val format = languages("chat_format", "%name%" to event.player.name, "%message%" to event.message)
+            Bukkit.getOnlinePlayers().filter { it.gameMode == GameMode.SPECTATOR }.forEach { player ->
+                player.sendMessage(format)
+            }
+        } else {
+            // 遺言を設定
+            event.player.will = event.message
+            // チャットのフォーマットを設定
+            val format = languages("chat_format", "%name%" to event.player.displayName, "%message%" to event.message)
+            if (WereWolf3.TIME == Time.DAY) {
+                // 朝は全員に送信
+                event.format = format
+            } else {
+                // 夜は特定の人にのみ送信
+                event.isCancelled = true
+                // スペクテイター、もしくは会話可能範囲内のプレイヤーにチャットを送信
+                Bukkit.getOnlinePlayers()
+                    .associateWith { it.location.distance(event.player.location) }
+                    .filter { it.key.gameMode == GameMode.SPECTATOR || it.value < Constants.CONVERSATION_DISTANCE }
+                    .forEach { (player, _) -> player.sendMessage(format) }
+                event.player.playSound(event.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                event.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(languages("send_message_at_night", "%distance%" to Constants.CONVERSATION_DISTANCE)))
+            }
         }
     }
 
@@ -100,9 +119,14 @@ object PlayerListener: Listener {
 
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
+        if(WereWolf3.PLAYERS.contains(event.player)&&event.player.gameMode!=GameMode.SPECTATOR) {
+            // 途中抜けしたプレイヤーの下を生成し、その上発見させる。
+            DeadBody(event.player).found(event.player)
+            // ゲームモードをスペクテイターに
+            event.player.gameMode = GameMode.SPECTATOR
+        }
         WereWolf3.PLAYERS.remove(event.player)
         WereWolf3.PLAYER_BY_ENTITY_ID.remove(event.player.entityId)
-        DeadBody.DEAD_BODY_BY_UUID[event.player.uniqueId]?.destroy()
     }
 
     @EventHandler
@@ -114,30 +138,25 @@ object PlayerListener: Listener {
         // ゲームが実行中かどうか
         if(WereWolf3.running) {
             // if:実行中だった場合
-            // プレイヤーが途中抜けしていたかどうか
-            if(player.gameId==null||player.gameId!=WereWolf3.GAME_ID) {
-                // if:新規参加っだった場合
-                // ｷﾗﾘｰﾝを鳴らす
-                player.playSound(player,Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
-                // 実行中であるため最後まで提起する必要であるという旨を表示
-                player.sendTitle(languages("name"), languages("messages.please_wait_for_end"), 0, 100, 20)
-                // スペクテイターに
-                player.gameMode = GameMode.SPECTATOR
-            } else {
-                // if:途中抜けだった場合
-                // 全員に復帰した旨を知らせる
-                event.joinMessage = languages("messages.player_rejoined", "%player%" to player.name).asPrefixed()
-            }
+            // ｷﾗﾘｰﾝを鳴らす
+            player.playSound(player,Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
+            // 実行中であるため最後まで提起する必要であるという旨を表示
+            player.sendTitle(languages("name"), languages("messages.please_wait_for_end"), 0, 100, 20)
+            // スペクテイターに
+            player.gameMode = GameMode.SPECTATOR
+            // なめに取り消し線
+            player.setDisplayName("${ChatColor.STRIKETHROUGH}${player.name}")
         } else {
+            event.player.gameMode = GameMode.ADVENTURE
             // if:実行中ではない場合
             // プレイヤーに待機中のボスバーを表示
             WereWolf3.BOSSBAR.addPlayer(player)
             // プレイヤーにサイドバーを表示
             player.sidebar = WaitingSidebar()
-            WereWolf3.PLAYERS.forEach { p ->
+            Bukkit.getOnlinePlayers().forEach { p ->
                 val sidebar = p.sidebar
                 if(sidebar !is WaitingSidebar) { return@forEach }
-                sidebar.players(WereWolf3.PLAYERS.size)
+                sidebar.players(Bukkit.getOnlinePlayers().size)
             }
         }
     }

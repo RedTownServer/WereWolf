@@ -3,7 +3,7 @@ package dev.mr3n.werewolf3
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import dev.moru3.minepie.Executor.Companion.runTaskAsync
 import dev.mr3n.werewolf3.protocol.DeadBody
-import dev.mr3n.werewolf3.protocol.InvisiblePacketUtil
+import dev.mr3n.werewolf3.protocol.InvisibleEquipmentPacketUtil
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.DeathSidebar
@@ -62,10 +62,10 @@ object GameRunner {
                         WereWolf3.PLAYERS.forEach s@{ player2 ->
                             if (player.role == Role.WOLF && player2.role == Role.WOLF) { return@s }
                             if (visiblePlayers.contains(player2)) {
-                                InvisiblePacketUtil.remove(player, player2, 0)
+                                InvisibleEquipmentPacketUtil.remove(player, player2, 0)
                                 MetadataPacketUtil.removeFromInvisible(player, player2)
                             } else {
-                                InvisiblePacketUtil.add(player, player2, 0, *ItemSlot.values())
+                                InvisibleEquipmentPacketUtil.add(player, player2, 0, *ItemSlot.values())
                                 MetadataPacketUtil.addToInvisible(player, player2)
                             }
                         }

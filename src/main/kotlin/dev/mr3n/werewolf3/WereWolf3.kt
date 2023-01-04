@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
+import dev.mr3n.werewolf3.commands.End
 import dev.mr3n.werewolf3.commands.Start
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.DeadBody
@@ -46,6 +47,10 @@ class WereWolf3: JavaPlugin() {
         this.getCommand("start")?.also {
             it.setExecutor(Start)
             it.tabCompleter = Start
+        }
+        this.getCommand("end")?.also {
+            it.setExecutor(End)
+            it.tabCompleter = End
         }
         // >>> クラスの初期化 >>>
         IShopItem.ShopItem.ITEMS

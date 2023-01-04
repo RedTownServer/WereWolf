@@ -3,9 +3,12 @@ package dev.mr3n.werewolf3.protocol
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
+import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import com.comphenix.protocol.wrappers.Pair
 import dev.mr3n.werewolf3.WereWolf3
+import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -75,7 +78,10 @@ object InvisiblePacketUtil {
                 val players = INVISIBLE_PLAYERS[event.player]?:return
                 val invisibleData = players[packet.integers.readSafely(0)]?:return
                 val firstKey = invisibleData.keys.minOrNull() ?:return
-                packet.slotStackPairLists.writeSafely(0, invisibleData[firstKey]?.map { Pair(it, null) })
+                val items = packet.slotStackPairLists.readSafely(0).associate { it.first to it.second }.toMutableMap()
+                items.putAll(invisibleData[firstKey]?.associate { it to null as ItemStack? }?:mapOf())
+                packet.slotStackPairLists.writeSafely(0, items.map { Pair(it.key,it.value) })
+                event.packet = packet
             }
         })
     }

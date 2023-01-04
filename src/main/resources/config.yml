@@ -169,7 +169,7 @@ roles:
     name: 占い師
     team: VILLAGER
     color: LIGHT_PURPLE
-    num: 10
+    num: 10.0
     unit: PERCENT
     min_players: 4
     min: 0
@@ -177,9 +177,9 @@ roles:
   madman:
     priority: 2
     name: 狂人
-    team: VILLAGER
+    team: WOLF
     color: DARK_RED
-    num: 10
+    num: 5.0
     unit: PERCENT
     min_players: 7
     min: 0
@@ -189,7 +189,7 @@ roles:
     name: 霊媒師
     team: VILLAGER
     color: DARK_PURPLE
-    num: 10
+    num: 10.0
     unit: PERCENT
     min_players: 8
     min: 0
@@ -199,7 +199,7 @@ roles:
     name: 人狼
     team: WOLF
     color: DARK_RED
-    num: 15
+    num: 15.0
     unit: PERCENT
     min_players: 0
     min: 2
@@ -209,7 +209,7 @@ roles:
     name: 医者
     team: VILLAGER
     color: AQUA
-    num: 10
+    num: 10.0
     unit: PERCENT
     min_players: 5
     min: 0

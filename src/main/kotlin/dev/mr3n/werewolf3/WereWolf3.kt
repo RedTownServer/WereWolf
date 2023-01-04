@@ -62,6 +62,13 @@ class WereWolf3: JavaPlugin() {
                     "test1" -> {
                         sender.inventory.addItem(IShopItem.ShopItem.ITEMS_BY_ID[args.getOrNull(1)]?.itemStack)
                     }
+                    "test2" -> {
+                        val players = args.getOrNull(1)?.toIntOrNull()?:return@setExecutor true
+                        val result = Role.values().associateWith { it.calc(players) }
+                        val wolfTeams = result.filter { it.key.team==Role.Team.WOLF }
+                        sender.sendMessage(result.mapKeys { it.key.displayName }.toString())
+                        sender.sendMessage("人狼陣営: ${wolfTeams.map { it.value }.sum()}, 村人陣営: ${players - wolfTeams.map { it.value }.sum()}")
+                    }
                 }
                 true
             }

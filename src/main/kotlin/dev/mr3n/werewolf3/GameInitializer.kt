@@ -44,9 +44,6 @@ object GameInitializer {
         // TODO カメラアニメーションをつける
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
-            repeat(20) {
-                player.sendMessage("\n")
-            }
             // プレイヤーの役職を設定。
             player.role = role
             player.co = null

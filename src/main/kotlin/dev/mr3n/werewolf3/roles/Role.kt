@@ -4,6 +4,7 @@ import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.container
 import dev.mr3n.werewolf3.utils.languages
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
+import kotlin.math.ceil
 
 enum class Role() {
     VILLAGER,
@@ -62,15 +64,15 @@ enum class Role() {
             // autoの合計役職人数を足す
             val sum = filters.sumOf { it.calc(players) }
             // 足した値をautoの役職の数で割って最小役職人数を適用
-            maxOf(min,(players - sum)/count)
+            (players - sum)/count
         } else {
             // パーセント/人で人数を決定。
             val base = when(unit) {
                 Unit.PERCENT -> { (players / 100.0) * num }
-                Unit.PLAYER -> { num }
+                Unit.PLAYER -> { num.toDouble() }
             }
             // 最小役職人数を適用。
-            maxOf(min,base.toInt())
+            maxOf(min, ceil(base).toInt())
         }
     }
 

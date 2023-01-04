@@ -29,8 +29,6 @@ object GameTerminator {
         // 役職 to プレイヤー一覧 のマップ
         val players = Role.ROLES.map { it.key to it.value.map { uniqueId -> Bukkit.getOfflinePlayer(uniqueId) } }
         WereWolf3.PLAYERS.forEach { player ->
-            // 改行を大量に送信して上のチャットを削除
-            repeat(20) { player.sendMessage("\n") }
             // どちらサイドが勝利したかをタイトルで表示
             player.sendTitle(languages("title.win.title", "%role%" to win.displayName, "%color%" to win.color), reason, 20, 100, 20)
             // ﾋﾟﾛﾘｰﾝ

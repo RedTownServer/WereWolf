@@ -56,6 +56,7 @@ object GameInitializer {
             player.sidebar = StartingSidebar(player)
             player.flySpeed = 0.2f
             player.walkSpeed = 0.2f
+            player.world.difficulty = Difficulty.PEACEFUL
             player.money = Constants.START_MONEY
             TeamPacketUtil.add(player,ChatColor.WHITE,players)
             player.setDisplayName(player.name)

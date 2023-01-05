@@ -5,6 +5,7 @@ import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.titleText
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.block.Action
@@ -40,7 +41,7 @@ object GlowInk: IShopItem.ShopItem("glow_ink", Material.GLOW_INK_SAC) {
         WereWolf3.INSTANCE.runTaskTimer(0L,20L) {
             if(glowing > 0) {
                 glowing -= 20
-                WereWolf3.PLAYERS.forEach { player ->
+                WereWolf3.PLAYERS.filter { it.gameMode != GameMode.SPECTATOR }.forEach { player ->
                     player.playSound(player,Sound.ENTITY_BEE_STING,2F,0F)
                     if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                         player.sendTitle(GLOW_TITLE_TEXT, messages("invisible"), 0, 5, 30)

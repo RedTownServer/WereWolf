@@ -5,9 +5,11 @@ import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.*
+import dev.mr3n.werewolf3.utils.asPrefixed
+import dev.mr3n.werewolf3.utils.languages
+import dev.mr3n.werewolf3.utils.role
+import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.*
-import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.cos
 import kotlin.math.sin
@@ -23,14 +25,6 @@ object MultipleSeerItem: IShopItem.ShopItem("multiple_seer", Material.ENDER_EYE)
 
     // なんか明るめの紫色みたいなやつ。ChatColor.LIGHT_PURPLE。名前統一してくれ
     private val PARTICLE_COLOR = Particle.DustOptions(Color.FUCHSIA, 1f)
-
-    override fun buy(player: Player): Boolean {
-        if(player.isBE) {
-            player.sendMessage(languages("be_cannot_use_item"))
-            return false
-        }
-        return super.buy(player)
-    }
 
     /**
      * 円を描画する関数

@@ -15,6 +15,11 @@ commands:
   end:
     description: 人狼を終了します。
     permission: werewolf3.admin.end
+  shop:
+    description: ショップを開きます。
+    aliases:
+      - s
+      - store
 permissions:
   werewolf3:
     children:

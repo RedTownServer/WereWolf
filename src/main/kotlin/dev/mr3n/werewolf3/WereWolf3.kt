@@ -4,8 +4,9 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
-import dev.mr3n.werewolf3.commands.End
-import dev.mr3n.werewolf3.commands.Start
+import dev.mr3n.werewolf3.commands.EndCommand
+import dev.mr3n.werewolf3.commands.ShopCommand
+import dev.mr3n.werewolf3.commands.StartCommand
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
@@ -45,12 +46,16 @@ class WereWolf3: JavaPlugin() {
         // すでにサーバーにいるプレイヤーのjoin eventを発生させる(初期化用)
         Bukkit.getOnlinePlayers().forEach { PlayerListener.onJoin(PlayerJoinEvent(it,null)) }
         this.getCommand("start")?.also {
-            it.setExecutor(Start)
-            it.tabCompleter = Start
+            it.setExecutor(StartCommand)
+            it.tabCompleter = StartCommand
         }
         this.getCommand("end")?.also {
-            it.setExecutor(End)
-            it.tabCompleter = End
+            it.setExecutor(EndCommand)
+            it.tabCompleter = EndCommand
+        }
+        this.getCommand("shop")?.also {
+            it.setExecutor(ShopCommand)
+            it.tabCompleter = ShopCommand
         }
         // >>> クラスの初期化 >>>
         IShopItem.ShopItem.ITEMS

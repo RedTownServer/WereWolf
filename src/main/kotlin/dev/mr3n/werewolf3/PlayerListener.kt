@@ -30,6 +30,9 @@ import org.bukkit.potion.PotionEffectType
 
 object PlayerListener: Listener {
 
+    /**
+     * tellコマンドなどその他のメッセージコマンドを無効化
+     */
     @EventHandler
     fun onCommand(event: PlayerCommandPreprocessEvent) {
         if(Constants.MESSAGE_COMMANDS.contains(event.message.split(" ").firstOrNull())) {
@@ -37,6 +40,9 @@ object PlayerListener: Listener {
         }
     }
 
+    /**
+     * 死んだ際にそのプレイヤーを死体にしてその他死亡時の処理を行う
+     */
     @EventHandler
     fun onDead(event: PlayerDeathEvent) {
         val player = event.entity
@@ -68,6 +74,9 @@ object PlayerListener: Listener {
         player.world.spawnParticle(Particle.BLOCK_CRACK,player.location.clone().add(0.0,1.5,0.0),100,0.5,.5,0.5, Material.REDSTONE_BLOCK.createBlockData())
     }
 
+    /**
+     * 夜は近くの人としか喋れない、また死亡者同士の死亡者チャットなどのの処理
+     */
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
         if(event.player.gameMode==GameMode.SPECTATOR) {
@@ -98,6 +107,9 @@ object PlayerListener: Listener {
         }
     }
 
+    /**
+     * 体力の自然回復を無効化。
+     */
     @EventHandler
     fun onRegainHealth(event: EntityRegainHealthEvent) {
         val player = event.entity
@@ -111,12 +123,19 @@ object PlayerListener: Listener {
         }
     }
 
+    /**
+     * アイテムをドロップできないようにする
+     * TODO 特定のアイテムのみドロップできないようにする
+     */
     @EventHandler
     fun onDrop(event: PlayerDropItemEvent) {
         if(!WereWolf3.PLAYERS.contains(event.player)) { return }
         event.isCancelled = true
     }
 
+    /**
+     * プレイヤーが途中抜けした際にそのプレイヤーを死体にする
+     */
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         if(WereWolf3.PLAYERS.contains(event.player)&&event.player.gameMode!=GameMode.SPECTATOR) {
@@ -127,14 +146,19 @@ object PlayerListener: Listener {
         }
         WereWolf3.PLAYERS.remove(event.player)
         WereWolf3.PLAYER_BY_ENTITY_ID.remove(event.player.entityId)
+        DeadBody.CARRYING.remove(event.player)
     }
 
+    /**
+     * プレイヤーが参加した際に実行中だった場合スペクテイターにし、大気中だった場合はボスバーやサイドバーを表示する
+     */
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
         WereWolf3.PLAYER_BY_ENTITY_ID[player.entityId] = player
         // 参加メッセージを"人狼に参加しました"に変更
         event.joinMessage = languages("messages.player_joined", "%player%" to player.name).asPrefixed()
+        WereWolf3.BOSSBAR.addPlayer(player)
         // ゲームが実行中かどうか
         if(WereWolf3.running) {
             // if:実行中だった場合
@@ -146,11 +170,11 @@ object PlayerListener: Listener {
             player.gameMode = GameMode.SPECTATOR
             // なめに取り消し線
             player.setDisplayName("${ChatColor.STRIKETHROUGH}${player.name}")
+            // プレイヤーにサイドバーを表示
+            player.sidebar = DeathSidebar(player)
         } else {
             event.player.gameMode = GameMode.ADVENTURE
             // if:実行中ではない場合
-            // プレイヤーに待機中のボスバーを表示
-            WereWolf3.BOSSBAR.addPlayer(player)
             // プレイヤーにサイドバーを表示
             player.sidebar = WaitingSidebar()
             Bukkit.getOnlinePlayers().forEach { p ->

@@ -1,9 +1,7 @@
 package dev.mr3n.werewolf3.sidebar
 
-import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.role
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Criteria
@@ -44,10 +42,6 @@ class DeathSidebar(player: Player): RunningSidebar(player) {
         // 参加プレイヤー数を設定
         players(WereWolf3.PLAYERS.size)
         // 待機時間を設定
-        // ステータスを待機中に変更
-        role(player.role)
-        money(300)
-        day(Constants.MAX_DAYS - WereWolf3.DAY)
         players(WereWolf3.PLAYERS.count { it.gameMode != GameMode.SPECTATOR })
     }
 }

@@ -15,10 +15,16 @@ import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.persistence.PersistentDataType
-import java.security.SecureRandom
 import java.util.*
 
 object GameInitializer {
+
+    private val RANDOM = Random()
+
+    init {
+        // Javaの乱数はnextDoubleをしたあとだとある程度偏りが軽減されるためnextDoubleを10回実行
+        repeat(10) { RANDOM.nextDouble() }
+    }
 
     /**
      * ゲームを初期化し、試合を開始します。
@@ -40,7 +46,9 @@ object GameInitializer {
         // プレイヤーにゲームIDを設定。
         players.forEach { player -> player.gameId = WereWolf3.GAME_ID }
         // プレイヤー人数から役職数を推定してリストに格納。 roleList.length == players.length
-        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(SecureRandom.getInstance("SHA1PRNG"))
+        val roleList = Role.values().map { role -> MutableList(role.calc(players.size)) { role } }.flatten().shuffled(RANDOM)
+        // 推定プレイヤー数を参加人数に設定(死亡確認時に減らしていく)
+        WereWolf3.PLAYERS_EST = players.size
         // 役職リストとプレイヤーのリストを合体してfor
         players.zip(roleList).toMap().forEach { (player, role) ->
             // プレイヤーの役職を設定。
@@ -81,8 +89,6 @@ object GameInitializer {
             player.sendMessage(languages("messages.wolfs", "%wolfs%" to wolfs.joinToString(" ") { it.name }).asPrefixed())
         }
 
-        WereWolf3.PLAYERS_EST = players.size
-
         WereWolf3.PLAYERS.addAll(players)
     }
 
@@ -92,6 +98,8 @@ object GameInitializer {
     fun run() {
         val wolfs = WereWolf3.PLAYERS.filter { it.role?.team == Role.Team.WOLF }
         WereWolf3.PLAYERS.forEach {  player ->
+            // アイテム配布時に人狼アイテムとかを持たないようにスロットを0に設定
+            player.inventory.heldItemSlot = 0
             player.inventory.setItem(8,
                 EasyItem(Material.AMETHYST_SHARD, languages("item.shop.open.name"), languages("item.shop.open.description").split("\n")).also { item ->
                     item.setContainerValue(Keys.ITEM_TYPE, PersistentDataType.STRING, ShopMenu.SHOP_ID)

@@ -12,7 +12,10 @@ import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
+import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -60,7 +63,11 @@ class DeadBody(val player: Player) {
 
     private val playerUniqueId = player.uniqueId
 
-    val location = player.location.clone()
+    var location = player.location.clone()
+
+    val yaw = location.yaw
+
+    val pitch = location.pitch
 
     private val armorStand = player.world.spawn(location.clone().subtract(0.0,0.5,0.0), ArmorStand::class.java)
 
@@ -184,6 +191,24 @@ class DeadBody(val player: Player) {
         show(players)
     }
 
+    private fun Float.toPacketDirection(): Byte = ((this / 360f) * 256f).toInt().toByte()
+
+    fun teleport(location: Location) {
+        this.location = location.clone()
+        val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_TELEPORT)
+        packet.integers
+            .writeSafely(0, entityId)
+        packet.bytes
+            .writeSafely(0,this.yaw.toPacketDirection())
+            .writeSafely(1,this.pitch.toPacketDirection())
+        packet.doubles
+            .writeSafely(0, this.location.x)
+            .writeSafely(1, this.location.y)
+            .writeSafely(2, this.location.z)
+        Bukkit.getOnlinePlayers().forEach { player -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet) }
+        armorStand.teleport(this.location.clone().subtract(0.0,0.5,0.0))
+    }
+
     /**
      * 死体を消します。
      */
@@ -198,6 +223,7 @@ class DeadBody(val player: Player) {
         // 一覧からも削除
         DEAD_BODIES.remove(this)
         DEAD_BODY_BY_UUID.remove(playerUniqueId)
+        CARRYING.filterValues { it == this }.keys.forEach { CARRYING.remove(it) }
     }
 
     companion object {
@@ -212,19 +238,69 @@ class DeadBody(val player: Player) {
 
         val DEAD_BODY_BY_UUID = mutableMapOf<UUID, DeadBody>()
 
+        val CARRYING = mutableMapOf<Player, DeadBody>()
+
         init {
+            /**
+             * 死体のクリック判定のところにパーティクルを出す処理
+             */
             WereWolf3.INSTANCE.runTaskTimer(10,10) {
                 DEAD_BODIES.forEach { deadBody ->
                     val location = deadBody.location.clone()
                     location.world?.spawnParticle(Particle.REDSTONE, location.add(0.0,0.5,0.0),10,0.0, 0.0, 0.0, Particle.DustOptions(if(deadBody.wasFound) Color.AQUA else Color.RED, 1f))
                 }
             }
-
             WereWolf3.INSTANCE.registerEvent<PlayerInteractAtEntityEvent> { event ->
                 val player = event.player
                 if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
                 val entity = event.rightClicked
                 ARMOR_STANDS[entity.entityId]?.onClick(player)
+            }
+
+            /**
+             * 死体を運んでいるときにタイトルを表示する
+             */
+            WereWolf3.INSTANCE.runTaskTimer(20, 20) {
+                CARRYING.forEach { (player, _) -> player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20) }
+            }
+
+            /**
+             * 死体を運ぶ処理
+             */
+            WereWolf3.INSTANCE.registerEvent<PlayerMoveEvent> { event ->
+                val player = event.player
+                if(player.isSneaking) {
+                    // if:スニークしていたら死体をプレイヤーの足元にtp
+                    val deadBody = CARRYING[player] ?: return@registerEvent
+                    deadBody.teleport(player.location)
+                }
+            }
+
+            /**
+             * スニークを解除したら死体を離す
+             */
+            WereWolf3.INSTANCE.registerEvent<PlayerToggleSneakEvent> { event ->
+                if(!event.isSneaking && CARRYING.containsKey(event.player)) {
+                    CARRYING.remove(event.player)
+                    event.player.playSound(event.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                    event.player.sendTitle(titleText("carrying_dead_body.let_go"),languages("carrying_dead_body.let_go.subtitle"), 0, 30, 20)
+                }
+            }
+
+            /**
+             * 死体を運ぶ前処理(クリック部分)
+             */
+            WereWolf3.INSTANCE.registerEvent<WereWolf3DeadBodyClickEvent>(p = EventPriority.HIGHEST, ic = true) { event ->
+                val player = event.player
+                // スニークしていなかったらreturn
+                if(!player.isSneaking) { return@registerEvent }
+                // すでに運搬中の死体だった場合return
+                if(CARRYING.values.contains(event.deadBody)) { return@registerEvent }
+                CARRYING[player] = event.deadBody
+                event.deadBody.teleport(event.player.location)
+                player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20)
+                event.isCancelled = true
             }
         }
     }

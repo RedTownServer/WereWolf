@@ -1,7 +1,7 @@
 package dev.mr3n.werewolf3.sidebar
 
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
-import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.role
 import net.md_5.bungee.api.ChatColor
@@ -26,7 +26,7 @@ open class RunningSidebar(val player: Player): ISideBar {
     // 現在のステータつ情報を表示するためのチーム
     private val roleTeam = scoreboard.registerNewTeam("role").apply { addEntry(languages("sidebar.global.role.display")) }
     // ステータス情報を設定
-    fun role(value: Role?) { if(roleTeam.suffix != "${value?.color}${ChatColor.BOLD}${value?.displayName}") { roleTeam.suffix = "${value?.color}${ChatColor.BOLD}${value?.displayName}" } }
+    fun role(value: String) { if(roleTeam.suffix != value) { roleTeam.suffix = value } }
 
     // 現在のステータつ情報を表示するためのチーム
     private val moneyTeam = scoreboard.registerNewTeam("money").apply { addEntry(languages("sidebar.running.money.display")) }
@@ -60,11 +60,11 @@ open class RunningSidebar(val player: Player): ISideBar {
         // 待機プレイヤー数
         getScore(languages("sidebar.running.day.display")).apply { score = 8 }
         // 参加プレイヤー数を設定
-        playersEst(WereWolf3.PLAYERS.size)
+        playersEst(WereWolf3.PLAYERS_EST)
         // 待機時間を設定
         // ステータスを待機中に変更
-        role(player.role)
+        role(player.role?.let { "${it.color}${ChatColor.BOLD}${it.displayName}" }?: languages("none"))
         money(300)
-        day(-1)
+        day(Constants.MAX_DAYS - WereWolf3.DAY)
     }
 }

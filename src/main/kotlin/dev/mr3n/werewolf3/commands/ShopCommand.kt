@@ -1,20 +1,20 @@
 package dev.mr3n.werewolf3.commands
 
-import dev.mr3n.werewolf3.GameTerminator
+import dev.mr3n.werewolf3.ShopMenu.openShopMenu
 import dev.mr3n.werewolf3.WereWolf3
-import dev.mr3n.werewolf3.roles.Role
-import dev.mr3n.werewolf3.utils.languages
-import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-object End: CommandExecutor, TabCompleter {
+object ShopCommand: CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender !is Player) { return false }
-        GameTerminator.end(Role.Team.VILLAGER, languages("force_end"))
+        if(!WereWolf3.PLAYERS.contains(sender)) { return true }
+        sender.playSound(sender, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+        sender.openShopMenu()
         return true
     }
 

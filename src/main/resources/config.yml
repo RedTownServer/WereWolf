@@ -7,7 +7,7 @@ game:
   day_time: 2400 # 2 minute
   night_time: 3600 # 3 minute
   add_money: 200 # per 30 sec
-  max_days: 5
+  max_days: 3 # 最大日数。最大この日数+1日になる(人狼の"苦肉の策"アイテム)
   end_time: DAY # DAY or NIGHT
   dead_body_prize: 300 # 死体発見時の賞金
   conversation_distance: 20.0 # 夜に会話可能な半径
@@ -27,7 +27,6 @@ items:
     price: 300
     roles:
       - MEDIUM
-    medium_time: 60
   bomb_ball:
     price: 300
     roles:

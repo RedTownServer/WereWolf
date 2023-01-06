@@ -43,6 +43,15 @@ title:
     title: "&4&l死亡しました"
     subtitle: "試合を観戦できます。"
     subtitle_with_killer: "%killer% に殺された。"
+carrying_dead_body:
+  carrying:
+    title: "死体運搬中"
+    color: "&c"
+    subtitle: "スニークを解除すると離します。"
+  let_go:
+    title: "死体を離した"
+    color: "&c"
+    subtitle: "スニークを続けることで運搬できます"
 item:
   comment: "ひとこと: %comment%"
   shop:
@@ -58,7 +67,7 @@ item:
     title:
       heal:
         color: "&c"
-        title: "回復"
+        title: "HEALING"
       sword:
         color: "&b"
         title: "医者の剣"
@@ -97,17 +106,13 @@ item:
         villager: "範囲内に&c人狼は&nいません。"
   medium:
     name: "&d霊媒アイテム"
-    description: "プレイヤーの死体のモヤを右クリック長押しすることで\nそのプレイヤーの遺言や役職などを確認することができます。"
+    description: "プレイヤーの死体のモヤを右クリックすることで\nそのプレイヤーの遺言や役職などを確認することができます。"
     comment: "遺言一つで大きく流れが変わることがあるから慎重にね！"
     title:
       medium:
         color: "&5"
         title: "霊媒"
     messages:
-      canceled: "霊媒をキャンセルしました。"
-      init: "%player%を霊媒中..."
-      hint:
-        how_to: "プレヤーを右クリック長押しすることで霊媒ができます。"
       success: "霊媒が完了しました。"
       header: "&5========== 霊媒 =========="
       will: "&5遺言&7: &f%will%"
@@ -120,7 +125,7 @@ item:
     title:
       warning:
         color: "&4"
-        title: "爆発注意"
+        title: "EXPLODE"
   wolf_axe:
     name: "&4人狼の斧"
     description: "チャージすることで&c一撃&7でプレイヤーを倒すことができる斧。\nチャージ完了時、および使用した際に&c大きな音が鳴る&7。"
@@ -131,10 +136,10 @@ item:
         title: "人狼の斧"
       failed:
         color: "&c"
-        title: "殺害失敗"
+        title: "FAILED"
       success:
         color: "&a"
-        title: "殺害成功"
+        title: "SUCCESS"
     messages:
       charging: "チャージしています。"
       charged: "チャージ完了"
@@ -146,7 +151,7 @@ item:
     comment: "本物の占いはプレイヤーを3秒間長押ししないといけないからたまに「止まって！」とか言うと信憑性増すかも？"
   fake_medium:
     name: "&dニセ霊媒アイテム(偽物)"
-    description: "偽物の霊媒アイテム。プレイヤーを騙す以外に使用する手段はない。"
+    description: "偽物の霊媒アイテム。"
     comment: "遺言を偽装すると結構有利に立てるかも！死人に口無し！"
   stan_ball:
     name: "&cスタンボール"
@@ -165,10 +170,11 @@ item:
     title:
       glowing:
         color: "&a"
-        title: "発光中"
+        title: "GLOWING"
     messages:
       glowing: "体が発光しています。"
       invisible: "透明なため発光していません。"
+      for_be: "BEエディションは仕様上発光が表示されません。対応をお待ち下さい。"
   lightning_rod:
     name: "&a停電"
     description: "使用することで人狼以外のすべてのプレイヤーに盲目の効果を付与する。"
@@ -176,7 +182,7 @@ item:
     title:
       blindness:
         color: "&e"
-        title: "停電中"
+        title: "停電"
     messages:
       blindness: "人狼が停電を使用した。"
       for_wolf: "プレイヤーに盲目を付与中: %sec%"
@@ -197,7 +203,7 @@ item:
     comment: "ちなみに即時回復だよ"
     title:
       healing:
-        title: "回復"
+        title: "HEALING"
         color: "&c"
     messages:
       healing: "&c❤%amount%&f回復しました。"
@@ -207,10 +213,10 @@ item:
     comment: "体の向きじゃなくて頭の向きがベースだから\n斬りかかる時は頭の向きをよく見てみてね！"
     title:
       assassin_failed:
-        title: "暗殺失敗"
+        title: "FAILED"
         color: "&c"
       assassin_success:
-        title: "暗殺成功"
+        title: "SUCCESS"
         color: "&a"
     messages:
       need_from_back: "背後から斬りかかる必要があります。"
@@ -274,31 +280,29 @@ item:
     comment: "死体のモヤのところをクリックしてね！"
     title:
       remover:
-        title: "死体消し"
+        title: "BURNING"
         color: "&4"
     messages:
-      subtitle: "%player% の死体を燃やしました。"
+      subtitle: "%player%の死体を燃やした"
   with_you:
     name: "&7一緒にいるよ"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
     comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
-      - "%player% と一緒に行動してます！"
-      - "%player% と一緒に行動中ですー"
+      - "%player% と一緒にいます[QC]"
   trust_you:
     name: "&e村人陣営だと思う"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
     comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
-      - "%player% は信用できる気がする"
-      - "%player% は村人陣営だと思う"
+      - "%player% は信用できる気がする[QC]"
+      - "%player% は村人陣営だと思う[QC]"
   you_are_wolf:
     name: "&4こいつやばい！人狼や！"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
     comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
-      - "%player%人狼！！！！"
-      - "%player%人狼！！！！！"
+      - "%player%人狼！！！！[QC]"
 time:
   day:
     name: "&6朝"

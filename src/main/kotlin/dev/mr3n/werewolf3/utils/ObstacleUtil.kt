@@ -6,7 +6,7 @@ import org.bukkit.Location
 /**
  * プレイヤーの視線上に障害物があるかどうかを確認します。ある場合はtrue
  */
-fun Location.hasObstacleInPath(end: Location, max: Double = Bukkit.getServer().viewDistance.toDouble()): Boolean {
+fun Location.hasObstacleInPath(end: Location, max: Double = Bukkit.getServer().viewDistance.toDouble() * 16): Boolean {
     // 障害物がない場合はnullが返ってくるため!=nullで比較。障害物がある場合はtrue
     val start = this.clone()
     val distance = start.distance(end)

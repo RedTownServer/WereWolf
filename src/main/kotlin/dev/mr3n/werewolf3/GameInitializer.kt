@@ -109,14 +109,14 @@ object GameInitializer {
             player.inventory.setItem(5, WithYou.itemStack)
             player.inventory.setItem(6, TrustYou.itemStack)
             player.inventory.setItem(7, YouAreWolf.itemStack)
+            // 木の剣を渡す。
+            player.inventory.addItem(EasyItem(Material.WOODEN_SWORD).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta -> itemMeta.isUnbreakable = true } })
+
             // 弓を渡す。
             player.inventory.addItem(EasyItem(Material.BOW).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta ->
                 itemMeta.addEnchant(Enchantment.ARROW_INFINITE,1,true)
                 itemMeta.isUnbreakable = true
-            } })
-            // 石の剣を渡す。
-            player.inventory.addItem(EasyItem(Material.WOODEN_SWORD).also { itemStack -> itemStack.itemMeta = itemStack.itemMeta?.also { itemMeta -> itemMeta.isUnbreakable = true } })
-            // 矢を渡す。
+            } }) // 矢を渡す。
             player.inventory.addItem(EasyItem(Material.ARROW))
             Role.values().forEachIndexed { index, role -> player.inventory.setItem(9+index, role.helmet) }
             player.sendMessage(languages("title.start.messages.info", "%wolf_teams%" to wolfs.size, "%villager_teams%" to WereWolf3.PLAYERS.size - wolfs.size))

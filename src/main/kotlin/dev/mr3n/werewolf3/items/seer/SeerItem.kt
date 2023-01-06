@@ -2,7 +2,6 @@ package dev.mr3n.werewolf3.items.seer
 
 import dev.moru3.minepie.Executor.Companion.runTaskLater
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
-import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.roles.Role

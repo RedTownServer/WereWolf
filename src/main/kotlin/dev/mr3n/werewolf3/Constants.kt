@@ -2,6 +2,7 @@ package dev.mr3n.werewolf3
 
 import dev.mr3n.werewolf3.utils.constant
 import dev.mr3n.werewolf3.utils.constants
+import dev.mr3n.werewolf3.utils.languages
 
 /**
  * 定数一覧。
@@ -20,4 +21,6 @@ object Constants {
     val CONVERSATION_DISTANCE: Double = constant("game.conversation_distance")
     val BE_PREFIX: String = constant("be_prefix")
     val MESSAGE_COMMANDS: List<String> = constants("message_commands")
+    val MONEY_UNIT: String = languages("money_unit")
+    val TEAM_KILL_BONUS: Int = constant("game.team_kill_bonus")
 }

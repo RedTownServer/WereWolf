@@ -19,7 +19,7 @@ import java.util.*
 
 object GameInitializer {
 
-    private val RANDOM = Random()
+    private val RANDOM = Random(System.currentTimeMillis())
 
     init {
         // Javaの乱数はnextDoubleをしたあとだとある程度偏りが軽減されるためnextDoubleを10回実行

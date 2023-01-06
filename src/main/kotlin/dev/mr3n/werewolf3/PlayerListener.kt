@@ -2,29 +2,21 @@ package dev.mr3n.werewolf3
 
 import dev.mr3n.werewolf3.protocol.DeadBody
 import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
+import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.DeathSidebar
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
 import dev.mr3n.werewolf3.utils.*
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.GameMode
-import org.bukkit.Material
-import org.bukkit.Particle
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.player.AsyncPlayerChatEvent
-import org.bukkit.event.player.PlayerCommandPreprocessEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.*
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -35,7 +27,7 @@ object PlayerListener: Listener {
      */
     @EventHandler
     fun onCommand(event: PlayerCommandPreprocessEvent) {
-        if(Constants.MESSAGE_COMMANDS.contains(event.message.split(" ").firstOrNull())) {
+        if(event.player.gameMode == GameMode.SPECTATOR && Constants.MESSAGE_COMMANDS.contains(event.message.split(" ").firstOrNull())) {
             event.isCancelled = true
         }
     }
@@ -53,6 +45,13 @@ object PlayerListener: Listener {
             killer.playSound(killer, Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f)
             killer.addKill(player)
             player.sendTitle(languages("title.you_are_dead.title"),languages("title.you_are_dead.subtitle_with_killer", "%killer%" to killer.name), 0, 100, 20)
+            if(player.role?.team==Role.Team.VILLAGER&&killer.role?.team==Role.Team.VILLAGER) {
+                WereWolf3.PLAYERS.filter { it.role == Role.WOLF }.forEach { wolf ->
+                    wolf.money += Constants.TEAM_KILL_BONUS
+                    wolf.sendMessage(languages("team_kill_bonus", "%money%" to "${Constants.TEAM_KILL_BONUS}${Constants.MONEY_UNIT}").asPrefixed())
+                    wolf.playSound(wolf, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                }
+            }
         } else {
             player.sendTitle(languages("title.you_are_dead.title"),languages("title.you_are_dead.subtitle"), 0, 100, 20)
         }

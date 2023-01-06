@@ -1,6 +1,7 @@
 package dev.mr3n.werewolf3.items
 
 import dev.moru3.minepie.item.EasyItem
+import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.items.doctor.DoctorSword
 import dev.mr3n.werewolf3.items.doctor.HealthCharger
@@ -13,6 +14,7 @@ import dev.mr3n.werewolf3.items.seer.SeerItem
 import dev.mr3n.werewolf3.items.wolf.*
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.utils.*
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
@@ -42,7 +44,7 @@ interface IShopItem {
     /**
      * アイテムの説明
      */
-    val description: String
+    val description: List<String>
 
     /**
      * アイテム
@@ -76,9 +78,18 @@ interface IShopItem {
         override val roles: List<Role> = constants<String>("roles").map{Role.valueOf(it)}
         override val displayName: String = languages("item.${id}.name")
         override val comment: String = languages("item.${id}.comment")
-        override val description: String = languages("item.${id}.description").let { "${it}\n\n${languages("item.comment", "%comment%" to comment)}" }
+        override val description = languages("item.${id}.description").split("\n")
+        private val lore: List<String>
+            get() {
+                return if(roles.isEmpty()) {
+                    description
+                } else {
+                    val roles = if(roles.size >= Role.values().size) languages("everyone") else roles.joinToString("${ChatColor.WHITE},") { it.asString() }
+                    description.toMutableList().apply { add("");add(languages("item.roles", "%roles%" to roles)) }
+                }
+            }
         override val itemStack: ItemStack
-            get() = EasyItem(material, displayName, description.split("\n")).also { item ->
+            get() = EasyItem(material, displayName, lore).also { item ->
                 item.itemMeta = item.itemMeta?.also { meta ->
                     meta.container.set(Keys.ITEM_ID, PersistentDataType.STRING, id)
                     ItemFlag.values().forEach { meta.addItemFlags(it) }
@@ -108,10 +119,10 @@ interface IShopItem {
             return if(player.money >= price) {
                 player.money -= price
                 player.inventory.addItem(itemStack)
-                player.sendMessage(languages("shop.bought", "%item%" to displayName, "%price%" to price).asPrefixed())
+                player.sendMessage(languages("shop.bought", "%item%" to displayName, "%price%" to "${price}${Constants.MONEY_UNIT}").asPrefixed())
                 true
             } else {
-                player.sendMessage(languages("shop.cant_buy", "%item%" to displayName, "%price%" to price).asPrefixed())
+                player.sendMessage(languages("shop.cant_buy", "%item%" to displayName, "%price%" to "${price}${Constants.MONEY_UNIT}").asPrefixed())
                 false
             }
         }

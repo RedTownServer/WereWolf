@@ -31,7 +31,7 @@ open class RunningSidebar(val player: Player): ISideBar {
     // 現在のステータつ情報を表示するためのチーム
     private val moneyTeam = scoreboard.registerNewTeam("money").apply { addEntry(languages("sidebar.running.money.display")) }
     // ステータス情報を設定
-    open fun money(value: Int) { if(moneyTeam.suffix != "${value}円") { moneyTeam.suffix = "${value}円" } }
+    open fun money(value: Int) { if(moneyTeam.suffix != "${value}${Constants.MONEY_UNIT}") { moneyTeam.suffix = "${value}${Constants.MONEY_UNIT}" } }
 
     // 現在のステータつ情報を表示するためのチーム
     private val dayTeam = scoreboard.registerNewTeam("day").apply { addEntry(languages("sidebar.running.day.display")) }

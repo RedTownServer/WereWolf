@@ -15,7 +15,7 @@ object HealPotion: IShopItem.ShopItem("heal_potion", Material.POTION) {
 
     private val CHARGER_TITLE_TEXT = titleText("item.$id.title.healing")
 
-    override val description: String = languages("item.${id}.description", "%amount%" to HEAL_AMOUNT)
+    override val description: List<String> = languages("item.${id}.description", "%amount%" to HEAL_AMOUNT).split("\n")
 
     override fun onSetItemMeta(itemMeta: ItemMeta) {
         if(itemMeta !is PotionMeta) { return }

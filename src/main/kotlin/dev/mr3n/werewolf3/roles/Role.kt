@@ -6,7 +6,6 @@ import dev.mr3n.werewolf3.utils.constants
 import dev.mr3n.werewolf3.utils.container
 import dev.mr3n.werewolf3.utils.languages
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -80,6 +79,9 @@ enum class Role() {
             maxOf(min, ceil(base).toInt())
         }
     }
+
+    // toStringをoverrideするとvalueOfを使えないため。
+    fun asString() = "${color}${displayName}"
 
     // 役職のヘルメットを取得。
     val helmet: ItemStack

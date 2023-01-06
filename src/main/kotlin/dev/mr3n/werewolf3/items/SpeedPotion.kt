@@ -3,7 +3,6 @@ package dev.mr3n.werewolf3.items
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.titleText
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.event.player.PlayerItemConsumeEvent
@@ -18,7 +17,7 @@ object SpeedPotion: IShopItem.ShopItem("speed_potion", Material.POTION) {
 
     private val LEVEL: Int = constant("level")
 
-    override val description: String = languages("item.$id.description", "%time%" to TIME / 20)
+    override val description: List<String> = languages("item.$id.description", "%time%" to TIME / 20).split("\n")
 
     override fun onSetItemMeta(itemMeta: ItemMeta) {
         if(itemMeta !is PotionMeta) { return }

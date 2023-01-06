@@ -41,8 +41,7 @@ object ShopMenu {
                 action(ClickType.LEFT, ClickType.RIGHT) { player.closeInventory() }
             }
             IShopItem.ShopItem.ITEMS.filter { item -> item.roles.contains(role) }.forEach { item ->
-                val roles = item.roles.joinToString("${ChatColor.WHITE},") { "${it.color}${it.displayName}" }
-                addContents(item.itemStack.addLore("", languages("shop.roles","%roles%" to roles), "", languages("shop.price", "%price%" to item.price))) {
+                addContents(item.itemStack.addLore("", languages("shop.price", "%price%" to "${item.price}${Constants.MONEY_UNIT}"))) {
                     action(ClickType.LEFT) { item.buy(player) }
                 }
             }

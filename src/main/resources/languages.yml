@@ -3,16 +3,18 @@ prefix: "&4&l[人狼PvP]&f"
 chat_format: "%name%&a: &f%message%"
 death_chat_format: "&7[死亡者チャット]%name%&7: %message%"
 none: "なし"
+everyone: "全員"
 force_end: "GMがゲームを終了しました。"
 send_message_at_night: "&e&l[半径%distance%m以内のプレイヤーにメッセージを送信しました！]"
 be_cannot_use_item: "統合版ではこのアイテムを使用できません。対応をお待ち下さい。\nまた、%item%は次のアイテムで代用できるかもしれません: %substitute%"
+team_kill_bonus: "村人陣営が同士討ちしたため&c%money%獲得しました。"
+money_unit: "円"
 shop:
   name: "&dアイテムショップ"
   close: "&c閉じる"
-  bought: "%item%&fを&c%price%&f円で購入しました"
-  cant_buy: "残高が不足しています。%item%&fを購入するには&c%price%円&f必要です。"
-  price: "価格: &c%price%&f円"
-  roles: "役職: %roles%"
+  bought: "%item%&fを&c%price%&fで購入しました"
+  cant_buy: "残高が不足しています。%item%&fを購入するには&c%price%&f必要です。"
+  price: "価格: &c%price%&７"
 messages:
   please_wait_for_start: "開始までしばらくお待ちください"
   please_wait_for_end: "終了までしばらくお待ちください。"
@@ -53,7 +55,7 @@ carrying_dead_body:
     color: "&c"
     subtitle: "スニークを続けることで運搬できます"
 item:
-  comment: "ひとこと: %comment%"
+  roles: "役職: %roles%"
   shop:
     open:
       name: "&dショップを開く"
@@ -63,7 +65,6 @@ item:
   doctor_sword:
     name: "&b医者の剣(回復残量:%amount%)"
     description: "殴ることで対象のプレイヤーの体力を回復させます。"
-    comment: "回復量に上限があるから使いすぎるといざという時に使えないよ！"
     title:
       heal:
         color: "&c"
@@ -78,7 +79,6 @@ item:
   seer:
     name: "&d占いアイテム"
     description: "プレイヤーを右クリック長押しすることでそのプレイヤーを占うことができます。"
-    comment: "占うときは相手が人狼かもしれないので最低一人守ってくれる人がいると安心！"
     title:
       seer:
         color: "&d"
@@ -94,7 +94,6 @@ item:
   multiple_seer:
     name: "&d範囲占いアイテム"
     description: "近くに人狼がいるかどうかを占うことができます。"
-    comment: "半径はまあまあ小さいから占うときは近くのプレイヤーに報告しよう！"
     title:
       seer:
         color: "&d"
@@ -107,7 +106,6 @@ item:
   medium:
     name: "&d霊媒アイテム"
     description: "プレイヤーの死体のモヤを右クリックすることで\nそのプレイヤーの遺言や役職などを確認することができます。"
-    comment: "遺言一つで大きく左右するから慎重にね！"
     title:
       medium:
         color: "&5"
@@ -121,7 +119,6 @@ item:
   bomb_ball:
     name: "&4投げ爆弾"
     description: "着弾点から広範囲に即死級のダメージを与える。\n爆発音はワールド内全員に聞こえる。"
-    comment: "夜はトーテムでダメージを防がれる可能性があるので使うなら朝！\nヘルスチャージャーに集まってるところに投げ込むと嫌われるよ"
     title:
       warning:
         color: "&4"
@@ -129,7 +126,6 @@ item:
   wolf_axe:
     name: "&4人狼の斧"
     description: "チャージすることで&c一撃&7でプレイヤーを倒すことができる斧。\nチャージ完了時、および使用した際に&c大きな音が鳴る&7。"
-    comment: "だいぶ大きな音がなるので\n透明ポーションと併用すると強いよ！"
     title:
       wolf_axe:
         color: "&4"
@@ -148,15 +144,12 @@ item:
   fake_seer:
     name: "&dニセ占いアイテム(偽物)"
     description: "偽物の占いアイテム。プレイヤーを騙す以外に使用する手段はない。"
-    comment: "本物の占いはプレイヤーを3秒間長押ししないといけないからたまに「止まって！」とか言うと信憑性増すかも？"
   fake_medium:
     name: "&dニセ霊媒アイテム(偽物)"
     description: "偽物の霊媒アイテム。"
-    comment: "遺言を偽装すると結構有利に立てるかも！死人に口無し！"
   stan_ball:
     name: "&cスタンボール"
     description: "着弾点で&c爆発&7し巻き込まれたプレイヤーは\n数秒間&cほとんど動けない状態&fになる。"
-    comment: "爆発範囲が広いから自分が喰らわなように気をつけてね！\n爆発ダメージはまったくないよ"
     messages:
       stan: "数秒間動けなくなります。"
     title:
@@ -166,7 +159,6 @@ item:
   glow_ink:
     name: "&aピカピカインク"
     description: "使用することでプレイヤー&c全員に発光効果を付&7与する。\n例外に&n透明なプレイヤーは発光しない。"
-    comment: "停電中に使用すると走ってる人狼がわかるよ！"
     title:
       glowing:
         color: "&a"
@@ -178,7 +170,6 @@ item:
   lightning_rod:
     name: "&a停電"
     description: "使用することで人狼以外のすべてのプレイヤーに盲目の効果を付与する。"
-    comment: "盲目の付いたプレイヤーは走れないから\n盲目中に発光をつけられたら歩かないと正体がバレるかも。"
     title:
       blindness:
         color: "&e"
@@ -189,7 +180,6 @@ item:
   health_charger:
     name: "&cヘルスチャージャー"
     description: "設置することで周囲のプレイヤーの体力を回復する。\n設置するには&c3x3のスペースが必要&7。"
-    comment: "集まってると爆弾を投げ込まれる可能性があるから置く場所には気をつけて！"
     title:
       charger:
         color: "&c"
@@ -200,7 +190,6 @@ item:
   heal_potion:
     name: "&c回復ポーション"
     description: "&7飲むことで&c❤%amount%&7回復するポーション。"
-    comment: "ちなみに即時回復だよ"
     title:
       healing:
         title: "HEALING"
@@ -210,7 +199,6 @@ item:
   assassin_sword:
     name: "&c暗殺の剣"
     description: "&c背後から&7プレイヤーに斬りかかることで&c一撃&7で\nプレイヤーを仕留めることができる剣。"
-    comment: "体の向きじゃなくて頭の向きがベースだから\n斬りかかる時は頭の向きをよく見てみてね！"
     title:
       assassin_failed:
         title: "FAILED"
@@ -224,11 +212,9 @@ item:
   invisible_potion:
     name: "&b透明化ポーション"
     description: "飲むことで&c%time%秒間透明になれる&7。\n装備は消えるが手に持っている&nアイテムは見えてしまう。\nまた透明化中は&c発光の効果を完全に無効化&7する。"
-    comment: "俊敏ポーションと併用するとめっちゃ強いよ！ちなみに走ると足跡が見えちゃうから気をつけてね！"
   wolf_guide:
     name: "&c人狼ガイド"
     description: "使用することでランダムで一匹の人狼の名前を知ることができる。\nまた知った人狼をマーキングすることができる。"
-    comment: "２冊買っておくと人狼に自分が狂人だとアピールできるアイテムになるよ！"
     title:
       guide:
         title: "人狼ガイド"
@@ -240,7 +226,6 @@ item:
   one_shot_crossbow:
     name: "&c一撃のクロスボウ"
     description: "プレイヤーを&c一撃&7で殺害できる弓。\n&n一度使用すると壊れてしまう。"
-    comment: "夜に使うとトーテムでダメージを防がれるかも"
     title:
       bow:
         title: "一撃のクロスボウ"
@@ -250,19 +235,15 @@ item:
   totem_of_undying:
     name: "&b不死のトーテム"
     description: "手に持つことで&c夜に即死攻撃を一度のみ防ぐ&7ことができる。"
-    comment: "朝は効果がないよ。気をつけてね！\nちなみに使用すると数秒間俊敏の効果がつくよ！"
   speed_potion:
     name: "&b俊敏のポーション"
     description: "飲むことで&c%time%&7秒間足がとても早くなる。"
-    comment: "俊敏+透明+発光が最強コンビかも"
   stone_sword:
     name: "&eちょっと強い石の剣"
     description: "敵を大抵3-4発で倒せる程度の攻撃力はあるちょっと強い剣"
-    comment: "ダメージ増加Ⅱ、ついてます。"
   last_resort:
     name: "苦肉の策"
     description: "人狼、及び狂人の名前を全員に公開する代わりに\n試合時間一日(5分程度)延長される。"
-    comment: "最後の切り札。"
     title:
       last_resort:
         title: "苦肉の策"
@@ -277,7 +258,6 @@ item:
   dead_body_remover:
     name: "&c死体消し"
     description: "任意のプレイヤーの死体を燃やして隠蔽することができる。"
-    comment: "死体のモヤのところをクリックしてね！"
     title:
       remover:
         title: "BURNING"
@@ -287,20 +267,17 @@ item:
   with_you:
     name: "&7一緒にいるよ"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
-    comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
       - "%player% と一緒にいます[QC]"
   trust_you:
     name: "&e村人陣営だと思う"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
-    comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
       - "%player% は信用できる気がする[QC]"
       - "%player% は村人陣営だと思う[QC]"
   you_are_wolf:
     name: "&4こいつやばい！人狼や！"
     description: "これでプレイヤーをクリックをすることで\nクイックチャットを使用できます。"
-    comment: "嘘は構いませんが冗談では使用しないでください。"
     messages:
       - "%player%人狼！！！！[QC]"
 time:

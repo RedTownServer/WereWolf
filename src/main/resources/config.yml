@@ -11,6 +11,7 @@ game:
   end_time: DAY # DAY or NIGHT
   dead_body_prize: 300 # 死体発見時の賞金
   conversation_distance: 20.0 # 夜に会話可能な半径
+  team_kill_bonus: 300 # 村人が同士討ちした際に人狼に入るボーナス
 items:
   seer:
     price: 300

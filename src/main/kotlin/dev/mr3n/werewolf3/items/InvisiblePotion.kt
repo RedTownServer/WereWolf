@@ -20,7 +20,7 @@ import org.bukkit.potion.PotionEffectType
 object InvisiblePotion: IShopItem.ShopItem("invisible_potion", Material.POTION) {
     private val TIME: Int = constant("time")
 
-    override val description: String = languages("item.$id.description", "%time%" to TIME / 20)
+    override val description: List<String> = languages("item.$id.description", "%time%" to TIME / 20).split("\n")
 
     override fun onSetItemMeta(itemMeta: ItemMeta) {
         if(itemMeta !is PotionMeta) { return }

@@ -64,12 +64,13 @@ class DeadBody(val player: Player) {
     private val playerUniqueId = player.uniqueId
 
     var location = player.location.clone()
+        private set
 
-    val yaw = location.yaw
+    private val yaw = location.yaw
 
-    val pitch = location.pitch
+    private val pitch = location.pitch
 
-    private val armorStand = player.world.spawn(location.clone().subtract(0.0,0.5,0.0), ArmorStand::class.java)
+    private val armorStand = player.world.spawn(location.clone(), ArmorStand::class.java)
 
     private val gameProfile = WrappedGameProfile(uniqueId, player.name)
 
@@ -101,8 +102,6 @@ class DeadBody(val player: Player) {
         armorStand.isSmall = true
         armorStand.isInvulnerable = true
         armorStand.isSilent = true
-        armorStand.setGravity(false)
-        armorStand.setAI(false)
         armorStand.persistentDataContainer.set(Keys.ENTITY_TYPE, PersistentDataType.STRING, ENTITY_TYPE)
         // 死体一覧にしたいを追加
         DEAD_BODIES.add(this)
@@ -191,22 +190,24 @@ class DeadBody(val player: Player) {
         show(players)
     }
 
-    private fun Float.toPacketDirection(): Byte = ((this / 360f) * 256f).toInt().toByte()
-
-    fun teleport(location: Location) {
-        this.location = location.clone()
+    fun sync() {
+        if(this.location.x == armorStand.location.x && this.location.y == armorStand.location.y && this.location.z == armorStand.location.z) { return }
         val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_TELEPORT)
         packet.integers
             .writeSafely(0, entityId)
         packet.bytes
-            .writeSafely(0,this.yaw.toPacketDirection())
-            .writeSafely(1,this.pitch.toPacketDirection())
+            .writeSafely(0,((yaw / 360f) * 256f).toInt().toByte())
+            .writeSafely(1,((pitch / 360f) * 256f).toInt().toByte())
         packet.doubles
-            .writeSafely(0, this.location.x)
-            .writeSafely(1, this.location.y)
-            .writeSafely(2, this.location.z)
+            .writeSafely(0, armorStand.location.x)
+            .writeSafely(1, armorStand.location.y)
+            .writeSafely(2, armorStand.location.z)
         Bukkit.getOnlinePlayers().forEach { player -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet) }
-        armorStand.teleport(this.location.clone().subtract(0.0,0.5,0.0))
+        this.location = armorStand.location
+    }
+
+    fun teleport(location: Location) {
+        armorStand.teleport(location.clone().subtract(0.0,0.5,0.0))
     }
 
     /**
@@ -247,7 +248,7 @@ class DeadBody(val player: Player) {
             WereWolf3.INSTANCE.runTaskTimer(10,10) {
                 DEAD_BODIES.forEach { deadBody ->
                     val location = deadBody.location.clone()
-                    location.world?.spawnParticle(Particle.REDSTONE, location.add(0.0,0.5,0.0),10,0.0, 0.0, 0.0, Particle.DustOptions(if(deadBody.wasFound) Color.AQUA else Color.RED, 1f))
+                    location.world?.spawnParticle(Particle.REDSTONE, location,10,0.0, 0.0, 0.0, Particle.DustOptions(if(deadBody.wasFound) Color.AQUA else Color.RED, 1f))
                 }
             }
             WereWolf3.INSTANCE.registerEvent<PlayerInteractAtEntityEvent> { event ->
@@ -255,6 +256,12 @@ class DeadBody(val player: Player) {
                 if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
                 val entity = event.rightClicked
                 ARMOR_STANDS[entity.entityId]?.onClick(player)
+            }
+
+            WereWolf3.INSTANCE.runTaskTimer(4L,4L) {
+                DEAD_BODIES.forEach { deadBody ->
+                    deadBody.sync()
+                }
             }
 
             /**
@@ -294,6 +301,7 @@ class DeadBody(val player: Player) {
                 val player = event.player
                 // スニークしていなかったらreturn
                 if(!player.isSneaking) { return@registerEvent }
+                if(player.gameMode==GameMode.SPECTATOR) { return@registerEvent }
                 // すでに運搬中の死体だった場合return
                 if(CARRYING.values.contains(event.deadBody)) { return@registerEvent }
                 CARRYING[player] = event.deadBody

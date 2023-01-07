@@ -14,7 +14,7 @@ shop:
   close: "&c閉じる"
   bought: "%item%&fを&c%price%&fで購入しました"
   cant_buy: "残高が不足しています。%item%&fを購入するには&c%price%&f必要です。"
-  price: "価格: &c%price%&７"
+  price: "価格: &c%price%"
 messages:
   please_wait_for_start: "開始までしばらくお待ちください"
   please_wait_for_end: "終了までしばらくお待ちください。"
@@ -78,7 +78,7 @@ item:
       healing: "%player%を回復しています。"
   seer:
     name: "&d占いアイテム"
-    description: "プレイヤーを右クリック長押しすることでそのプレイヤーを占うことができます。"
+    description: "プレイヤーを右クリック長押しすると\nそのプレイヤーを占うことができます。\n夜にしか使えません。"
     title:
       seer:
         color: "&d"
@@ -86,6 +86,7 @@ item:
     messages:
       canceled: "占いをキャンセルしました。"
       init: "%player%を占い中..."
+      night_only: "夜にしか使用できません。"
       hint:
         how_to: "プレヤーを右クリック長押しすることで占うことができます。"
       result:
@@ -93,7 +94,7 @@ item:
         villager: "%player%は&c人狼では&nありません。"
   multiple_seer:
     name: "&d範囲占いアイテム"
-    description: "近くに人狼がいるかどうかを占うことができます。"
+    description: "半径数m以内に人狼かいるかどうかを\n知ることができる。"
     title:
       seer:
         color: "&d"
@@ -118,14 +119,14 @@ item:
       time: "&5死亡時刻&7: &f%sec%秒前"
   bomb_ball:
     name: "&4投げ爆弾"
-    description: "着弾点から広範囲に即死級のダメージを与える。\n爆発音はワールド内全員に聞こえる。"
+    description: "着弾点から広範囲に\n即死級のダメージを与える。\n爆発音はワールド内&n全員に聞こえる。"
     title:
       warning:
         color: "&4"
         title: "EXPLODE"
   wolf_axe:
     name: "&4人狼の斧"
-    description: "チャージすることで&c一撃&7でプレイヤーを倒すことができる斧。\nチャージ完了時、および使用した際に&c大きな音が鳴る&7。"
+    description: "チャージすることで&c一撃&7で\nプレイヤーを倒すことができる斧。\nチャージ完了時、および使用した際\n&c大きな音が鳴る&7。"
     title:
       wolf_axe:
         color: "&4"
@@ -158,7 +159,7 @@ item:
         title: "STAN!"
   glow_ink:
     name: "&aピカピカインク"
-    description: "使用することでプレイヤー&c全員に発光効果を付&7与する。\n例外に&n透明なプレイヤーは発光しない。"
+    description: "使用することで&c全員に\n&c発光効果を付与&7する。\n例外に&n透明なプレイヤーは発光しない。"
     title:
       glowing:
         color: "&a"
@@ -169,7 +170,7 @@ item:
       for_be: "BEエディションは仕様上発光が表示されません。対応をお待ち下さい。"
   lightning_rod:
     name: "&a停電"
-    description: "使用することで人狼以外のすべてのプレイヤーに盲目の効果を付与する。"
+    description: "人狼以外のすべてのプレイヤーに\n盲目の効果を付与する。"
     title:
       blindness:
         color: "&e"
@@ -198,7 +199,7 @@ item:
       healing: "&c❤%amount%&f回復しました。"
   assassin_sword:
     name: "&c暗殺の剣"
-    description: "&c背後から&7プレイヤーに斬りかかることで&c一撃&7で\nプレイヤーを仕留めることができる剣。"
+    description: "&c背後から&7プレイヤーに\n斬りかかることで&c一撃&7で\nプレイヤーを仕留めることができる剣。"
     title:
       assassin_failed:
         title: "FAILED"
@@ -211,10 +212,10 @@ item:
       success: "暗殺に成功しました。"
   invisible_potion:
     name: "&b透明化ポーション"
-    description: "飲むことで&c%time%秒間透明になれる&7。\n装備は消えるが手に持っている&nアイテムは見えてしまう。\nまた透明化中は&c発光の効果を完全に無効化&7する。"
+    description: "飲むことで&c%time%秒間透明になれる&7。\n装備は消えるが手に持っている\nアイテムは見えてしまう。\n透明化中は&c発光の効果を完全に無効化&7する。"
   wolf_guide:
     name: "&c人狼ガイド"
-    description: "使用することでランダムで一匹の人狼の名前を知ることができる。\nまた知った人狼をマーキングすることができる。"
+    description: "でランダムで一匹の人狼の名前を知ることができる。\nまた知った人狼をマーキングすることができる。"
     title:
       guide:
         title: "人狼ガイド"
@@ -240,7 +241,7 @@ item:
     description: "飲むことで&c%time%&7秒間足がとても早くなる。"
   stone_sword:
     name: "&eちょっと強い石の剣"
-    description: "敵を大抵3-4発で倒せる程度の攻撃力はあるちょっと強い剣"
+    description: "敵を大抵3-4発で倒せる程度の\n攻撃力はあるちょっと強い剣"
   last_resort:
     name: "苦肉の策"
     description: "人狼、及び狂人の名前を全員に公開する代わりに\n試合時間一日(5分程度)延長される。"
@@ -257,7 +258,7 @@ item:
       already_bought: "すでにこのアイテムは人狼に購入されています。このアイテムは試合中に一度しか購入できません。"
   dead_body_remover:
     name: "&c死体消し"
-    description: "任意のプレイヤーの死体を燃やして隠蔽することができる。"
+    description: "任意のプレイヤーの死体を\n燃やして隠蔽することができる。"
     title:
       remover:
         title: "BURNING"

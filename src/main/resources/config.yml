@@ -23,7 +23,7 @@ items:
     roles:
       - SEER
     distance: 5.0
-    seer_time: 50
+    seer_time: 30
   medium:
     price: 300
     roles:

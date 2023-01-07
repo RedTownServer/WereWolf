@@ -2,6 +2,9 @@ package dev.mr3n.werewolf3
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
+import com.comphenix.protocol.wrappers.EnumWrappers
+import dev.moru3.minepie.Executor.Companion.runTaskTimer
+import dev.moru3.minepie.Executor.Companion.runTaskTimerAsync
 import dev.moru3.minepie.config.Config
 import dev.mr3n.werewolf3.Status.*
 import dev.mr3n.werewolf3.commands.EndCommand
@@ -9,12 +12,15 @@ import dev.mr3n.werewolf3.commands.ShopCommand
 import dev.mr3n.werewolf3.commands.StartCommand
 import dev.mr3n.werewolf3.items.IShopItem
 import dev.mr3n.werewolf3.protocol.DeadBody
+import dev.mr3n.werewolf3.protocol.InvisibleEquipmentPacketUtil
+import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
 import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
+import dev.mr3n.werewolf3.utils.hasObstacleInPath
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.parseTime
 import dev.mr3n.werewolf3.utils.role
@@ -81,6 +87,44 @@ class WereWolf3: JavaPlugin() {
                     }
                 }
                 true
+            }
+        }
+
+        this.runTaskTimerAsync(2, 2) {
+            when(STATUS) {
+                RUNNING, STARTING -> {
+                    PLAYERS.forEach { player ->
+                        val visiblePlayers = WereWolf3.PLAYERS
+                            .filter { player2 -> player2 != player }
+                            .filter { player2 -> player2.gameMode != GameMode.SPECTATOR }
+                            .filterNot { player2 ->
+                                player.location.clone().add(0.0, 1.6, 0.0)
+                                    .hasObstacleInPath(player2.location.clone().add(0.0, 1.8, 0.0))
+                            }
+                        WereWolf3.PLAYERS.forEach s@{ player2 ->
+                            if (player.role == Role.WOLF && player2.role == Role.WOLF) { return@s }
+                            if (visiblePlayers.contains(player2)) {
+                                InvisibleEquipmentPacketUtil.remove(player, player2, 0)
+                                MetadataPacketUtil.removeFromInvisible(player, player2)
+                            } else {
+                                InvisibleEquipmentPacketUtil.add(player, player2, 0, *EnumWrappers.ItemSlot.values())
+                                MetadataPacketUtil.addToInvisible(player, player2)
+                            }
+                        }
+                        val visibleDeadBodies = DeadBody.DEAD_BODIES
+                            .filterNot { deadBody ->
+                                player.location.clone().add(0.0, 1.6, 0.0).hasObstacleInPath(deadBody.location.clone())
+                            }
+                        DeadBody.DEAD_BODIES.forEach { deadBody ->
+                            if(visibleDeadBodies.contains(deadBody)) {
+                                deadBody.show(listOf(player))
+                            } else {
+                                deadBody.hide(listOf(player))
+                            }
+                        }
+                    }
+                }
+                else -> {}
             }
         }
 

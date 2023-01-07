@@ -50,38 +50,6 @@ object GameRunner {
                 }
                 // 30秒おきにお金を追加する
                 if (loopCount % (20 * 30) == 0) { player.money += Constants.ADD_MONEY }
-                if (loopCount % 2 == 0) {
-                    WereWolf3.INSTANCE.runTaskAsync {
-                        val visiblePlayers = WereWolf3.PLAYERS
-                            .filter { player2 -> player2 != player }
-                            .filter { player2 -> player2.gameMode != GameMode.SPECTATOR }
-                            .filterNot { player2 ->
-                                player.location.clone().add(0.0, 1.6, 0.0)
-                                    .hasObstacleInPath(player2.location.clone().add(0.0, 1.8, 0.0))
-                            }
-                        WereWolf3.PLAYERS.forEach s@{ player2 ->
-                            if (player.role == Role.WOLF && player2.role == Role.WOLF) { return@s }
-                            if (visiblePlayers.contains(player2)) {
-                                InvisibleEquipmentPacketUtil.remove(player, player2, 0)
-                                MetadataPacketUtil.removeFromInvisible(player, player2)
-                            } else {
-                                InvisibleEquipmentPacketUtil.add(player, player2, 0, *ItemSlot.values())
-                                MetadataPacketUtil.addToInvisible(player, player2)
-                            }
-                        }
-                        val visibleDeadBodies = DeadBody.DEAD_BODIES
-                            .filterNot { deadBody ->
-                                player.location.clone().add(0.0, 1.6, 0.0).hasObstacleInPath(deadBody.location.clone())
-                            }
-                        DeadBody.DEAD_BODIES.forEach { deadBody ->
-                            if(visibleDeadBodies.contains(deadBody)) {
-                                deadBody.show(listOf(player))
-                            } else {
-                                deadBody.hide(listOf(player))
-                            }
-                        }
-                    }
-                }
             }
         }
     }

@@ -6,21 +6,18 @@ import dev.moru3.minepie.Executor.Companion.runTaskTimer
 import dev.moru3.minepie.Executor.Companion.runTaskTimerAsync
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.Constants
-import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.events.WereWolf3DeadBodyClickEvent
 import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Allay
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Frog
 import org.bukkit.entity.Player
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
-import org.bukkit.persistence.PersistentDataType
+import org.bukkit.inventory.EquipmentSlot
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.experimental.or
@@ -47,7 +44,7 @@ class DeadBody(val player: Player) {
         WereWolf3.PLAYERS.forEach { player2 ->
             player2.sendMessage(languages("messages.found_dead_body", "%player%" to name).asPrefixed())
         }
-        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1f)
+        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
         if(co!=null) {
             this.player.setPlayerListName("${co.color}${ChatColor.STRIKETHROUGH}[${co.displayName}Co]${this.player.name}")
         } else {
@@ -260,11 +257,9 @@ class DeadBody(val player: Player) {
             WereWolf3.INSTANCE.registerEvent<PlayerInteractAtEntityEvent> { event ->
                 val player = event.player
                 if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
+                if(event.hand != EquipmentSlot.HAND) { return@registerEvent }
                 val entity = event.rightClicked
-                FROGS[entity.entityId]?.also {
-                    it.onClick(player)
-                    event.isCancelled = true
-                }
+                FROGS[entity.entityId]?.onClick(player)
             }
 
             WereWolf3.INSTANCE.runTaskTimerAsync(1L,1L) {
@@ -315,7 +310,7 @@ class DeadBody(val player: Player) {
                 if(CARRYING.values.contains(event.deadBody)) { return@registerEvent }
                 CARRYING[player] = event.deadBody
                 event.deadBody.teleport(event.player.location)
-                player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 1f)
+                player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 2f, 1f)
                 player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20)
                 event.isCancelled = true
             }

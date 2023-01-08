@@ -54,6 +54,7 @@ carrying_dead_body:
     title: "死体を離した"
     color: "&c"
     subtitle: "スニークを続けることで運搬できます"
+  too_far: "死体を運ぶにはもっと死体に近づく必要があります。"
 item:
   roles: "役職: %roles%"
   shop:

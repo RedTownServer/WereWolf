@@ -19,7 +19,6 @@ commands:
     description: ショップを開きます。
     aliases:
       - s
-      - store
 permissions:
   werewolf3:
     children:

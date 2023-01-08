@@ -146,7 +146,7 @@ class DeadBody(val player: Player) {
             .writeSafely(0, uniqueId)
         namedEntitySpawn.doubles
             .writeSafely(0, location.x)
-            .writeSafely(1, location.y)
+            .writeSafely(1, location.y + 0.12)
             .writeSafely(2, location.z)
         namedEntitySpawn.bytes
             .writeSafely(0, ((location.yaw*256.0f)/360.0f).toInt().toByte())
@@ -203,7 +203,7 @@ class DeadBody(val player: Player) {
             .writeSafely(1,((pitch / 360f) * 256f).toInt().toByte())
         packet.doubles
             .writeSafely(0, frog.location.x)
-            .writeSafely(1, frog.location.y)
+            .writeSafely(1, frog.location.y + 0.12)
             .writeSafely(2, frog.location.z)
         Bukkit.getOnlinePlayers().forEach { player -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet) }
         this.location = frog.location
@@ -293,7 +293,7 @@ class DeadBody(val player: Player) {
             WereWolf3.INSTANCE.registerEvent<PlayerToggleSneakEvent> { event ->
                 if(!event.isSneaking && CARRYING.containsKey(event.player)) {
                     CARRYING.remove(event.player)
-                    event.player.playSound(event.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                    event.player.playSound(event.player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 2f, 1f)
                     event.player.sendTitle(titleText("carrying_dead_body.let_go"),languages("carrying_dead_body.let_go.subtitle"), 0, 30, 20)
                 }
             }
@@ -308,11 +308,16 @@ class DeadBody(val player: Player) {
                 if(player.gameMode==GameMode.SPECTATOR) { return@registerEvent }
                 // すでに運搬中の死体だった場合return
                 if(CARRYING.values.contains(event.deadBody)) { return@registerEvent }
-                CARRYING[player] = event.deadBody
-                event.deadBody.teleport(event.player.location)
-                player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 2f, 1f)
-                player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20)
                 event.isCancelled = true
+                if(player.location.distance(event.deadBody.location) <= 1) {
+                    CARRYING[player] = event.deadBody
+                    event.deadBody.teleport(event.player.location)
+                    player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 2f, 1f)
+                    player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20)
+                } else {
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 2f, 1f)
+                    player.sendMessage(languages("carrying_dead_body.too_far").asPrefixed())
+                }
             }
         }
     }

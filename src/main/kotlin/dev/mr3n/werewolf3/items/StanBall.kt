@@ -6,6 +6,7 @@ import dev.mr3n.werewolf3.Keys
 import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.utils.languages
 import dev.mr3n.werewolf3.utils.titleText
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -41,6 +42,7 @@ object StanBall: IShopItem.ShopItem("stan_ball", Material.SNOWBALL) {
             projectile.persistentDataContainer.set(Keys.ENTITY_TYPE, PersistentDataType.STRING, ENTITY_TYPE)
         }
         WereWolf3.INSTANCE.registerEvent<PlayerMoveEvent> { event ->
+            if(event.player.gameMode == GameMode.SPECTATOR) { return@registerEvent }
             if(stanPlayers.contains(event.player)) {
                 val to = (event.to?:event.player.location)
                 if(to.pitch != -90f) {

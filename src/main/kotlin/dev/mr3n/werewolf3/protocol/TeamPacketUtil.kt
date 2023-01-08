@@ -14,6 +14,7 @@ import java.util.*
 
 object TeamPacketUtil {
     private val TEAMS = mutableMapOf<Player, MutableMap<ChatColor, MutableList<String>>>()
+    private val SAME_TEAM_ENTITIES = mutableMapOf<Player, MutableList<UUID>>()
 
     /**
      * 色用のチームを作成するパケットです。
@@ -42,6 +43,19 @@ object TeamPacketUtil {
         return packet
     }
 
+    fun sendTeamJLPacket(player: Player, color: ChatColor, entities: List<String>, operation: Int) {
+        // パケットを作成
+        val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM)
+        // チーム名を指定
+        packet.strings.write(0,"$color")
+        // 操作を4，つまりエンティティの削除に設定
+        packet.integers.write(0,operation)
+        // 追加するプレイヤーを格納
+        packet.getSpecificModifier(Collection::class.java).write(0,entities)
+        // パケットを送信
+        WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
+    }
+
     /**
      * チームのメンバーを設定できる関数です。
      */
@@ -53,16 +67,8 @@ object TeamPacketUtil {
         }
         members[color] = players.map { it.name }.toMutableList()
         TEAMS[player] = members
-        // パケットを作成
-        val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM)
-        // チーム名を指定
-        packet.strings.write(0,"$color")
-        // 操作を3，つまりプレイヤーの追加に設定
-        packet.integers.write(0,3)
-        // 追加するプレイヤーを格納
-        packet.getSpecificModifier(Collection::class.java).write(0,players.map { it.name })
-        // パケットを送信
-        WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
+        val playerTeam = TEAMS[player]?.filterValues { it.contains(player.name) }?.keys?.firstOrNull()?:return
+        sendTeamJLPacket(player, playerTeam, players.map { it.name }, 3)
     }
 
     /**
@@ -72,16 +78,7 @@ object TeamPacketUtil {
         val teams = TEAMS[player]?.get(color)?: return
         teams.removeAll(entities)
         TEAMS[player]?.put(color, teams)
-        // パケットを作成
-        val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM)
-        // チーム名を指定
-        packet.strings.write(0,"$color")
-        // 操作を４，つまりプレイヤーの削除に設定
-        packet.integers.write(0,4)
-        // 削除するプレイヤーを格納
-        packet.getSpecificModifier(Collection::class.java).write(0,entities)
-        // パケットを送信
-        WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet)
+        sendTeamJLPacket(player, color, entities, 4)
     }
 
     val colours = listOf(

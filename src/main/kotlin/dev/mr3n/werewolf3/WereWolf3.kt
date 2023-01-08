@@ -11,19 +11,13 @@ import dev.mr3n.werewolf3.commands.EndCommand
 import dev.mr3n.werewolf3.commands.ShopCommand
 import dev.mr3n.werewolf3.commands.StartCommand
 import dev.mr3n.werewolf3.items.IShopItem
-import dev.mr3n.werewolf3.protocol.DeadBody
-import dev.mr3n.werewolf3.protocol.InvisibleEquipmentPacketUtil
-import dev.mr3n.werewolf3.protocol.MetadataPacketUtil
-import dev.mr3n.werewolf3.protocol.SpectatorPacketUtil
+import dev.mr3n.werewolf3.protocol.*
 import dev.mr3n.werewolf3.roles.Role
 import dev.mr3n.werewolf3.sidebar.ISideBar.Companion.sidebar
 import dev.mr3n.werewolf3.sidebar.RunningSidebar
 import dev.mr3n.werewolf3.sidebar.StartingSidebar
 import dev.mr3n.werewolf3.sidebar.WaitingSidebar
-import dev.mr3n.werewolf3.utils.hasObstacleInPath
-import dev.mr3n.werewolf3.utils.languages
-import dev.mr3n.werewolf3.utils.parseTime
-import dev.mr3n.werewolf3.utils.role
+import dev.mr3n.werewolf3.utils.*
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.GameRule
@@ -69,7 +63,9 @@ class WereWolf3: JavaPlugin() {
         GameTerminator.init()
         Role.ROLES
         DeadBody.DEAD_BODIES
-        Time.DAY
+        TeamPacketUtil.colours
+        Time.DAY.title
+        Time.NIGHT.title
         // <<< クラスの初期化 <<<
         this.getCommand("debug")?.also {
             it.setExecutor { sender, _, _, args ->
@@ -90,7 +86,7 @@ class WereWolf3: JavaPlugin() {
             }
         }
 
-        this.runTaskTimerAsync(2, 2) {
+        this.runTaskTimerAsync(3, 3) {
             when(STATUS) {
                 RUNNING, STARTING -> {
                     PLAYERS.forEach { player ->
@@ -98,10 +94,10 @@ class WereWolf3: JavaPlugin() {
                             .filter { player2 -> player2 != player }
                             .filter { player2 -> player2.gameMode != GameMode.SPECTATOR }
                             .filterNot { player2 ->
-                                player.location.clone().add(0.0, 1.6, 0.0)
-                                    .hasObstacleInPath(player2.location.clone().add(0.0, 1.8, 0.0))
+                                // プレイヤー間に障害物があるかどうか。ある場合はtrueなのでfilterNotでfalseのみ残す
+                                player.hasObstacleInSightPath(player2)
                             }
-                        WereWolf3.PLAYERS.forEach s@{ player2 ->
+                        PLAYERS.forEach s@{ player2 ->
                             if (player.role == Role.WOLF && player2.role == Role.WOLF) { return@s }
                             if (visiblePlayers.contains(player2)) {
                                 InvisibleEquipmentPacketUtil.remove(player, player2, 0)
@@ -113,7 +109,8 @@ class WereWolf3: JavaPlugin() {
                         }
                         val visibleDeadBodies = DeadBody.DEAD_BODIES
                             .filterNot { deadBody ->
-                                player.location.clone().add(0.0, 1.6, 0.0).hasObstacleInPath(deadBody.location.clone())
+                                // 死体とプレイヤーの間に障害物があるかどうか。ある場合はtrueなのでfilterNotでfalseのみ残す
+                                player.hasObstacleInSightPath(deadBody.location.clone())
                             }
                         DeadBody.DEAD_BODIES.forEach { deadBody ->
                             if(visibleDeadBodies.contains(deadBody)) {
@@ -179,7 +176,7 @@ class WereWolf3: JavaPlugin() {
                     if(alivePlayers.count { p->p.role?.team==Role.Team.WOLF }<=0) {
                         // 人狼陣営の数が0になった場合ゲームを終了
                         GameTerminator.end(Role.Team.VILLAGER, languages("title.win.reason.anni", "%role%" to Role.Team.WOLF.displayName))
-                    } else if(alivePlayers.count { p->p.role?.team==Role.Team.VILLAGER }<=0) {
+                    } else if(alivePlayers.count { p->p.role?.team==Role.Team.VILLAGER && p.role != Role.MADMAN }<=0) {
                         // 村人陣営の数が0になった場合ゲームを終了
                         GameTerminator.end(Role.Team.WOLF, languages("title.win.reason.anni", "%role%" to Role.Team.VILLAGER.displayName))
                     }

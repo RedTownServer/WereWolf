@@ -3,6 +3,7 @@ package dev.mr3n.werewolf3.protocol
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.wrappers.*
 import dev.moru3.minepie.Executor.Companion.runTaskTimer
+import dev.moru3.minepie.Executor.Companion.runTaskTimerAsync
 import dev.moru3.minepie.events.EventRegister.Companion.registerEvent
 import dev.mr3n.werewolf3.Constants
 import dev.mr3n.werewolf3.Keys
@@ -10,7 +11,10 @@ import dev.mr3n.werewolf3.WereWolf3
 import dev.mr3n.werewolf3.events.WereWolf3DeadBodyClickEvent
 import dev.mr3n.werewolf3.utils.*
 import org.bukkit.*
+import org.bukkit.attribute.Attribute
+import org.bukkit.entity.Allay
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Frog
 import org.bukkit.entity.Player
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
@@ -43,7 +47,7 @@ class DeadBody(val player: Player) {
         WereWolf3.PLAYERS.forEach { player2 ->
             player2.sendMessage(languages("messages.found_dead_body", "%player%" to name).asPrefixed())
         }
-        player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1f)
         if(co!=null) {
             this.player.setPlayerListName("${co.color}${ChatColor.STRIKETHROUGH}[${co.displayName}Co]${this.player.name}")
         } else {
@@ -70,7 +74,7 @@ class DeadBody(val player: Player) {
 
     private val pitch = location.pitch
 
-    private val armorStand = player.world.spawn(location.clone(), ArmorStand::class.java)
+    private val frog = player.world.spawn(location.clone(), Frog::class.java)
 
     private val gameProfile = WrappedGameProfile(uniqueId, player.name)
 
@@ -98,14 +102,16 @@ class DeadBody(val player: Player) {
     init {
         DEAD_BODY_BY_UUID[playerUniqueId]?.destroy()
         spawn(Bukkit.getOnlinePlayers().toList())
-        armorStand.isInvisible = true
-        armorStand.isSmall = true
-        armorStand.isInvulnerable = true
-        armorStand.isSilent = true
-        armorStand.persistentDataContainer.set(Keys.ENTITY_TYPE, PersistentDataType.STRING, ENTITY_TYPE)
+        frog.isInvisible = true
+        frog.isInvulnerable = true
+        frog.isSilent = true
+        frog.ageLock = true
+        frog.isCollidable = false
+        frog.isAware = false
+        frog.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = 0.0
         // 死体一覧にしたいを追加
         DEAD_BODIES.add(this)
-        ARMOR_STANDS[armorStand.entityId] = this
+        FROGS[frog.entityId] = this
         DEAD_BODY_BY_UUID[playerUniqueId] = this
     }
 
@@ -191,7 +197,7 @@ class DeadBody(val player: Player) {
     }
 
     fun sync() {
-        if(this.location.x == armorStand.location.x && this.location.y == armorStand.location.y && this.location.z == armorStand.location.z) { return }
+        if(this.location.x == frog.location.x && this.location.y == frog.location.y && this.location.z == frog.location.z) { return }
         val packet = WereWolf3.PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_TELEPORT)
         packet.integers
             .writeSafely(0, entityId)
@@ -199,15 +205,15 @@ class DeadBody(val player: Player) {
             .writeSafely(0,((yaw / 360f) * 256f).toInt().toByte())
             .writeSafely(1,((pitch / 360f) * 256f).toInt().toByte())
         packet.doubles
-            .writeSafely(0, armorStand.location.x)
-            .writeSafely(1, armorStand.location.y)
-            .writeSafely(2, armorStand.location.z)
+            .writeSafely(0, frog.location.x)
+            .writeSafely(1, frog.location.y)
+            .writeSafely(2, frog.location.z)
         Bukkit.getOnlinePlayers().forEach { player -> WereWolf3.PROTOCOL_MANAGER.sendServerPacket(player, packet) }
-        this.location = armorStand.location
+        this.location = frog.location
     }
 
     fun teleport(location: Location) {
-        armorStand.teleport(location.clone().subtract(0.0,0.5,0.0))
+        frog.teleport(location.clone())
     }
 
     /**
@@ -219,8 +225,8 @@ class DeadBody(val player: Player) {
         Bukkit.getOnlinePlayers().forEach { p ->
             WereWolf3.PROTOCOL_MANAGER.sendServerPacket(p,packet)
         }
-        ARMOR_STANDS.remove(armorStand.entityId)
-        armorStand.remove()
+        FROGS.remove(frog.entityId)
+        frog.remove()
         // 一覧からも削除
         DEAD_BODIES.remove(this)
         DEAD_BODY_BY_UUID.remove(playerUniqueId)
@@ -235,7 +241,7 @@ class DeadBody(val player: Player) {
 
         private val BYTE_SERIALIZER = WrappedDataWatcher.Registry.get(Byte::class.javaObjectType)
 
-        private val ARMOR_STANDS = mutableMapOf<Int, DeadBody>()
+        private val FROGS = mutableMapOf<Int, DeadBody>()
 
         val DEAD_BODY_BY_UUID = mutableMapOf<UUID, DeadBody>()
 
@@ -248,17 +254,20 @@ class DeadBody(val player: Player) {
             WereWolf3.INSTANCE.runTaskTimer(10,10) {
                 DEAD_BODIES.forEach { deadBody ->
                     val location = deadBody.location.clone()
-                    location.world?.spawnParticle(Particle.REDSTONE, location,10,0.0, 0.0, 0.0, Particle.DustOptions(if(deadBody.wasFound) Color.AQUA else Color.RED, 1f))
+                    location.world?.spawnParticle(Particle.REDSTONE, location.clone().add(.0, .3, .0),10,0.0, 0.0, 0.0, Particle.DustOptions(if(deadBody.wasFound) Color.AQUA else Color.RED, 1f))
                 }
             }
             WereWolf3.INSTANCE.registerEvent<PlayerInteractAtEntityEvent> { event ->
                 val player = event.player
                 if(!WereWolf3.PLAYERS.contains(player)) { return@registerEvent }
                 val entity = event.rightClicked
-                ARMOR_STANDS[entity.entityId]?.onClick(player)
+                FROGS[entity.entityId]?.also {
+                    it.onClick(player)
+                    event.isCancelled = true
+                }
             }
 
-            WereWolf3.INSTANCE.runTaskTimer(4L,4L) {
+            WereWolf3.INSTANCE.runTaskTimerAsync(1L,1L) {
                 DEAD_BODIES.forEach { deadBody ->
                     deadBody.sync()
                 }
@@ -306,7 +315,7 @@ class DeadBody(val player: Player) {
                 if(CARRYING.values.contains(event.deadBody)) { return@registerEvent }
                 CARRYING[player] = event.deadBody
                 event.deadBody.teleport(event.player.location)
-                player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 1f)
                 player.sendTitle(titleText("carrying_dead_body.carrying"),languages("carrying_dead_body.carrying.subtitle"), 0, 30, 20)
                 event.isCancelled = true
             }

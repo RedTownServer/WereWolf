@@ -99,7 +99,8 @@ object GameTerminator {
                 // チームの色を削除
                 TeamPacketUtil.removeAll(player, ChatColor.DARK_RED,)
                 // パケットで発光、透明化を送信していた場合は削除
-                MetadataPacketUtil.resetAll(player)
+                MetadataPacketUtil.removeAllInvisible(player)
+                MetadataPacketUtil.removeAllGlowing(player)
                 player.activePotionEffects.forEach { player.removePotionEffect(it.type) }
                 // >>> バグって動かないようにちょっとずらしてスポーン地点にてレポート >>>
                 val tc = (0..100)

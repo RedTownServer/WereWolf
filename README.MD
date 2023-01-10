@@ -1,6 +1,8 @@
 # WereWolf3
 アイテム、新機能、及び夜の接近ボイスチャットなどオリジナルな要素が盛りだくさんの人狼プラグインです。
 
+[Notion](https://moruch4nn.notion.site/Ver-3-RedTownServer-29c1f0d44cf34ebfb36d1ba08b57a0dc) で詳細を見る。
+
 ---
 
 ## 推奨環境について
